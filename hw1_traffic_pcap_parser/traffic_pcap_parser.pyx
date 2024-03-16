@@ -68,10 +68,6 @@ cdef class parser:
     cdef list entropy_dst_ips
     cdef list tcp_syn_counts
     cdef list tcp_fin_counts
-    cdef float delta_t
-    cdef float current_time
-    cdef float previous_time
-    cdef float start_time
     cdef unsigned long long int max_packets
     cdef unsigned long long int packet_count
     cdef unsigned long long int ip_packet_count
@@ -82,6 +78,10 @@ cdef class parser:
     cdef unsigned long long int udp_count
     cdef unsigned long long int tcp_syn_count
     cdef unsigned long long int tcp_fin_count
+    cdef delta_t
+    cdef current_time
+    cdef previous_time
+    cdef start_time
     cdef iat
     cdef sum_iat
     ip_count_src = defaultdict(int)
@@ -106,6 +106,11 @@ cdef class parser:
         print("Found " + str(len(self.pcap_fp)) + " pcap files")
         self.delta_t = data["delta_t"]
         self.max_packets = data["max_packets"]
+        print()
+        print(f">> self.pcap_fp:     {self.pcap_fp}")
+        print(f">> self.delta_t:     {self.delta_t}")
+        print(f">> self.max_packets: {self.max_packets}")
+        print()
 
     # Initialize data structures
     def init_var(self):
@@ -131,11 +136,6 @@ cdef class parser:
         self.entropy_dst_ips = []
         self.tcp_syn_counts = []
         self.tcp_fin_counts = []
-        # cdef float
-        self.delta_t = 0
-        self.current_time = 0
-        self.previous_time = 0
-        self.start_time = 0
         # cdef unsigned long long int
         self.max_packets = 0
         self.packet_count = 0
@@ -148,6 +148,10 @@ cdef class parser:
         self.tcp_syn_count = 0
         self.tcp_fin_count = 0
         # cdef
+        self.delta_t = 0
+        self.current_time = 0
+        self.previous_time = 0
+        self.start_time = 0
         self.iat = 0
         self.sum_iat = 0
         # defaultdict
@@ -177,16 +181,6 @@ cdef class parser:
         self.packet_count = 0
         tmp_size = 0
         for packet in packets:
-            # Break if the maximum packet count is reached
-            if (self.packet_count >= self.max_packets) and (self.max_packets != 0):
-                print("\nReached maximum packet count")
-                break
-            self.packet_count += 1
-
-            # Print progress
-            tmp_size += len((packet.summary()).encode('utf-8'))
-            print("File: {0}/{1} - Progress: {2:.4f}% - Packet Count: {3}".format(index+1, fcnt, (tmp_size/full_size)*100, self.packet_count), end="\r")
-
             # Initialize the start time to the timestamp of the first packet
             if (self.packet_count==0):
                 self.current_time = packet.time
@@ -195,16 +189,26 @@ cdef class parser:
             else:
                 self.previous_time= self.current_time
                 self.current_time = packet.time
+            self.packet_count += 1
 
-            # Existed Flow
+            # Break if the maximum packet count is reached
+            if (self.packet_count >= self.max_packets) and (self.max_packets != 0):
+                print("\nReached maximum packet count")
+                break
+
+            # Print progress
+            tmp_size += len((packet.summary()).encode('utf-8'))
+            print("File: {0}/{1} - Progress: {2:.4f}% (size) - Packet Count: {3}".format(index+1, fcnt, (tmp_size/full_size)*100, self.packet_count), end="\r")
+
+            # Is Valid Packet
             if IP in packet:
                 self.ip_packet_count += 1
                 self.ip_count_src[packet[IP].src] += 1
                 self.ip_count_dst[packet[IP].dst] += 1
                 self.iat = self.current_time - self.previous_time
                 self.iat_delta_t.append(float(self.iat))
-                self.sum_iat = self.sum_iat + self.iat
-                self.sum_packet_length = self.sum_packet_length + packet[IP].len
+                self.sum_iat += self.iat
+                self.sum_packet_length += packet[IP].len
                 if packet[IP].proto == 1:
                     self.icmp_count += 1
                 elif packet[IP].proto == 6:
@@ -254,6 +258,30 @@ cdef class parser:
                 self.tcp_syn_counts.append(self.tcp_syn_count)
                 self.tcp_fin_counts.append(self.tcp_fin_count)
                 self.reset_var()
+                #self.print_critical()
+
+    # Print critical data
+    def print_critical(self):
+        print(f"self.packet_count: {self.packet_count}")
+        print(f"self.timestamp: {self.timestamps}")
+        print(f"self.ip_packet_counts: {self.ip_packet_counts}")
+        print(f"self.ip_distinct_src_counts: {self.ip_distinct_src_counts}")
+        print(f"self.ip_distinct_dst_counts: {self.ip_distinct_dst_counts}")
+        print(f"self.f2_src_ips: {self.f2_src_ips}")
+        print(f"self.f2_dst_ips: {self.f2_dst_ips}")
+        print(f"self.average_iats: {self.average_iats}")
+        print(f"self.iat_delta_t_skews: {self.iat_delta_t_skews}")
+        print(f"self.iat_delta_t_kurts: {self.iat_delta_t_kurts}")
+        print(f"self.entropy_src_ips: {self.entropy_src_ips}")
+        print(f"self.entropy_dst_ips: {self.entropy_dst_ips}")
+        print(f"self.average_packet_lengths: {self.average_packet_lengths}")
+        print(f"self.icmp_percentages: {self.icmp_percentages}")
+        print(f"self.tcp_percentages: {self.tcp_percentages}")
+        print(f"self.udp_percentages: {self.udp_percentages}")
+        print(f"self.tcp_syn_counts: {self.tcp_syn_counts}")
+        print(f"self.tcp_fin_counts: {self.tcp_fin_counts}")
+        print()
+
 
     # Write class mem to file
     def write(self, index):
@@ -394,8 +422,8 @@ cdef class parser:
 
 data = {
     "data_directory": "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/",
-    "delta_t": 10.0,
-    "max_packets": 100000,
+    "delta_t": 10,
+    "max_packets": 1500000,
 }
 p = parser(data)
 p.exec()
