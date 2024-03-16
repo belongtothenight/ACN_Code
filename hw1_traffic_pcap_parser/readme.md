@@ -6,7 +6,7 @@ Focuses on improving the performance of the original code by Cython.
 
 ## Time
 
-Original code run in jupyter notebook: ~400 minutes
+Original code run in jupyter notebook: ~400 minutes for pcap parsing not including any other processing
 
 ## Run
 
