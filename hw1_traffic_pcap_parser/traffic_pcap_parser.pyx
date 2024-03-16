@@ -1,3 +1,6 @@
+# To utilize all CPU cores to process, modify following code by
+# 1. Use multiprocessing from example code in parser.exec to parallelize parser class execution (outside of the class)
+
 from scapy.all import IP, TCP, PcapReader
 from collections import defaultdict
 from scipy.stats import skew, kurtosis
@@ -47,7 +50,6 @@ def raw_entropy(data):
     return entropy_raw
 
 cdef class parser:
-    cdef list pcap_fp
     cdef list iat_delta_t
     cdef list iat_floats
     cdef list iat_delta_t_stds
@@ -68,6 +70,7 @@ cdef class parser:
     cdef list entropy_dst_ips
     cdef list tcp_syn_counts
     cdef list tcp_fin_counts
+    cdef unsigned long long int n_delta_t
     cdef unsigned long long int max_packets
     cdef unsigned long long int packet_count
     cdef unsigned long long int ip_packet_count
@@ -78,6 +81,7 @@ cdef class parser:
     cdef unsigned long long int udp_count
     cdef unsigned long long int tcp_syn_count
     cdef unsigned long long int tcp_fin_count
+    cdef pcap_fp
     cdef delta_t
     cdef current_time
     cdef previous_time
@@ -90,27 +94,20 @@ cdef class parser:
     # Check input arguments
     def __init__(self, data) -> None:
         self.init_var()
-
-        if not os.path.isdir(data["data_directory"]):
-            raise ValueError("Invalid data_directory: " + data["data_directory"])
+        if not os.path.isfile(data["data_fp"]):
+            raise ValueError("Invalid data filepath: " + data["data_fp"])
         if not (type(data["delta_t"]) == float or type(data["delta_t"]) == int or data["delta_t"] > 0):
             raise ValueError("Invalid delta_t: " + str(data["delta_t"]))
-        for dirpath, dirnames, filenames in os.walk(data["data_directory"]):
-            if len(filenames) == 0:
-                raise ValueError("No pcap files found in data_directory: " + data["data_directory"])
-            for filename in filenames:
-                if ".pcap" in filename:
-                    self.pcap_fp.append(os.path.join(dirpath, filename))
-        if len(self.pcap_fp) == 0:
-            raise ValueError("No pcap files found in data_directory: " + data["data_directory"])
-        print("Found " + str(len(self.pcap_fp)) + " pcap files")
+        self.pcap_fp = data["data_fp"]
         self.delta_t = data["delta_t"]
         self.max_packets = data["max_packets"]
+        self.n_delta_t = data["n_delta_t"]
         print()
         print(f">> self.pcap_fp:     {self.pcap_fp}")
         print(f">> self.delta_t:     {self.delta_t}")
         print(f">> self.max_packets: {self.max_packets}")
-        print()
+        print(f">> self.n_delta_t:   {self.n_delta_t}")
+        print("=============================================")
 
     # Initialize data structures
     def init_var(self):
@@ -174,10 +171,10 @@ cdef class parser:
 
     # Load data into memory and parse it (linear process, can't be parallelized)
     cdef unsigned long long int tmp_size
-    def load_parse(self, index, fcnt):
-        print("Loading and parsing pcap file: " + self.pcap_fp[index])
-        packets = PcapReader(self.pcap_fp[index])
-        full_size = os.path.getsize(self.pcap_fp[index])
+    def load_parse(self):
+        print(">> Loading and parsing pcap file:\t" + self.pcap_fp)
+        packets = PcapReader(self.pcap_fp)
+        full_size = os.path.getsize(self.pcap_fp)
         self.packet_count = 0
         tmp_size = 0
         for packet in packets:
@@ -192,13 +189,14 @@ cdef class parser:
             self.packet_count += 1
 
             # Break if the maximum packet count is reached
-            if (self.packet_count >= self.max_packets) and (self.max_packets != 0):
-                print("\nReached maximum packet count")
-                break
+            if self.max_packets != 0:
+                if self.packet_count > self.max_packets:
+                    print("\n>> Reached maximum packet count")
+                    break
 
             # Print progress
             tmp_size += len((packet.summary()).encode('utf-8'))
-            print("File: {0}/{1} - Progress: {2:.4f}% (size) - Packet Count: {3}".format(index+1, fcnt, (tmp_size/full_size)*100, self.packet_count), end="\r")
+            print("Progress: {0:.4f}% (size) - Packet Count: {1}".format((tmp_size/full_size)*100, self.packet_count), end="\r")
 
             # Is Valid Packet
             if IP in packet:
@@ -213,12 +211,13 @@ cdef class parser:
                     self.icmp_count += 1
                 elif packet[IP].proto == 6:
                     self.tcp_count += 1
+                elif packet[IP].proto == 17:
+                    self.udp_count += 1
+                if TCP in packet:
                     if packet[TCP].flags & 0x02:
                         self.tcp_syn_count += 1
                     if packet[TCP].flags & 0x01:
                         self.tcp_fin_count += 1
-                elif packet[IP].proto == 17:
-                    self.udp_count += 1
                 self.previous_time = self.current_time
 
             # Calculate the time window data
@@ -259,11 +258,15 @@ cdef class parser:
                 self.tcp_fin_counts.append(self.tcp_fin_count)
                 self.reset_var()
                 #self.print_critical()
+                if self.n_delta_t != 0:
+                    if len(self.timestamps) >= self.n_delta_t:
+                        print("\n>> Reached maximum delta_t count")
+                        break
 
     # Print critical data
     def print_critical(self):
         print(f"self.packet_count: {self.packet_count}")
-        print(f"self.timestamp: {self.timestamps}")
+        print(f"self.timestamps: {self.timestamps}")
         print(f"self.ip_packet_counts: {self.ip_packet_counts}")
         print(f"self.ip_distinct_src_counts: {self.ip_distinct_src_counts}")
         print(f"self.ip_distinct_dst_counts: {self.ip_distinct_dst_counts}")
@@ -284,7 +287,7 @@ cdef class parser:
 
 
     # Write class mem to file
-    def write(self, index):
+    def write(self):
         # Tuple Variables to be written
         data = (self.pcap_fp,
                 self.iat_delta_t,
@@ -323,14 +326,16 @@ cdef class parser:
                 self.iat,
                 self.sum_iat)
         # Write to file
-        filename = os.path.dirname(self.pcap_fp[index])+ "/" + os.path.basename(self.pcap_fp[index]).split(".")[0] + ".pickle"
+        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
+        if os.path.exists(filename):
+            os.remove(filename)
         with open(filename, 'wb') as f:
             pickle.dump(data, f)
-        print("Data written to file: " + filename)
+        print(">> Data written to file:         \t" + filename)
 
     # Read class mem from file
-    def read(self, index):
-        filename = os.path.dirname(self.pcap_fp[index])+ "/" + os.path.basename(self.pcap_fp[index]).split(".")[0] + ".pickle"
+    def read(self):
+        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         with open(filename, 'rb') as f:
             data = pickle.load(f)
         # Tuple Variables to be read
@@ -370,11 +375,13 @@ cdef class parser:
          self.tcp_fin_count,
          self.iat,
          self.sum_iat) = data
-        print("Data read from file: " + filename)
+        print(">> Data read from file:          \t" + filename)
 
     # Write critical data to file
-    def write_critical(self, index):
-        filename = os.path.dirname(self.pcap_fp[index])+ "/" + os.path.basename(self.pcap_fp[index]).split(".")[0] + "_critical.txt"
+    def write_critical(self):
+        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + "_critical.txt"
+        if os.path.exists(filename):
+            os.remove(filename)
         with open(filename, 'w') as f:
             for item1, item2,item3, item4,item5, item6,item7, item8,item9, item10,item11,item12, item13,item14,item15,item16,item17 in zip(
                 self.timestamps,
@@ -395,11 +402,15 @@ cdef class parser:
                 self.tcp_syn_counts,
                 self.tcp_fin_counts):
                 f.write(f"{item1}\t{item2}\t{item3}\t{item4}\t{item5}\t{item6}\t{item7}\t{item8}\t{item8}\t{item9}\t{item10}\t{item11}\t{item12}\t{item13}\t{item14}\t{item15}\t{item16}\t{item17}\n")
-        print("Critical data written to file: " + filename)
+        print(">> Critical data written to file:\t" + filename)
+
+    # Plot data
+    def plot(self):
+        print("Plotting data")
 
     # (multi-processing is difficult for concurrent data access)
     def exec(self):
-        total_tasks = len(self.pcap_fp)
+        #total_tasks = len(self.pcap_fp)
         #if total_tasks < os.cpu_count():
         #    tasks = total_tasks
         #else:
@@ -408,23 +419,29 @@ cdef class parser:
         #    pool.map(self.load_parse, range(total_tasks))
         #pool.close()
         #pool.join()
-        for i in range(total_tasks):
-            init_time = time.time()
-            self.load_parse(i, total_tasks)
-            print("Time taken for file {0}/{1}: {2:.4f} seconds".format(i+1, total_tasks, time.time()-init_time))
-            self.write_critical(i)
-            self.write(i)
-            self.read(i)
-
-    # Plot data
-    def plot(self):
-        print("Plotting data")
+        init_time = time.time()
+        self.load_parse()
+        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-init_time))
+        self.write_critical()
+        self.write()
+        self.read()
+        print(">> Execution complete\n")
 
 data = {
-    "data_directory": "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/",
+    "data_fp": "",
     "delta_t": 10,
-    "max_packets": 1500000,
+    "max_packets": 0, # Extract first x packets # 0: Off
+    "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
 }
-p = parser(data)
-p.exec()
-p.plot()
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301261400.pcap.gz"
+p1 = parser(data)
+p1.exec()
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz"
+p2 = parser(data)
+p2.exec()
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+p3 = parser(data)
+p3.exec()
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
+p4 = parser(data)
+p4.exec()
