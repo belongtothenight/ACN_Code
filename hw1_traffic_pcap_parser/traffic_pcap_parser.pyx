@@ -10,18 +10,6 @@ import math
 import os
 import multiprocessing
 
-"""
-TIME
-Original code run in jupyter notebook: ~400 minutes
-"""
-
-"""
-COMPILE
-C:\Python312\python.exe -m pip install cython setuptools
-cp traffic_pcap_parser.pyx traffic_pcap_parser.py; C:\Python312\python.exe traffic_pcap_parser.py; rm traffic_pcap_parser.py
-C:\Python312\python.exe .\setup.py build_ext --inplace; C:\Python312\python.exe .\execute.py
-"""
-
 class parser:
     # Check input arguments
     def __init__(self, data) -> None:
