@@ -11,3 +11,5 @@ C:\Python312\python.exe .\execute.py
 
 rm execute.py
 rm setup.py
+rm *.pyd
+rm *.c

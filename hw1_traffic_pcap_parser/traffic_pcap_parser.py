@@ -10,6 +10,34 @@ import math
 import os
 import multiprocessing
 
+# The input is the list of frequency count
+def norm_entropy(freq_counts):
+    total_count = sum( freq_counts)
+    probabilities = [count / total_count for count in freq_counts]
+    entropy = 0
+    for prob in probabilities:
+        if prob > 0:
+            entropy -= prob * math.log(prob, 2)
+    #normalize the entropy
+    distinct_count=len(freq_counts)
+    #just in case only one distinct count
+    if (distinct_count<=1):
+        entropy_norm=0
+    else:
+        entropy_norm=entropy/math.log(distinct_count, 2)
+    return entropy_norm
+# the list of data contain the original elements    
+def raw_entropy(data):
+    """Compute the entropy of a list of integers"""
+    if not data:
+        return 0
+    counts = {}
+    for value in data:
+        counts[value] = counts.get(value, 0) + 1
+    probs = [float(c) / len(data) for c in counts.values()]
+    entropy_raw=-sum(p * math.log(p, 2) for p in probs)
+    return entropy_raw
+
 class parser:
     # Check input arguments
     def __init__(self, data) -> None:
@@ -30,54 +58,54 @@ class parser:
         print("Found " + str(len(self.pcap_fp)) + " pcap files")
         self.delta_t = data["delta_t"]
         self.max_packets = data["max_packets"]
-        self.common = {
-                "packet_cnt": 0,
-                "ip_packet_cnt": 0,
-                "ip_cnt_src": defaultdict(int),
-                "ip_cnt_dst": defaultdict(int),
-                "ip_packet_cnts": [], #?? Dup?
-                "average_IATs": [],
-                "IAT_list_delta_t": [],
-                "IAT_list_delta_t_std": [],
-                "IAT_list_delta_t_skew": [],
-                "IAT_list_delta_t_kurtosise": [],
-                "sum_IAT": 0,
-                }
-        self.entropy = {
-                "freq_cnt_src": [],
-                "freq_cnt_dst": [],
-                "ip_cnt_distinct_src": [],
-                "ip_cnt_distinct_dst": [],
-                "f2_src_ip": [],
-                "f2_dst_ip": [],
-                "timestamp": [],
-                "src_ip": [], #entropys_srcIP
-                "dst_ip": [], #entropys_destIP
-                }
-        self.ip_length = {
-                "average_packet_length": [],
-                "sum_packet_length": 0,
-                }
-        self.protocol = {
-                "ICMP_percentage": [],
-                "TCP_percentage": [],
-                "UDP_percentage": [],
-                "ICMP_cnt": 0,
-                "TCP_cnt": 0,
-                "UDP_cnt": 0,
-                }
-        self.tcp = {
-                "syn_cnt": 0,
-                "fin_cnt": 0,
-                "syn_cnt_list": [],
-                "fin_cnt_list": [],
-                }
-        self.time = {
-                "current_time": 0,
-                "previous_time": 0,
-                "start_time": 0,
-                }
+        ##########
+        # Create a dictionary to count packets and distinct IP addresses
+        ##########
+        self.packet_count = 0
+        self.ip_packet_count =0
+        self.ip_count_src = []
+        self.ip_count_dest = []
+        self.ip_packet_counts = []
+        self.average_IATs=[]
+        self.IAT_list_deltaT=[]
+        self.IAT_list_deltaT_stds=[]
+        self.IAT_list_deltaT_skews=[]
+        self.IAT_list_deltaT_kurts=[]
+        self.sum_iat=0
+        self.ip_count_src = defaultdict(int)
+        self.ip_count_dest = defaultdict(int)
+        
+        #for entropy
+        self.freq_count_src=[]
+        self.freq_count_dest=[]
+        self.ip_counts_distinct_src = []
+        self.ip_counts_distinct_dest = []
+        self.F2_srcIPs= []
+        self.F2_destIPs= []
+        self.time_stamps = []
 
+        #IPLength
+        self.average_packet_lengths = []
+        self.sum_pkt_length=0
+        
+        #Protocols
+        self.ICMP_percentages=[]
+        self.TCP_percentages=[]
+        self.UDP_percentages=[]
+        self.icmp_count=0
+        self.tcp_count=0
+        self.udp_count=0
+
+        # Initialize TCP syn fin counters
+        self.syn_count = 0
+        self.fin_count = 0
+        self.syn_counts = []
+        self.fin_counts = []
+        self.entropys_srcIP=[]
+        self.entropys_destIP=[]
+        self.current_time = 0
+        self.previous_time= 0
+        self.start_time = 0
 
     # Load data into memory and parse it (linear process, can't be parallelized)
     def load_parse(self, index, fcnt):
@@ -87,20 +115,22 @@ class parser:
         tmp_size = 0
         pkt_cnt = 0
         for packet in packets:
-            if (pkt_cnt >= self.max_packets):
+            if (pkt_cnt >= self.max_packets) and (self.max_packets != 0):
+                print("\nReached maximum packet count")
                 break
             tmp_size += len((packet.summary()).encode('utf-8'))
             pkt_cnt += 1
             print("File: {0}/{1} - Progress: {2:.4f}% - Packet Count: {3}".format(index+1, fcnt, (tmp_size/full_size)*100, pkt_cnt), end="\r")
-            if (self.common["packet_cnt"] == 0):
-                # Initialize time
-                self.time["current_time"] = packet.time
-                self.time["previous_time"] = packet.time
-                self.time["start_time"] = packet.time
+            if (self.packet_count==0):
+                # Initialize the start time to the timestamp of the first packet
+                # Get the first packet in the pcap file
+                self.current_time = packet.time
+                self.previous_time= packet.time
+                self.start_time = packet.time
             else:
-                self.time["previous_time"] = self.time["current_time"]
-                self.time["current_time"] = packet.time
-            self.common["packet_cnt"] += 1
+                self.previous_time= self.current_time
+                self.current_time = packet.time
+            self.packet_count += 1
 
     # (multi-processing is difficult for concurrent data access)
     def exec(self):
