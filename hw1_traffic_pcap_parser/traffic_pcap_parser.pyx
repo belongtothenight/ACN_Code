@@ -90,8 +90,8 @@ cdef class parser:
     cdef start_time
     cdef iat
     cdef sum_iat
-    ip_count_src = defaultdict(int)
-    ip_count_dst = defaultdict(int)
+    cdef ip_count_src
+    cdef ip_count_dst
 
     # Check input arguments
     def __init__(self, data) -> None:
@@ -159,7 +159,6 @@ cdef class parser:
         self.start_time = 0
         self.iat = 0
         self.sum_iat = 0
-        # defaultdict
         self.ip_count_src = defaultdict(int)
         self.ip_count_dst = defaultdict(int)
 
@@ -280,7 +279,7 @@ cdef class parser:
                 self.tcp_syn_counts.append(self.tcp_syn_count)
                 self.tcp_fin_counts.append(self.tcp_fin_count)
                 if self.progress_display_mode == 1:
-                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, timeit.default_timer() - init_time), end="\r")
+                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, timeit.default_timer() - self.init_time), end="\r")
                 #self.print_critical()
                 self.reset_var()
                 if self.n_delta_t != 0:
@@ -444,16 +443,16 @@ cdef class parser:
         #    pool.map(self.load_parse, range(total_tasks))
         #pool.close()
         #pool.join()
-        init_time = time.time()
+        self.init_time = time.time()
         self.load_parse()
-        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-init_time))
+        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time))
         self.write_critical()
         self.write()
         self.read()
         print(">> Execution complete\n")
 
 data = {
-        "read_mode": 1, # 0: Read from drive, 1: Load into memory (make sure you have enough memory)
+        "read_mode": 0, # 0: Read from drive, 1: Load into memory (make sure you have enough memory)
         "data_fp": "",
         "delta_t": 10,
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t

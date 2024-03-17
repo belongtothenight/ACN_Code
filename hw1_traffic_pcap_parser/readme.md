@@ -12,8 +12,8 @@ Original code run in jupyter notebook: ~400 minutes for pcap parsing not includi
 Following code only perform original pcap parsing.
 Original code in jupyter notebook: ~400 min (202301301400)
 Original code in python native ([./traffic_pcap_parser.py](./traffic_pcap_parser.py)): ~387 min (202301261400)
-Re-write code in python native ([./traffic_pcap_parser_re.py](./traffic_pcap_parser_re.py)): testing
 Re-write code in cython ([./traffic_pcap_parser.pyx](./traffic_pcap_parser.pyx)): testing
+Re-write code in python native (auto-generated from cython version): testing
 ```
 
 ## Run

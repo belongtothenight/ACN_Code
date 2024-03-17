@@ -16,6 +16,7 @@ import pickle
 
 # The input is the list of frequency count
 def norm_entropy(freq_counts):
+
     total_count = sum( freq_counts)
     probabilities = [count / total_count for count in freq_counts]
     entropy = 0
@@ -44,6 +45,7 @@ def raw_entropy(data):
     return entropy_raw
 
 class parser:
+
     # Check input arguments
     def __init__(self, data) -> None:
         self.init_var()
@@ -68,7 +70,6 @@ class parser:
 
     # Initialize data structures
     def init_var(self):
-        # list
         self.pcap_fp = []
         self.iat_delta_t = []
         self.iat_floats = []
@@ -90,7 +91,6 @@ class parser:
         self.entropy_dst_ips = []
         self.tcp_syn_counts = []
         self.tcp_fin_counts = []
-        # int
         self.read_mode = 1
         self.progress_display_mode = 1
         self.max_packets = 0
@@ -103,14 +103,12 @@ class parser:
         self.udp_count = 0
         self.tcp_syn_count = 0
         self.tcp_fin_count = 0
-        # 
         self.delta_t = 0
         self.current_time = 0
         self.previous_time = 0
         self.start_time = 0
         self.iat = 0
         self.sum_iat = 0
-        # defaultdict
         self.ip_count_src = defaultdict(int)
         self.ip_count_dst = defaultdict(int)
 
@@ -230,7 +228,7 @@ class parser:
                 self.tcp_syn_counts.append(self.tcp_syn_count)
                 self.tcp_fin_counts.append(self.tcp_fin_count)
                 if self.progress_display_mode == 1:
-                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, timeit.default_timer() - init_time), end="\r")
+                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, timeit.default_timer() - self.init_time), end="\r")
                 #self.print_critical()
                 self.reset_var()
                 if self.n_delta_t != 0:
@@ -394,9 +392,9 @@ class parser:
         #    pool.map(self.load_parse, range(total_tasks))
         #pool.close()
         #pool.join()
-        init_time = time.time()
+        self.init_time = time.time()
         self.load_parse()
-        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-init_time))
+        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time))
         self.write_critical()
         self.write()
         self.read()
