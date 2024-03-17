@@ -8,10 +8,19 @@ Focuses on improving the performance of the original code by Cython.
 
 Original code run in jupyter notebook: ~400 minutes for pcap parsing not including any other processing
 
+```
+Following code only perform original pcap parsing.
+Original code in jupyter notebook: ~400 min (202301301400)
+Original code in python native ([./traffic_pcap_parser.py](./traffic_pcap_parser.py)): ~387 min (202301261400)
+Re-write code in python native ([./traffic_pcap_parser_re.py](./traffic_pcap_parser_re.py)): testing
+Re-write code in cython ([./traffic_pcap_parser.pyx](./traffic_pcap_parser.pyx)): testing
+```
+
 ## Run
 
-native_run.ps1: Run the code with native python (for making sure cython helps, not actively developed)
-cython_run.ps1: Run the code compiled with cython
+native_run.ps1: Run the code with native python (port from original code)
+cython_run.ps1: Run the code compiled with cython (develop focused)
+native_re_run.ps1: Run the re-write code with native python (port from cython code)
 
 ## Data
 

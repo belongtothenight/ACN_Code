@@ -16,12 +16,6 @@ import pickle
 
 # The input is the list of frequency count
 def norm_entropy(freq_counts):
-    cdef float entropy
-    cdef float entropy_norm
-    cdef float total_count
-    cdef float prob
-    cdef int distinct_count
-
     total_count = sum( freq_counts)
     probabilities = [count / total_count for count in freq_counts]
     entropy = 0
@@ -49,50 +43,7 @@ def raw_entropy(data):
     entropy_raw=-sum(p * math.log(p, 2) for p in probs)
     return entropy_raw
 
-cdef class parser:
-    cdef list iat_delta_t
-    cdef list iat_floats
-    cdef list iat_delta_t_stds
-    cdef list iat_delta_t_skews
-    cdef list iat_delta_t_kurts
-    cdef list ip_packet_counts
-    cdef list ip_distinct_src_counts
-    cdef list ip_distinct_dst_counts
-    cdef list timestamps
-    cdef list average_packet_lengths
-    cdef list icmp_percentages
-    cdef list tcp_percentages
-    cdef list udp_percentages
-    cdef list average_iats
-    cdef list f2_src_ips
-    cdef list f2_dst_ips
-    cdef list entropy_src_ips
-    cdef list entropy_dst_ips
-    cdef list tcp_syn_counts
-    cdef list tcp_fin_counts
-    cdef unsigned long long int read_mode
-    cdef unsigned long long int progress_display_mode
-    cdef unsigned long long int n_delta_t
-    cdef unsigned long long int max_packets
-    cdef unsigned long long int packet_count
-    cdef unsigned long long int ip_packet_count
-    cdef unsigned long long int packet_length
-    cdef unsigned long long int sum_packet_length
-    cdef unsigned long long int icmp_count
-    cdef unsigned long long int tcp_count
-    cdef unsigned long long int udp_count
-    cdef unsigned long long int tcp_syn_count
-    cdef unsigned long long int tcp_fin_count
-    cdef pcap_fp
-    cdef delta_t
-    cdef current_time
-    cdef previous_time
-    cdef start_time
-    cdef iat
-    cdef sum_iat
-    ip_count_src = defaultdict(int)
-    ip_count_dst = defaultdict(int)
-
+class parser:
     # Check input arguments
     def __init__(self, data) -> None:
         self.init_var()
@@ -117,7 +68,7 @@ cdef class parser:
 
     # Initialize data structures
     def init_var(self):
-        # cdef list
+        # list
         self.pcap_fp = []
         self.iat_delta_t = []
         self.iat_floats = []
@@ -139,7 +90,7 @@ cdef class parser:
         self.entropy_dst_ips = []
         self.tcp_syn_counts = []
         self.tcp_fin_counts = []
-        # cdef unsigned long long int
+        # int
         self.read_mode = 1
         self.progress_display_mode = 1
         self.max_packets = 0
@@ -152,7 +103,7 @@ cdef class parser:
         self.udp_count = 0
         self.tcp_syn_count = 0
         self.tcp_fin_count = 0
-        # cdef
+        # 
         self.delta_t = 0
         self.current_time = 0
         self.previous_time = 0
@@ -178,7 +129,6 @@ cdef class parser:
         self.iat_delta_t = []
 
     # Load data into memory and parse it (linear process, can't be parallelized)
-    cdef unsigned long long int tmp_size
     def load_parse(self):
         print(">> Loading and parsing pcap file:\t" + self.pcap_fp)
         if self.read_mode == 0:
@@ -453,7 +403,7 @@ cdef class parser:
         print(">> Execution complete\n")
 
 data = {
-        "read_mode": 1, # 0: Read from drive, 1: Load into memory (make sure you have enough memory)
+        "read_mode": 0, # 0: Read from drive, 1: Load into memory (make sure you have enough memory)
         "data_fp": "",
         "delta_t": 10,
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
