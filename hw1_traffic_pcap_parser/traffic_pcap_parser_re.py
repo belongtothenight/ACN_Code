@@ -230,7 +230,7 @@ class parser:
                 self.tcp_syn_counts.append(self.tcp_syn_count)
                 self.tcp_fin_counts.append(self.tcp_fin_count)
                 if self.progress_display_mode == 1:
-                    print("Progress: {0:.4f} seconds - Packet Count: {1}".format(len(self.timestamps)*self.delta_t, self.packet_count), end="\r")
+                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, timeit.default_timer() - init_time), end="\r")
                 #self.print_critical()
                 self.reset_var()
                 if self.n_delta_t != 0:
