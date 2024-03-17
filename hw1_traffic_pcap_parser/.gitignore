@@ -5,4 +5,4 @@ data/
 *.pyd
 execute.py
 setup.py
-*_re.py*
+*re.py*
