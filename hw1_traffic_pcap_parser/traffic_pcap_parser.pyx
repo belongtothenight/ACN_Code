@@ -1,7 +1,16 @@
 # To utilize all CPU cores to process, modify following code by
-# 1. Use multiprocessing from example code in parser.exec to parallelize parser class execution (outside of the class)
+# 1. Use multiprocessing from example code below to parallelize parser class execution (outside of the class)
+        #total_tasks = len(self.pcap_fp)
+        #if total_tasks < os.cpu_count():
+        #    tasks = total_tasks
+        #else:
+        #    tasks = os.cpu_count()
+        #with multiprocessing.Pool(tasks) as pool:
+        #    pool.map(self.load_parse, range(total_tasks))
+        #pool.close()
+        #pool.join()
 
-from scapy.all import IP, TCP, PcapReader, rdpcap
+from scapy.all import IP, TCP, UDP, PcapReader, rdpcap
 from collections import defaultdict
 from scipy.stats import skew, kurtosis
 import matplotlib.pyplot as plt
@@ -70,6 +79,21 @@ cdef class parser:
     cdef list entropy_dst_ips
     cdef list tcp_syn_counts
     cdef list tcp_fin_counts
+    cdef list tcp_src_ports # [[t1_port1, t1_port2], [t2_port1, t2_port2], ...]]
+    cdef list tcp_dst_ports # [[t1_port1, t1_port2], [t2_port1, t2_port2], ...]]
+    cdef list udp_src_ports # [[t1_port1, t1_port2], [t2_port1, t2_port2], ...]]
+    cdef list udp_dst_ports # [[t1_port1, t1_port2], [t2_port1, t2_port2], ...]]
+    cdef list tcp_src_port_distinct
+    cdef list tcp_dst_port_distinct
+    cdef list udp_src_port_distinct
+    cdef list udp_dst_port_distinct
+    cdef unsigned long long int tcp_src_port_cnt # Total count of TCP source ports
+    cdef unsigned long long int tcp_dst_port_cnt # Total count of TCP destination ports
+    cdef unsigned long long int udp_src_port_cnt # Total count of UDP source ports
+    cdef unsigned long long int udp_dst_port_cnt # Total count of UDP destination ports
+    cdef unsigned long long int int_temp
+    cdef unsigned long long int display_critical
+    cdef unsigned long long int interval_cnt
     cdef unsigned long long int read_mode
     cdef unsigned long long int progress_display_mode
     cdef unsigned long long int n_delta_t
@@ -83,6 +107,7 @@ cdef class parser:
     cdef unsigned long long int udp_count
     cdef unsigned long long int tcp_syn_count
     cdef unsigned long long int tcp_fin_count
+    cdef str_temp
     cdef pcap_fp
     cdef delta_t
     cdef current_time
@@ -101,25 +126,33 @@ cdef class parser:
             raise ValueError("Invalid data filepath: " + data["data_fp"])
         if not (type(data["delta_t"]) == float or type(data["delta_t"]) == int or data["delta_t"] > 0):
             raise ValueError("Invalid delta_t: " + str(data["delta_t"]))
-        self.read_mode = data["read_mode"]
         self.pcap_fp = data["data_fp"]
         self.delta_t = data["delta_t"]
+        self.read_mode = data["read_mode"]
         self.progress_display_mode = data["progress_display_mode"]
+        self.display_critical = data["display_critical"]
         self.max_packets = data["max_packets"]
         self.n_delta_t = data["n_delta_t"]
         print()
-        print(f">> self.read_mode:              {self.read_mode}")
-        print(f">> self.pcap_fp:                {self.pcap_fp}")
-        print(f">> self.delta_t:                {self.delta_t}")
-        print(f">> self.progress_display_mode:  {self.progress_display_mode}")
-        print(f">> self.max_packets:            {self.max_packets}")
-        print(f">> self.n_delta_t:              {self.n_delta_t}")
+        self.str_temp = ">> self.pcap_fp:                {}"
+        print(self.str_temp.format(self.pcap_fp))
+        self.str_temp = ">> self.delta_t:                {}"
+        print(self.str_temp.format(self.delta_t))
+        self.str_temp = ">> self.read_mode:              {}"
+        print(self.str_temp.format("Packet stream" if self.read_mode == 0 else "Load into memory"))
+        self.str_temp = ">> self.progress_display_mode:  {}"
+        print(self.str_temp.format("By packet (more resource)" if self.progress_display_mode == 0 else "By interval/delta_t (less resource)"))
+        self.str_temp = ">> self.display_critical:       {}"
+        print(self.str_temp.format("On" if self.display_critical == 1 else "Off"))
+        self.str_temp = ">> self.max_packets:            {}"
+        print(self.str_temp.format("No limit" if self.max_packets == 0 else self.max_packets))
+        self.str_temp = ">> self.n_delta_t:              {}"
+        print(self.str_temp.format("No limit" if self.n_delta_t == 0 else self.n_delta_t))
         print("=============================================")
 
     # Initialize data structures
     def init_var(self):
         # cdef list
-        self.pcap_fp = []
         self.iat_delta_t = []
         self.iat_floats = []
         self.iat_delta_t_stds = []
@@ -140,9 +173,25 @@ cdef class parser:
         self.entropy_dst_ips = []
         self.tcp_syn_counts = []
         self.tcp_fin_counts = []
+        self.tcp_src_ports = [[]]
+        self.tcp_dst_ports = [[]]
+        self.udp_src_ports = [[]]
+        self.udp_dst_ports = [[]]
+        self.tcp_src_port_distinct = []
+        self.tcp_dst_port_distinct = []
+        self.udp_src_port_distinct = []
+        self.udp_dst_port_distinct = []
         # cdef unsigned long long int
+        self.tcp_src_port_cnt = 0
+        self.tcp_dst_port_cnt = 0
+        self.udp_src_port_cnt = 0
+        self.udp_dst_port_cnt = 0
+        self.int_temp = 0
+        self.display_critical = 0
+        self.interval_cnt = 0
         self.read_mode = 1
         self.progress_display_mode = 1
+        self.n_delta_t = 0
         self.max_packets = 0
         self.packet_count = 0
         self.ip_packet_count = 0
@@ -154,6 +203,8 @@ cdef class parser:
         self.tcp_syn_count = 0
         self.tcp_fin_count = 0
         # cdef
+        self.str_temp = ""
+        self.pcap_fp = ""
         self.delta_t = 0
         self.current_time = 0
         self.previous_time = 0
@@ -162,6 +213,7 @@ cdef class parser:
         self.sum_iat = 0
         self.ip_count_src = defaultdict(int)
         self.ip_count_dst = defaultdict(int)
+        self.init_time = time.time()
 
     # Reset data structures
     def reset_var(self):
@@ -241,6 +293,19 @@ cdef class parser:
                         self.tcp_syn_count += 1
                     if packet[TCP].flags & 0x01:
                         self.tcp_fin_count += 1
+                    self.tcp_src_ports[self.interval_cnt].append(packet[TCP].sport)
+                    self.tcp_dst_ports[self.interval_cnt].append(packet[TCP].dport)
+                    if packet[TCP].sport not in self.tcp_src_port_distinct:
+                        self.tcp_src_port_distinct.append(packet[TCP].sport)
+                    if packet[TCP].dport not in self.tcp_dst_port_distinct:
+                        self.tcp_dst_port_distinct.append(packet[TCP].dport)
+                if UDP in packet:
+                    self.udp_src_ports[self.interval_cnt].append(packet[UDP].sport)
+                    self.udp_dst_ports[self.interval_cnt].append(packet[UDP].dport)
+                    if packet[UDP].sport not in self.udp_src_port_distinct:
+                        self.udp_src_port_distinct.append(packet[UDP].sport)
+                    if packet[UDP].dport not in self.udp_dst_port_distinct:
+                        self.udp_dst_port_distinct.append(packet[UDP].dport)
                 self.previous_time = self.current_time
 
             # Calculate the time window data
@@ -250,6 +315,18 @@ cdef class parser:
                 self.ip_distinct_src_counts.append(len(self.ip_count_src))
                 self.ip_distinct_dst_counts.append(len(self.ip_count_dst))
                 self.timestamps.append(self.start_time)
+                self.entropy_src_ips.append(norm_entropy(self.ip_count_src.values()))
+                self.entropy_dst_ips.append(norm_entropy(self.ip_count_dst.values()))
+                self.tcp_syn_counts.append(self.tcp_syn_count)
+                self.tcp_fin_counts.append(self.tcp_fin_count)
+                self.tcp_src_ports.append([])
+                self.tcp_dst_ports.append([])
+                self.udp_src_ports.append([])
+                self.udp_dst_ports.append([])
+                self.tcp_src_port_cnt += len(self.tcp_src_ports[self.interval_cnt])
+                self.tcp_dst_port_cnt += len(self.tcp_dst_ports[self.interval_cnt])
+                self.udp_src_port_cnt += len(self.udp_src_ports[self.interval_cnt])
+                self.udp_dst_port_cnt += len(self.udp_dst_ports[self.interval_cnt])
                 if self.ip_packet_count != 0:
                     self.average_packet_lengths.append(self.sum_packet_length/self.ip_packet_count)
                     self.icmp_percentages.append(self.icmp_count/self.ip_packet_count)
@@ -275,21 +352,20 @@ cdef class parser:
                     self.iat_delta_t_stds.append(0)
                     self.iat_delta_t_skews.append(0)
                     self.iat_delta_t_kurts.append(0)
-                self.entropy_src_ips.append(norm_entropy(self.ip_count_src.values()))
-                self.entropy_dst_ips.append(norm_entropy(self.ip_count_dst.values()))
-                self.tcp_syn_counts.append(self.tcp_syn_count)
-                self.tcp_fin_counts.append(self.tcp_fin_count)
                 if self.progress_display_mode == 1:
-                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format(len(self.timestamps)*self.delta_t, self.packet_count, time.time() - self.init_time), end="\r")
-                #self.print_critical()
+                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format((self.interval_cnt+1)*self.delta_t, self.packet_count, time.time() - self.init_time), end="\r")
+                if self.display_critical == 1:
+                    self.print_critical()
                 self.reset_var()
+                self.interval_cnt += 1
                 if self.n_delta_t != 0:
-                    if len(self.timestamps) >= self.n_delta_t:
+                    if self.interval_cnt >= self.n_delta_t:
                         print("\n>> Reached maximum delta_t count")
                         break
 
     # Print critical data
     def print_critical(self):
+        print()
         print(f"self.packet_count: {self.packet_count}")
         print(f"self.timestamps: {self.timestamps}")
         print(f"self.ip_packet_counts: {self.ip_packet_counts}")
@@ -308,98 +384,31 @@ cdef class parser:
         print(f"self.udp_percentages: {self.udp_percentages}")
         print(f"self.tcp_syn_counts: {self.tcp_syn_counts}")
         print(f"self.tcp_fin_counts: {self.tcp_fin_counts}")
+        print(f"self.tcp_src_port_cnt: {self.tcp_src_port_cnt}")
+        print(f"self.tcp_dst_port_cnt: {self.tcp_dst_port_cnt}")
+        print(f"self.udp_src_port_cnt: {self.udp_src_port_cnt}")
+        print(f"self.udp_dst_port_cnt: {self.udp_dst_port_cnt}")
+        print(f"len(self.tcp_src_port_distinct): {len(self.tcp_src_port_distinct)}")
+        print(f"len(self.tcp_dst_port_distinct): {len(self.tcp_dst_port_distinct)}")
+        print(f"len(self.udp_src_port_distinct): {len(self.udp_src_port_distinct)}")
+        print(f"len(self.udp_dst_port_distinct): {len(self.udp_dst_port_distinct)}")
         print()
 
 
     # Write class mem to file
     def write(self):
-        # Tuple Variables to be written
-        data = (self.pcap_fp,
-                self.iat_delta_t,
-                self.iat_floats,
-                self.iat_delta_t_stds,
-                self.iat_delta_t_skews,
-                self.iat_delta_t_kurts,
-                self.ip_packet_counts,
-                self.ip_distinct_src_counts,
-                self.ip_distinct_dst_counts,
-                self.timestamps,
-                self.average_packet_lengths,
-                self.icmp_percentages,
-                self.tcp_percentages,
-                self.udp_percentages,
-                self.average_iats,
-                self.f2_src_ips,
-                self.f2_dst_ips,
-                self.entropy_src_ips,
-                self.entropy_dst_ips,
-                self.tcp_syn_counts,
-                self.tcp_fin_counts,
-                self.delta_t,
-                self.current_time,
-                self.previous_time,
-                self.start_time,
-                self.max_packets,
-                self.ip_packet_count,
-                self.packet_length,
-                self.sum_packet_length,
-                self.icmp_count,
-                self.tcp_count,
-                self.udp_count,
-                self.tcp_syn_count,
-                self.tcp_fin_count,
-                self.iat,
-                self.sum_iat)
-        # Write to file
         filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'wb') as f:
-            pickle.dump(data, f)
+            pickle.dump(self.__dict__, f)
         print(">> Data written to file:         \t" + filename)
 
     # Read class mem from file
     def read(self):
         filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         with open(filename, 'rb') as f:
-            data = pickle.load(f)
-        # Tuple Variables to be read
-        (self.pcap_fp,
-         self.iat_delta_t,
-         self.iat_floats,
-         self.iat_delta_t_stds,
-         self.iat_delta_t_skews,
-         self.iat_delta_t_kurts,
-         self.ip_packet_counts,
-         self.ip_distinct_src_counts,
-         self.ip_distinct_dst_counts,
-         self.timestamps,
-         self.average_packet_lengths,
-         self.icmp_percentages,
-         self.tcp_percentages,
-         self.udp_percentages,
-         self.average_iats,
-         self.f2_src_ips,
-         self.f2_dst_ips,
-         self.entropy_src_ips,
-         self.entropy_dst_ips,
-         self.tcp_syn_counts,
-         self.tcp_fin_counts,
-         self.delta_t,
-         self.current_time,
-         self.previous_time,
-         self.start_time,
-         self.max_packets,
-         self.ip_packet_count,
-         self.packet_length,
-         self.sum_packet_length,
-         self.icmp_count,
-         self.tcp_count,
-         self.udp_count,
-         self.tcp_syn_count,
-         self.tcp_fin_count,
-         self.iat,
-         self.sum_iat) = data
+            self.__dict__.update(pickle.load(f))
         print(">> Data read from file:          \t" + filename)
 
     # Write critical data to file
@@ -408,7 +417,7 @@ cdef class parser:
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'w') as f:
-            for item1, item2,item3, item4,item5, item6,item7, item8,item9, item10,item11,item12, item13,item14,item15,item16,item17 in zip(
+            for i1, i2,i3, i4,i5, i6,i7, i8,i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21 in zip(
                 self.timestamps,
                 self.ip_packet_counts,
                 self.ip_distinct_src_counts,
@@ -425,41 +434,41 @@ cdef class parser:
                 self.tcp_percentages,
                 self.udp_percentages,
                 self.tcp_syn_counts,
-                self.tcp_fin_counts):
-                f.write(f"{item1}\t{item2}\t{item3}\t{item4}\t{item5}\t{item6}\t{item7}\t{item8}\t{item8}\t{item9}\t{item10}\t{item11}\t{item12}\t{item13}\t{item14}\t{item15}\t{item16}\t{item17}\n")
+                self.tcp_fin_counts,
+                self.tcp_src_port_cnt,
+                self.tcp_dst_port_cnt,
+                self.udp_src_port_cnt,
+                self.udp_dst_port_cnt,
+                ):
+                f.write(f"{i1}\t{i2}\t{i3}\t{i4}\t{i5}\t{i6}\t{i7}\t{i8}\t{i8}\t{i9}\t{i10}\t{i11}\t{i12}\t{i13}\t{i14}\t{i15}\t{i16}\t{i17}\t{i18}\t{i19}\t{i20}\t{i21}\n")
         print(">> Critical data written to file:\t" + filename)
 
-    # Plot data
-    def plot(self):
-        print("Plotting data")
-
-    # (multi-processing is difficult for concurrent data access)
+    # Execute multiple parsing tasks
     def exec(self):
-        #total_tasks = len(self.pcap_fp)
-        #if total_tasks < os.cpu_count():
-        #    tasks = total_tasks
-        #else:
-        #    tasks = os.cpu_count()
-        #with multiprocessing.Pool(tasks) as pool:
-        #    pool.map(self.load_parse, range(total_tasks))
-        #pool.close()
-        #pool.join()
         self.init_time = time.time()
         self.load_parse()
         print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time))
         self.write_critical()
         self.write()
-        self.read()
+        #self.read()
         print(">> Execution complete\n")
 
+    # Plot data
+    def plot(self):
+        print("Plotting data")
+
+# Input data for parser class
 data = {
-        "read_mode": 0, # 0: Read from drive, 1: Load into memory (make sure you have enough memory)
         "data_fp": "",
         "delta_t": 10,
+        "read_mode": 0, # 0: Packet stream, 1: Load into memory (make sure you have enough memory)
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
+        "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
         "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
 }
+
+# Execute parser
 data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301261400.pcap.gz"
 p1 = parser(data)
 p1.exec()
