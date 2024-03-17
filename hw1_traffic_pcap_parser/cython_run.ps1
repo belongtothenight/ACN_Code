@@ -9,7 +9,7 @@ C:\Python312\python.exe .\setup.py build_ext --inplace
 "import traffic_pcap_parser" > execute.py
 C:\Python312\python.exe .\execute.py
 
-rm execute.py
-rm setup.py
-rm *.pyd
-rm *.c
+Remove-Item execute.py
+Remove-Item setup.py
+Remove-Item *.pyd
+Remove-Item *.c

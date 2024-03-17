@@ -92,6 +92,7 @@ cdef class parser:
     cdef sum_iat
     cdef ip_count_src
     cdef ip_count_dst
+    cdef init_time
 
     # Check input arguments
     def __init__(self, data) -> None:
