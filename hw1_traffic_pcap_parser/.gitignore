@@ -2,6 +2,9 @@ __pycache__/
 build/
 data/
 plot/
+mem_dump/
+critical/
+log/
 *.c
 *.pyd
 execute.py

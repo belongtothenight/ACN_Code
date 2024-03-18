@@ -145,22 +145,22 @@ cdef class parser:
         self.display_critical = data["display_critical"]
         self.max_packets = data["max_packets"]
         self.n_delta_t = data["n_delta_t"]
-        print()
+        print("", flush=True)
         self.str_temp = ">> self.pcap_fp:                {}"
-        print(self.str_temp.format(self.pcap_fp))
+        print(self.str_temp.format(self.pcap_fp), flush=True)
         self.str_temp = ">> self.delta_t:                {}"
-        print(self.str_temp.format(self.delta_t))
+        print(self.str_temp.format(self.delta_t), flush=True)
         self.str_temp = ">> self.read_mode:              {}"
-        print(self.str_temp.format("Packet stream" if self.read_mode == 0 else "Load into memory"))
+        print(self.str_temp.format("Packet stream" if self.read_mode == 0 else "Load into memory"), flush=True)
         self.str_temp = ">> self.progress_display_mode:  {}"
-        print(self.str_temp.format("By packet (more resource)" if self.progress_display_mode == 0 else "By interval/delta_t (less resource)"))
+        print(self.str_temp.format("By packet (more resource)" if self.progress_display_mode == 0 else "By interval/delta_t (less resource)"), flush=True)
         self.str_temp = ">> self.display_critical:       {}"
-        print(self.str_temp.format("On" if self.display_critical == 1 else "Off"))
+        print(self.str_temp.format("On" if self.display_critical == 1 else "Off"), flush=True)
         self.str_temp = ">> self.max_packets:            {}"
-        print(self.str_temp.format("No limit" if self.max_packets == 0 else self.max_packets))
+        print(self.str_temp.format("No limit" if self.max_packets == 0 else self.max_packets), flush=True)
         self.str_temp = ">> self.n_delta_t:              {}"
-        print(self.str_temp.format("No limit" if self.n_delta_t == 0 else self.n_delta_t))
-        print("=============================================")
+        print(self.str_temp.format("No limit" if self.n_delta_t == 0 else self.n_delta_t), flush=True)
+        print("=============================================", flush=True)
 
     # Initialize data structures
     def init_var(self):
@@ -244,23 +244,23 @@ cdef class parser:
     # Load data into memory and parse it (linear process, can't be parallelized)
     cdef unsigned long long int tmp_size
     def load_parse(self):
-        print(">> Loading and parsing pcap file:\t" + self.pcap_fp)
+        print(">> Loading and parsing pcap file:\t" + self.pcap_fp, flush=True)
         if self.read_mode == 0:
             packets = PcapReader(self.pcap_fp)
         elif self.read_mode == 1:
-            print(">> Reading pcap file into memory, this may take a while...")
-            print(">> If error occurs, your system may not have enough memory to load the entire pcap file (require 40+ times space), try to split the pcap file into multiple ones; or set read_mode to 0 to read the pcap file by packet.")
-            print(">> Open Task Manager or other system monitor tools to check memory usage for main, cached, and swap memory usage.")
+            print(">> Reading pcap file into memory, this may take a while...", flush=True)
+            print(">> If error occurs, your system may not have enough memory to load the entire pcap file (require 40+ times space), try to split the pcap file into multiple ones; or set read_mode to 0 to read the pcap file by packet.", flush=True)
+            print(">> Open Task Manager or other system monitor tools to check memory usage for main, cached, and swap memory usage.", flush=True)
             init_time = timeit.default_timer()
             packets = rdpcap(self.pcap_fp)
-            print(">> Time to read pcap file: {0:.4f} seconds".format(timeit.default_timer() - init_time))
+            print(">> Time to read pcap file: {0:.4f} seconds".format(timeit.default_timer() - init_time), flush=True)
         else:
             raise ValueError("Invalid read_mode: " + str(self.read_mode))
         if self.progress_display_mode == 0:
             full_size = os.path.getsize(self.pcap_fp)
             tmp_size = 0
         elif self.progress_display_mode == 1:
-            print(">> Progress will only be displayed when each interval is processed, please wait ...")
+            print(">> Progress will only be displayed when each interval is processed, please wait ...", flush=True)
         else:
             raise ValueError("Invalid progress_display_mode: " + str(self.progress_display_mode))
         for packet in packets:
@@ -277,13 +277,13 @@ cdef class parser:
             # Break if the maximum packet count is reached
             if self.max_packets != 0:
                 if self.packet_count > self.max_packets:
-                    print("\n>> Reached maximum packet count")
+                    print("\n>> Reached maximum packet count", flush=True)
                     break
 
             # Print progress
             if self.progress_display_mode == 0:
                 tmp_size += len((packet.summary()).encode('utf-8'))
-                print("Progress: {0:.4f}% (size) - Packet Count: {1}".format((tmp_size/full_size)*100, self.packet_count), end="\r")
+                print("Progress: {0:.4f}% (size) - Packet Count: {1}".format((tmp_size/full_size)*100, self.packet_count), end="\r", flush=True)
 
             # Is Valid Packet
             if IP in packet:
@@ -365,64 +365,71 @@ cdef class parser:
                     self.iat_delta_t_skews.append(0)
                     self.iat_delta_t_kurts.append(0)
                 if self.progress_display_mode == 1:
-                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format((self.interval_cnt+1)*self.delta_t, self.packet_count, time.time() - self.init_time), end="\r")
+                    print("Progress: {0:.4f} seconds - Packet Count: {1} - Run Time: {2:.4f} seconds".format((self.interval_cnt+1)*self.delta_t, self.packet_count, time.time() - self.init_time), end="\r", flush=True)
                 if self.display_critical == 1:
                     self.print_critical()
                 self.reset_var()
                 self.interval_cnt += 1
                 if self.n_delta_t != 0:
                     if self.interval_cnt >= self.n_delta_t:
-                        print("\n>> Reached maximum delta_t count")
+                        print("\n>> Reached maximum delta_t count", flush=True)
                         break
 
     # Print critical data
     def print_critical(self):
-        print()
-        print(f"self.packet_count: {self.packet_count}")
-        print(f"self.timestamps: {self.timestamps}")
-        print(f"self.ip_packet_counts: {self.ip_packet_counts}")
-        print(f"self.ip_distinct_src_counts: {self.ip_distinct_src_counts}")
-        print(f"self.ip_distinct_dst_counts: {self.ip_distinct_dst_counts}")
-        print(f"self.f2_src_ips: {self.f2_src_ips}")
-        print(f"self.f2_dst_ips: {self.f2_dst_ips}")
-        print(f"self.average_iats: {self.average_iats}")
-        print(f"self.iat_delta_t_skews: {self.iat_delta_t_skews}")
-        print(f"self.iat_delta_t_kurts: {self.iat_delta_t_kurts}")
-        print(f"self.entropy_src_ips: {self.entropy_src_ips}")
-        print(f"self.entropy_dst_ips: {self.entropy_dst_ips}")
-        print(f"self.average_packet_lengths: {self.average_packet_lengths}")
-        print(f"self.icmp_percentages: {self.icmp_percentages}")
-        print(f"self.tcp_percentages: {self.tcp_percentages}")
-        print(f"self.udp_percentages: {self.udp_percentages}")
-        print(f"self.tcp_syn_counts: {self.tcp_syn_counts}")
-        print(f"self.tcp_fin_counts: {self.tcp_fin_counts}")
-        print(f"len(self.tcp_src_port_distinct): {len(self.tcp_src_port_distinct)}")
-        print(f"len(self.tcp_dst_port_distinct): {len(self.tcp_dst_port_distinct)}")
-        print(f"len(self.udp_src_port_distinct): {len(self.udp_src_port_distinct)}")
-        print(f"len(self.udp_dst_port_distinct): {len(self.udp_dst_port_distinct)}")
-        print(f"self.tcp_src_port_counts: {self.tcp_src_port_counts}")
-        print()
+        print("", flush=True)
+        print(f"self.packet_count: {self.packet_count}", flush=True)
+        print(f"self.timestamps: {self.timestamps}", flush=True)
+        print(f"self.ip_packet_counts: {self.ip_packet_counts}", flush=True)
+        print(f"self.ip_distinct_src_counts: {self.ip_distinct_src_counts}", flush=True)
+        print(f"self.ip_distinct_dst_counts: {self.ip_distinct_dst_counts}", flush=True)
+        print(f"self.f2_src_ips: {self.f2_src_ips}", flush=True)
+        print(f"self.f2_dst_ips: {self.f2_dst_ips}", flush=True)
+        print(f"self.average_iats: {self.average_iats}", flush=True)
+        print(f"self.iat_delta_t_skews: {self.iat_delta_t_skews}", flush=True)
+        print(f"self.iat_delta_t_kurts: {self.iat_delta_t_kurts}", flush=True)
+        print(f"self.entropy_src_ips: {self.entropy_src_ips}", flush=True)
+        print(f"self.entropy_dst_ips: {self.entropy_dst_ips}", flush=True)
+        print(f"self.average_packet_lengths: {self.average_packet_lengths}", flush=True)
+        print(f"self.icmp_percentages: {self.icmp_percentages}", flush=True)
+        print(f"self.tcp_percentages: {self.tcp_percentages}", flush=True)
+        print(f"self.udp_percentages: {self.udp_percentages}", flush=True)
+        print(f"self.tcp_syn_counts: {self.tcp_syn_counts}", flush=True)
+        print(f"self.tcp_fin_counts: {self.tcp_fin_counts}", flush=True)
+        print(f"len(self.tcp_src_port_distinct): {len(self.tcp_src_port_distinct)}", flush=True)
+        print(f"len(self.tcp_dst_port_distinct): {len(self.tcp_dst_port_distinct)}", flush=True)
+        print(f"len(self.udp_src_port_distinct): {len(self.udp_src_port_distinct)}", flush=True)
+        print(f"len(self.udp_dst_port_distinct): {len(self.udp_dst_port_distinct)}", flush=True)
+        print(f"self.tcp_src_port_counts: {self.tcp_src_port_counts}", flush=True)
+        print("", flush=True)
 
 
     # Write class mem to file (cython not supported)
     def write(self):
-        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
+        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/mem_dump/"
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'wb') as f:
             pickle.dump(self.__dict__, f)
-        print(">> Data written to file:         \t" + filename)
+        print(">> Data written to file:         \t" + filename, flush=True)
 
     # Read class mem from file
     def read(self):
-        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
+        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/mem_dump/"
+        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         with open(filename, 'rb') as f:
             self.__dict__.update(pickle.load(f))
-        print(">> Data read from file:          \t" + filename)
+        print(">> Data read from file:          \t" + filename, flush=True)
 
     # Write critical data to file
     def write_critical(self):
-        filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + "_critical.txt"
+        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/critical/"
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + "_critical.txt"
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'w') as f:
@@ -449,17 +456,16 @@ cdef class parser:
                 self.udp_src_port_counts,
                 self.udp_dst_port_counts):
                 f.write(f"{i1}\t{i2}\t{i3}\t{i4}\t{i5}\t{i6}\t{i7}\t{i8}\t{i8}\t{i9}\t{i10}\t{i11}\t{i12}\t{i13}\t{i14}\t{i15}\t{i16}\t{i17}\t{i18}\t{i19}\t{i20}\t{i21}\n")
-        print(">> Critical data written to file:\t" + filename)
+        print(">> Critical data written to file:\t" + filename, flush=True)
 
     # Execute multiple parsing tasks
     def exec(self):
         self.init_time = time.time()
         self.load_parse()
-        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time))
+        print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time), flush=True)
         self.write_critical()
         self.write()
-        #self.read()
-        print(">> Execution complete\n")
+        print(">> Execution complete\n", flush=True)
 
     # Plot data
     def plot(self, switch, mode=0):
@@ -467,7 +473,7 @@ cdef class parser:
         times = [datetime.fromtimestamp(float(sec)) for sec in self.timestamps]
         # [+]  Plot the packet count using matplotlib
         if switch["f1"] == 1:
-            print(">> Plotting figure 1")
+            print(">> Plotting figure 1", flush=True)
             f1 = plt.figure(1)
             plt.plot(times, self.ip_packet_counts, label='Packet Count',marker=".")
             plt.xlabel('Time (s)')
@@ -477,7 +483,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+]  Plot the source IP count using matplotlib
         if switch["f2"] == 1:
-            print(">> Plotting figure 2")
+            print(">> Plotting figure 2", flush=True)
             f2 = plt.figure(2)
             plt.plot(times, self.ip_distinct_src_counts, label='Distinct Source IP Count',marker=".")
             plt.plot(times, self.ip_distinct_dst_counts, label='Distinct Destination IP Count',marker=".")
@@ -488,7 +494,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot F2 of Src and Dest IPs
         if switch["f3"] == 1:
-            print(">> Plotting figure 3")
+            print(">> Plotting figure 3", flush=True)
             f3 = plt.figure(3)
             plt.plot(times, self.f2_src_ips, label='F2 Source IP Count',marker=".")
             plt.plot(times, self.f2_dst_ips, label='F2 Destination IP Count',marker=".")
@@ -499,7 +505,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot average IAT
         if switch["f4"] == 1:
-            print(">> Plotting figure 4")
+            print(">> Plotting figure 4", flush=True)
             f4 = plt.figure(4)
             plt.plot(times, self.average_iats, label='Average IAT',marker=".")
             plt.xlabel('Time (s)')
@@ -509,7 +515,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot Average packet length
         if switch["f5"] == 1:
-            print(">> Plotting figure 5")
+            print(">> Plotting figure 5", flush=True)
             f5 = plt.figure(5)
             plt.plot(times, self.average_packet_lengths, label='Average PKT Length',marker=".")
             plt.xlabel('Sec')
@@ -519,7 +525,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot Protocol Percentage
         if switch["f6"] == 1:
-            print(">> Plotting figure 6")
+            print(">> Plotting figure 6", flush=True)
             f6 = plt.figure(6)
             plt.plot(times, self.icmp_percentages, label='ICMP',marker=".")
             plt.plot(times, self.tcp_percentages, label='TCP',marker=".")
@@ -531,7 +537,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot Syn FIN
         if switch["f7"] == 1:
-            print(">> Plotting figure 7")
+            print(">> Plotting figure 7", flush=True)
             f7 = plt.figure(7)
             plt.plot(times, self.tcp_syn_counts, label='SYN',marker=".")
             plt.plot(times, self.tcp_fin_counts, label='FIN',marker=".")
@@ -542,16 +548,16 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot average IAT mean, stdv
         if switch["f8"] == 1:
-            print(">> Plotting figure 8")
-            #f8 = plt.figure(8)
-            #plt.errorbar(time_stamps, average_IATs, IAT_list_deltaT_stds, linestyle='None', marker='^')
-            #plt.xlabel('Time (s)')
-            #plt.ylabel('Sec')
-            #plt.title('Average IAT over Time')
-            #plt.legend()
+            print(">> Plotting figure 8", flush=True)
+            f8 = plt.figure(8)
+            plt.errorbar(time_stamps, average_IATs, IAT_list_deltaT_stds, linestyle='None', marker='^')
+            plt.xlabel('Time (s)')
+            plt.ylabel('Sec')
+            plt.title('Average IAT over Time')
+            plt.legend()
         # [+] Plot average IAT skew 
         if switch["f9"] == 1:
-            print(">> Plotting figure 9")
+            print(">> Plotting figure 9", flush=True)
             f9 = plt.figure(9)
             plt.plot(times, self.iat_delta_t_skews, label='Skew',marker=".")
             plt.xlabel('Time (s)')
@@ -561,7 +567,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot average IAT Kurt
         if switch["f10"] == 1:
-            print(">> Plotting figure 10")
+            print(">> Plotting figure 10", flush=True)
             f10 = plt.figure(10)
             plt.plot(times, self.iat_delta_t_kurts, label='Kurts',marker=".")
             plt.xlabel('Time (s)')
@@ -570,7 +576,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot Entropy
         if switch["f11"] == 1:
-            print(">> Plotting figure 11")
+            print(">> Plotting figure 11", flush=True)
             f11 = plt.figure(11)
             plt.plot(times, self.entropy_src_ips, label='Source IP',marker=".")
             plt.plot(times, self.entropy_dst_ips, label='Destnation IP',marker=".")
@@ -581,7 +587,7 @@ cdef class parser:
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
         # [+] Plot 3D x: time, y: port number, z: tcp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f12"] == 1:
-            print(">> Plotting figure 12 (takes longer time ...)")
+            print(">> Plotting figure 12 (takes longer time ...)", flush=True)
             f12 = plt.figure(12)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
@@ -602,7 +608,7 @@ cdef class parser:
             ax.set_title('3D TCP Source Port Distribution')
         # [+] Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f13"] == 1:
-            print(">> Plotting figure 13 (takes longer time ...)")
+            print(">> Plotting figure 13 (takes longer time ...)", flush=True)
             f13 = plt.figure(13)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
@@ -623,7 +629,7 @@ cdef class parser:
             ax.set_title('3D TCP Destination Port Distribution')
         # [+] Plot 3D x: time, y: port number, z: udp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f14"] == 1:
-            print(">> Plotting figure 14 (takes longer time ...)")
+            print(">> Plotting figure 14 (takes longer time ...)", flush=True)
             f14 = plt.figure(14)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
@@ -644,7 +650,7 @@ cdef class parser:
             ax.set_title('3D UDP Source Port Distribution')
         # [+] Plot 3D x: time, y: port number, z: udp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f15"] == 1:
-            print(">> Plotting figure 15 (takes longer time ...)")
+            print(">> Plotting figure 15 (takes longer time ...)", flush=True)
             f15 = plt.figure(15)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
@@ -665,7 +671,7 @@ cdef class parser:
             ax.set_title('3D UDP Destination Port Distribution')
 
         if mode == 1:
-            print(">> Saving plots")
+            print(">> Saving plots", flush=True)
             self.str_temp = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/plot/"
             if not os.path.exists(os.path.dirname(self.str_temp)):
                 os.makedirs(os.path.dirname(self.str_temp))
@@ -700,12 +706,12 @@ cdef class parser:
             if switch["f15"] == 1:
                 f15.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "15.png")
             plt.close('all')
-            print(">> Plots saved")
+            print(">> Plots saved", flush=True)
         elif mode == 0:
-            print(">> Displaying plots")
+            print(">> Displaying plots", flush=True)
             plt.show()
         else:
-            print(">> Invalid mode")
+            print(">> Invalid mode", flush=True)
 
 # Input data for parser class
 data = {
@@ -715,7 +721,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
@@ -743,7 +749,8 @@ switch = {
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz"
 #p2 = parser(data)
 #p2.exec()
-data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+#data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
 p3 = parser(data)
 p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
