@@ -87,10 +87,10 @@ cdef class parser:
     cdef list tcp_dst_port_distinct
     cdef list udp_src_port_distinct
     cdef list udp_dst_port_distinct
-    cdef unsigned long long int tcp_src_port_cnt # Total count of TCP source ports
-    cdef unsigned long long int tcp_dst_port_cnt # Total count of TCP destination ports
-    cdef unsigned long long int udp_src_port_cnt # Total count of UDP source ports
-    cdef unsigned long long int udp_dst_port_cnt # Total count of UDP destination ports
+    cdef list tcp_src_port_counts # Count of TCP source port (by interval/delta_t)
+    cdef list tcp_dst_port_counts # Count of TCP destination port (by interval/delta_t)
+    cdef list udp_src_port_counts # Count of UDP source port (by interval/delta_t)
+    cdef list udp_dst_port_counts # Count of UDP destination port (by interval/delta_t)
     cdef unsigned long long int int_temp
     cdef unsigned long long int display_critical
     cdef unsigned long long int interval_cnt
@@ -181,11 +181,11 @@ cdef class parser:
         self.tcp_dst_port_distinct = []
         self.udp_src_port_distinct = []
         self.udp_dst_port_distinct = []
+        self.tcp_src_port_counts = []
+        self.tcp_dst_port_counts = []
+        self.udp_src_port_counts = []
+        self.udp_dst_port_counts = []
         # cdef unsigned long long int
-        self.tcp_src_port_cnt = 0
-        self.tcp_dst_port_cnt = 0
-        self.udp_src_port_cnt = 0
-        self.udp_dst_port_cnt = 0
         self.int_temp = 0
         self.display_critical = 0
         self.interval_cnt = 0
@@ -323,10 +323,10 @@ cdef class parser:
                 self.tcp_dst_ports.append([])
                 self.udp_src_ports.append([])
                 self.udp_dst_ports.append([])
-                self.tcp_src_port_cnt += len(self.tcp_src_ports[self.interval_cnt])
-                self.tcp_dst_port_cnt += len(self.tcp_dst_ports[self.interval_cnt])
-                self.udp_src_port_cnt += len(self.udp_src_ports[self.interval_cnt])
-                self.udp_dst_port_cnt += len(self.udp_dst_ports[self.interval_cnt])
+                self.tcp_src_port_counts.append(len(self.tcp_src_ports[self.interval_cnt]))
+                self.tcp_dst_port_counts.append(len(self.tcp_dst_ports[self.interval_cnt]))
+                self.udp_src_port_counts.append(len(self.udp_src_ports[self.interval_cnt]))
+                self.udp_dst_port_counts.append(len(self.udp_dst_ports[self.interval_cnt]))
                 if self.ip_packet_count != 0:
                     self.average_packet_lengths.append(self.sum_packet_length/self.ip_packet_count)
                     self.icmp_percentages.append(self.icmp_count/self.ip_packet_count)
@@ -384,14 +384,11 @@ cdef class parser:
         print(f"self.udp_percentages: {self.udp_percentages}")
         print(f"self.tcp_syn_counts: {self.tcp_syn_counts}")
         print(f"self.tcp_fin_counts: {self.tcp_fin_counts}")
-        print(f"self.tcp_src_port_cnt: {self.tcp_src_port_cnt}")
-        print(f"self.tcp_dst_port_cnt: {self.tcp_dst_port_cnt}")
-        print(f"self.udp_src_port_cnt: {self.udp_src_port_cnt}")
-        print(f"self.udp_dst_port_cnt: {self.udp_dst_port_cnt}")
         print(f"len(self.tcp_src_port_distinct): {len(self.tcp_src_port_distinct)}")
         print(f"len(self.tcp_dst_port_distinct): {len(self.tcp_dst_port_distinct)}")
         print(f"len(self.udp_src_port_distinct): {len(self.udp_src_port_distinct)}")
         print(f"len(self.udp_dst_port_distinct): {len(self.udp_dst_port_distinct)}")
+        print(f"self.tcp_src_port_counts: {self.tcp_src_port_counts}")
         print()
 
 
@@ -417,7 +414,7 @@ cdef class parser:
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'w') as f:
-            for i1, i2,i3, i4,i5, i6,i7, i8,i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21 in zip(
+            for i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21 in zip(
                 self.timestamps,
                 self.ip_packet_counts,
                 self.ip_distinct_src_counts,
@@ -435,11 +432,10 @@ cdef class parser:
                 self.udp_percentages,
                 self.tcp_syn_counts,
                 self.tcp_fin_counts,
-                self.tcp_src_port_cnt,
-                self.tcp_dst_port_cnt,
-                self.udp_src_port_cnt,
-                self.udp_dst_port_cnt,
-                ):
+                self.tcp_src_port_counts,
+                self.tcp_dst_port_counts,
+                self.udp_src_port_counts,
+                self.udp_dst_port_counts):
                 f.write(f"{i1}\t{i2}\t{i3}\t{i4}\t{i5}\t{i6}\t{i7}\t{i8}\t{i8}\t{i9}\t{i10}\t{i11}\t{i12}\t{i13}\t{i14}\t{i15}\t{i16}\t{i17}\t{i18}\t{i19}\t{i20}\t{i21}\n")
         print(">> Critical data written to file:\t" + filename)
 
@@ -465,7 +461,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 10, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
 }
 
 # Execute parser
