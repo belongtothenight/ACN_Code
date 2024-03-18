@@ -715,7 +715,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 2, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
@@ -744,8 +744,8 @@ switch = {
 #p2 = parser(data)
 #p2.exec()
 data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-#p3 = parser(data)
-#p3.exec()
+p3 = parser(data)
+p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
 #p4 = parser(data)
 #p4.exec()
