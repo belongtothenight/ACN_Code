@@ -721,7 +721,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
