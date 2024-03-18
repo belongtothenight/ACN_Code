@@ -4,9 +4,9 @@ This is a re-write version of the original code from [LAB518/Traffic_PcapParser]
 
 Focuses on improving the performance of the original code by Cython.
 
-## Time
+Note: Cython version of the code doesn't support memory dump.
 
-Original code run in jupyter notebook: ~400 minutes for pcap parsing not including any other processing
+## Time
 
 ```
 Following code only perform original pcap parsing.

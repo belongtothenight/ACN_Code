@@ -13,6 +13,7 @@
 from scapy.all import IP, TCP, UDP, PcapReader, rdpcap
 from collections import defaultdict
 from scipy.stats import skew, kurtosis
+from datetime import datetime
 import matplotlib.pyplot as plt
 import time
 import timeit
@@ -248,7 +249,7 @@ cdef class parser:
             full_size = os.path.getsize(self.pcap_fp)
             tmp_size = 0
         elif self.progress_display_mode == 1:
-            print(">> Progress will only be displayed when each interval is processed, please wait...")
+            print(">> Progress will only be displayed when each interval is processed, please wait ...")
         else:
             raise ValueError("Invalid progress_display_mode: " + str(self.progress_display_mode))
         for packet in packets:
@@ -392,7 +393,7 @@ cdef class parser:
         print()
 
 
-    # Write class mem to file
+    # Write class mem to file (cython not supported)
     def write(self):
         filename = os.path.dirname(self.pcap_fp)+ "/" + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
         if os.path.exists(filename):
@@ -450,8 +451,136 @@ cdef class parser:
         print(">> Execution complete\n")
 
     # Plot data
-    def plot(self):
-        print("Plotting data")
+    def plot1(self, mode=0):
+        # mode 0: show plot, 1: save plot
+        times = [datetime.fromtimestamp(float(sec)) for sec in self.timestamps]
+        # [+]  Plot the packet count using matplotlib
+        print(">> Plotting figure 1")
+        a = plt.figure(1)
+        plt.plot(times, self.ip_packet_counts, label='Packet Count',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Count')
+        plt.title('Packet Count over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+]  Plot the source IP count using matplotlib
+        print(">> Plotting figure 2")
+        b = plt.figure(2)
+        plt.plot(times, self.ip_distinct_src_counts, label='Distinct Source IP Count',marker=".")
+        plt.plot(times, self.ip_distinct_dst_counts, label='Distinct Destination IP Count',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Count')
+        plt.title('Distinct Source & Dest IP Count over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot F2 of Src and Dest IPs
+        print(">> Plotting figure 3")
+        c = plt.figure(3)
+        plt.plot(times, self.f2_src_ips, label='F2 Source IP Count',marker=".")
+        plt.plot(times, self.f2_dst_ips, label='F2 Destination IP Count',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Count')
+        plt.title('F2 of Src & Dest IP Count over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot average IAT
+        print(">> Plotting figure 4")
+        d = plt.figure(4)
+        plt.plot(times, self.average_iats, label='Average IAT',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Sec')
+        plt.title('Average IAT over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot Average packet length
+        print(">> Plotting figure 5")
+        e = plt.figure(5)
+        plt.plot(times, self.average_packet_lengths, label='Average PKT Length',marker=".")
+        plt.xlabel('Sec')
+        plt.ylabel('Bytes')
+        plt.title('Average PKT Length over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot Protocol Percentage
+        print(">> Plotting figure 6")
+        f = plt.figure(6)
+        plt.plot(times, self.icmp_percentages, label='ICMP',marker=".")
+        plt.plot(times, self.tcp_percentages, label='TCP',marker=".")
+        plt.plot(times, self.udp_percentages, label='UDP',marker=".")
+        plt.xlabel('Sec')
+        plt.ylabel('%')
+        plt.title('Protocol Percentage over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot Syn FIN
+        print(">> Plotting figure 7")
+        g = plt.figure(7)
+        plt.plot(times, self.tcp_syn_counts, label='SYN',marker=".")
+        plt.plot(times, self.tcp_fin_counts, label='FIN',marker=".")
+        plt.xlabel('Sec')
+        plt.ylabel('Packet Count')
+        plt.title('SYN & FIN over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot average IAT mean, stdv
+        print(">> Plotting figure 8")
+        #h = plt.figure(8)
+        #plt.errorbar(time_stamps, average_IATs, IAT_list_deltaT_stds, linestyle='None', marker='^')
+        #plt.xlabel('Time (s)')
+        #plt.ylabel('Sec')
+        #plt.title('Average IAT over Time')
+        #plt.legend()
+        # [+] Plot average IAT skew 
+        print(">> Plotting figure 9")
+        i = plt.figure(9)
+        plt.plot(times, self.iat_delta_t_skews, label='Skew',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('IAT Skew')
+        plt.title('IAT Skew over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot average IAT Kurt
+        print(">> Plotting figure 10")
+        j = plt.figure(10)
+        plt.plot(times, self.iat_delta_t_kurts, label='Kurts',marker=".")
+        plt.xlabel('Time (s)')
+        plt.title('IAT Kurts over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+        # [+] Plot Entropy
+        print(">> Plotting figure 11")
+        k = plt.figure(11)
+        plt.plot(times, self.entropy_src_ips, label='Source IP',marker=".")
+        plt.plot(times, self.entropy_dst_ips, label='Destnation IP',marker=".")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Entropy')
+        plt.title('Normalized Entropy over Time')
+        plt.legend()
+        plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+
+        if mode == 1:
+            print(">> Saving plots")
+            self.str_temp = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/plot/"
+            if not os.path.exists(os.path.dirname(self.str_temp)):
+                os.makedirs(os.path.dirname(self.str_temp))
+            a.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "1.png")
+            b.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "2.png")
+            c.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "3.png")
+            d.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "4.png")
+            e.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "5.png")
+            f.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "6.png")
+            g.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "7.png")
+            #h.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "8.png")
+            i.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "9.png")
+            j.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "10.png")
+            k.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "11.png")
+            plt.close('all')
+            print(">> Plots saved")
+        elif mode == 0:
+            print(">> Displaying plots")
+            plt.show()
+        else:
+            print(">> Invalid mode")
 
 # Input data for parser class
 data = {
@@ -472,8 +601,13 @@ data = {
 #p2 = parser(data)
 #p2.exec()
 data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-p3 = parser(data)
-p3.exec()
+#p3 = parser(data)
+#p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
 #p4 = parser(data)
 #p4.exec()
+
+# Plot data
+p = parser(data)
+p.read()
+p.plot1(mode=1)
