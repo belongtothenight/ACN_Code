@@ -103,6 +103,7 @@ cdef class parser:
     cdef list tcp_dst_port_counts # Count of TCP destination port (by interval/delta_t)
     cdef list udp_src_port_counts # Count of UDP source port (by interval/delta_t)
     cdef list udp_dst_port_counts # Count of UDP destination port (by interval/delta_t)
+    cdef unsigned long long int dpi
     cdef unsigned long long int int_temp
     cdef unsigned long long int display_critical
     cdef unsigned long long int interval_cnt
@@ -119,6 +120,8 @@ cdef class parser:
     cdef unsigned long long int udp_count
     cdef unsigned long long int tcp_syn_count
     cdef unsigned long long int tcp_fin_count
+    cdef alpha
+    cdef figsize
     cdef str_temp
     cdef pcap_fp
     cdef delta_t
@@ -140,6 +143,10 @@ cdef class parser:
             raise ValueError("Invalid delta_t: " + str(data["delta_t"]))
         self.pcap_fp = data["data_fp"]
         self.delta_t = data["delta_t"]
+        self.alpha = data["alpha"]
+        self.dpi = data["dpi"]
+        self.figsize = data["figsize"]
+        self.figsize = data["figsize"]
         self.read_mode = data["read_mode"]
         self.progress_display_mode = data["progress_display_mode"]
         self.display_critical = data["display_critical"]
@@ -150,6 +157,12 @@ cdef class parser:
         print(self.str_temp.format(self.pcap_fp), flush=True)
         self.str_temp = ">> self.delta_t:                {}"
         print(self.str_temp.format(self.delta_t), flush=True)
+        self.str_temp = ">> self.alpha:                  {}"
+        print(self.str_temp.format(self.alpha), flush=True)
+        self.str_temp = ">> self.dpi:                    {}"
+        print(self.str_temp.format(self.dpi), flush=True)
+        self.str_temp = ">> self.figsize:                {}"
+        print(self.str_temp.format(self.figsize), flush=True)
         self.str_temp = ">> self.read_mode:              {}"
         print(self.str_temp.format("Packet stream" if self.read_mode == 0 else "Load into memory"), flush=True)
         self.str_temp = ">> self.progress_display_mode:  {}"
@@ -198,6 +211,7 @@ cdef class parser:
         self.udp_src_port_counts = []
         self.udp_dst_port_counts = []
         # cdef unsigned long long int
+        self.dpi = 0
         self.int_temp = 0
         self.display_critical = 0
         self.interval_cnt = 0
@@ -215,6 +229,8 @@ cdef class parser:
         self.tcp_syn_count = 0
         self.tcp_fin_count = 0
         # cdef
+        self.alpha = 0.5
+        self.figsize = (16, 9)
         self.str_temp = ""
         self.pcap_fp = ""
         self.delta_t = 0
@@ -406,10 +422,10 @@ cdef class parser:
 
     # Write class mem to file (cython not supported)
     def write(self):
-        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/mem_dump/"
+        dirname = os.path.join(os.path.dirname(__file__), "mem_dump")
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
+        filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + ".pickle")
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'wb') as f:
@@ -418,18 +434,24 @@ cdef class parser:
 
     # Read class mem from file
     def read(self):
-        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/mem_dump/"
-        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + ".pickle"
+        dirname = os.path.join(os.path.dirname(__file__), "mem_dump")
+        filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + ".pickle")
         with open(filename, 'rb') as f:
-            self.__dict__.update(pickle.load(f))
+            temp = pickle.load(f)
+            # Port latest setting
+            temp["n_delta_t"] = self.n_delta_t
+            temp["dpi"] = self.dpi
+            temp["figsize"] = self.figsize
+            temp["alpha"] = self.alpha
+            self.__dict__.update(temp)
         print(">> Data read from file:          \t" + filename, flush=True)
 
     # Write critical data to file
     def write_critical(self):
-        dirname = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/critical/"
+        dirname = os.path.join(os.path.dirname(__file__), "critical")
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        filename = dirname + os.path.basename(self.pcap_fp).split(".")[0] + "_critical.txt"
+        filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_critical.txt")
         if os.path.exists(filename):
             os.remove(filename)
         with open(filename, 'w') as f:
@@ -469,22 +491,36 @@ cdef class parser:
 
     # Plot data
     def plot(self, switch, mode=0):
+        def save_plot(fig, filename):
+            dirname = os.path.join(os.path.dirname(__file__), "plots")
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_" + filename + ".png")
+            fig.savefig(filename, dpi=self.dpi)
+            print(">> Plot saved to file:           \t" + filename, flush=True)
+            plt.close(fig)
         # mode 0: show plot, 1: save plot
+        print(">> Total interval count: {0}".format(self.interval_cnt), flush=True)
+        if self.n_delta_t != 0:
+            self.interval_cnt = self.n_delta_t
+            print(">> Selected interval count: {0}".format(self.interval_cnt), flush=True)
         times = [datetime.fromtimestamp(float(sec)) for sec in self.timestamps]
         # [+]  Plot the packet count using matplotlib
         if switch["f1"] == 1:
             print(">> Plotting figure 1", flush=True)
-            f1 = plt.figure(1)
+            f1 = plt.figure(1, figsize=self.figsize)
             plt.plot(times, self.ip_packet_counts, label='Packet Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
             plt.title('Packet Count over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f1, "1")
+            else: plt.show()
         # [+]  Plot the source IP count using matplotlib
         if switch["f2"] == 1:
             print(">> Plotting figure 2", flush=True)
-            f2 = plt.figure(2)
+            f2 = plt.figure(2, figsize=self.figsize)
             plt.plot(times, self.ip_distinct_src_counts, label='Distinct Source IP Count',marker=".")
             plt.plot(times, self.ip_distinct_dst_counts, label='Distinct Destination IP Count',marker=".")
             plt.xlabel('Time (s)')
@@ -492,10 +528,12 @@ cdef class parser:
             plt.title('Distinct Source & Dest IP Count over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f2, "2")
+            else: plt.show()
         # [+] Plot F2 of Src and Dest IPs
         if switch["f3"] == 1:
             print(">> Plotting figure 3", flush=True)
-            f3 = plt.figure(3)
+            f3 = plt.figure(3, figsize=self.figsize)
             plt.plot(times, self.f2_src_ips, label='F2 Source IP Count',marker=".")
             plt.plot(times, self.f2_dst_ips, label='F2 Destination IP Count',marker=".")
             plt.xlabel('Time (s)')
@@ -503,30 +541,36 @@ cdef class parser:
             plt.title('F2 of Src & Dest IP Count over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f3, "3")
+            else: plt.show()
         # [+] Plot average IAT
         if switch["f4"] == 1:
             print(">> Plotting figure 4", flush=True)
-            f4 = plt.figure(4)
+            f4 = plt.figure(4, figsize=self.figsize)
             plt.plot(times, self.average_iats, label='Average IAT',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Sec')
             plt.title('Average IAT over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f4, "4")
+            else: plt.show()
         # [+] Plot Average packet length
         if switch["f5"] == 1:
             print(">> Plotting figure 5", flush=True)
-            f5 = plt.figure(5)
+            f5 = plt.figure(5, figsize=self.figsize)
             plt.plot(times, self.average_packet_lengths, label='Average PKT Length',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('Bytes')
             plt.title('Average PKT Length over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f5, "5")
+            else: plt.show()
         # [+] Plot Protocol Percentage
         if switch["f6"] == 1:
             print(">> Plotting figure 6", flush=True)
-            f6 = plt.figure(6)
+            f6 = plt.figure(6, figsize=self.figsize)
             plt.plot(times, self.icmp_percentages, label='ICMP',marker=".")
             plt.plot(times, self.tcp_percentages, label='TCP',marker=".")
             plt.plot(times, self.udp_percentages, label='UDP',marker=".")
@@ -535,10 +579,12 @@ cdef class parser:
             plt.title('Protocol Percentage over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f6, "6")
+            else: plt.show()
         # [+] Plot Syn FIN
         if switch["f7"] == 1:
             print(">> Plotting figure 7", flush=True)
-            f7 = plt.figure(7)
+            f7 = plt.figure(7, figsize=self.figsize)
             plt.plot(times, self.tcp_syn_counts, label='SYN',marker=".")
             plt.plot(times, self.tcp_fin_counts, label='FIN',marker=".")
             plt.xlabel('Sec')
@@ -546,38 +592,47 @@ cdef class parser:
             plt.title('SYN & FIN over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f7, "7")
+            else: plt.show()
         # [+] Plot average IAT mean, stdv
         if switch["f8"] == 1:
             print(">> Plotting figure 8", flush=True)
-            f8 = plt.figure(8)
+            f8 = plt.figure(8, figsize=self.figsize)
             plt.errorbar(time_stamps, average_IATs, IAT_list_deltaT_stds, linestyle='None', marker='^')
             plt.xlabel('Time (s)')
             plt.ylabel('Sec')
             plt.title('Average IAT over Time')
             plt.legend()
+            plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f8, "8")
+            else: plt.show()
         # [+] Plot average IAT skew 
         if switch["f9"] == 1:
             print(">> Plotting figure 9", flush=True)
-            f9 = plt.figure(9)
+            f9 = plt.figure(9, figsize=self.figsize)
             plt.plot(times, self.iat_delta_t_skews, label='Skew',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('IAT Skew')
             plt.title('IAT Skew over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f9, "9")
+            else: plt.show()
         # [+] Plot average IAT Kurt
         if switch["f10"] == 1:
             print(">> Plotting figure 10", flush=True)
-            f10 = plt.figure(10)
+            f10 = plt.figure(10, figsize=self.figsize)
             plt.plot(times, self.iat_delta_t_kurts, label='Kurts',marker=".")
             plt.xlabel('Time (s)')
             plt.title('IAT Kurts over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f10, "10")
+            else: plt.show()
         # [+] Plot Entropy
         if switch["f11"] == 1:
             print(">> Plotting figure 11", flush=True)
-            f11 = plt.figure(11)
+            f11 = plt.figure(11, figsize=self.figsize)
             plt.plot(times, self.entropy_src_ips, label='Source IP',marker=".")
             plt.plot(times, self.entropy_dst_ips, label='Destnation IP',marker=".")
             plt.xlabel('Time (s)')
@@ -585,10 +640,12 @@ cdef class parser:
             plt.title('Normalized Entropy over Time')
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+            if mode == 1: save_plot(f11, "11")
+            else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f12"] == 1:
             print(">> Plotting figure 12 (takes longer time ...)", flush=True)
-            f12 = plt.figure(12)
+            f12 = plt.figure(12, figsize=self.figsize)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
             for i in range(self.interval_cnt):
@@ -601,15 +658,17 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D TCP Source Port Distribution')
+            if mode == 1: save_plot(f12, "12")
+            else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f13"] == 1:
             print(">> Plotting figure 13 (takes longer time ...)", flush=True)
-            f13 = plt.figure(13)
+            f13 = plt.figure(13, figsize=self.figsize)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
             for i in range(self.interval_cnt):
@@ -622,15 +681,17 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D TCP Destination Port Distribution')
+            if mode == 1: save_plot(f13, "13")
+            else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f14"] == 1:
             print(">> Plotting figure 14 (takes longer time ...)", flush=True)
-            f14 = plt.figure(14)
+            f14 = plt.figure(14, figsize=self.figsize)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
             for i in range(self.interval_cnt):
@@ -643,15 +704,17 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D UDP Source Port Distribution')
+            if mode == 1: save_plot(f14, "14")
+            else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f15"] == 1:
             print(">> Plotting figure 15 (takes longer time ...)", flush=True)
-            f15 = plt.figure(15)
+            f15 = plt.figure(15, figsize=self.figsize)
             port_max = 65536
             temp_list = [0] * self.interval_cnt
             for i in range(self.interval_cnt):
@@ -664,52 +727,121 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D UDP Destination Port Distribution')
+            if mode == 1: save_plot(f15, "15")
+            else: plt.show()
+        # [+] Plot 3D x: time, y: port number, z: tcp total ports distribution (can't use time as x-axis, so use interval number instead)
+        if switch["f16"] == 1:
+            print(">> Plotting figure 16 (takes longer time ...)", flush=True)
+            f16 = plt.figure(16, figsize=self.figsize)
+            port_max = 65536
+            ax = f16.add_subplot(111, projection='3d')
+            x = np.arange(1, self.interval_cnt + 1)
+            y = np.arange(port_max)
+            _x, _y = np.meshgrid(x, y)
+            x, y = _x.ravel(), _y.ravel()
+            width = depth = 1
+            temp_list = [0] * self.interval_cnt
+            # src
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            # dst
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            ax.set_xlabel('Interval')
+            ax.set_ylabel('Port')
+            ax.set_zlabel('Count / Total Count')
+            ax.set_title('3D TCP Total Port Distribution')
+            ax.legend(["Source", "Destination"])
+            if mode == 1: save_plot(f16, "16")
+            else: plt.show()
+        # [+] Plot 3D x: time, y: port number, z: udp total ports distribution (can't use time as x-axis, so use interval number instead)
+        if switch["f17"] == 1:
+            print(">> Plotting figure 17 (takes longer time ...)", flush=True)
+            f17 = plt.figure(17, figsize=self.figsize)
+            port_max = 65536
+            ax = f17.add_subplot(111, projection='3d')
+            x = np.arange(1, self.interval_cnt + 1)
+            y = np.arange(port_max)
+            _x, _y = np.meshgrid(x, y)
+            x, y = _x.ravel(), _y.ravel()
+            width = depth = 1
+            temp_list = [0] * self.interval_cnt
+            # src
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.udp_src_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            # dst
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            ax.set_xlabel('Interval')
+            ax.set_ylabel('Port')
+            ax.set_zlabel('Count / Total Count')
+            ax.set_title('3D UDP Total Port Distribution')
+            ax.legend(["Source", "Destination"])
+            if mode == 1: save_plot(f17, "17")
+            else: plt.show()
+        # [+] Plot 3D x: time, y: port number, z: total ports distribution (can't use time as x-axis, so use interval number instead) (tcp vs. udp)
+        if switch["f18"] == 1:
+            print(">> Plotting figure 18 (takes longer time ...)", flush=True)
+            f18 = plt.figure(18, figsize=self.figsize)
+            port_max = 65536
+            ax = f18.add_subplot(111, projection='3d')
+            x = np.arange(1, self.interval_cnt + 1)
+            y = np.arange(port_max)
+            _x, _y = np.meshgrid(x, y)
+            x, y = _x.ravel(), _y.ravel()
+            width = depth = 1
+            temp_list = [0] * self.interval_cnt
+            # tcp
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            # udp
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.udp_src_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            for i in range(self.interval_cnt):
+                temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
+            top = np.array(temp_list).ravel() / self.packet_count
+            bottom = np.zeros_like(top)
+            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            ax.set_xlabel('Interval')
+            ax.set_ylabel('Port')
+            ax.set_zlabel('Count / Total Count')
+            ax.set_title('3D Total Port Distribution (TCP vs. UDP)')
+            ax.legend(["TCP Source", "TCP Destination", "UDP Source", "UDP Destination"])
+            if mode == 1: save_plot(f18, "18")
+            else: plt.show()
 
         if mode == 1:
-            print(">> Saving plots", flush=True)
-            self.str_temp = os.path.dirname(os.path.dirname(self.pcap_fp)) + "/plot/"
-            if not os.path.exists(os.path.dirname(self.str_temp)):
-                os.makedirs(os.path.dirname(self.str_temp))
-            if switch["f1"] == 1:
-                f1.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "1.png")
-            if switch["f2"] == 1:
-                f2.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "2.png")
-            if switch["f3"] == 1:
-                f3.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "3.png")
-            if switch["f4"] == 1:
-                f4.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "4.png")
-            if switch["f5"] == 1:
-                f5.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "5.png")
-            if switch["f6"] == 1:
-                f6.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "6.png")
-            if switch["f7"] == 1:
-                f7.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "7.png")
-            if switch["f8"] == 1:
-                f8.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "8.png")
-            if switch["f9"] == 1:
-                f9.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "9.png")
-            if switch["f10"] == 1:
-                f10.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "10.png")
-            if switch["f11"] == 1:
-                f11.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "11.png")
-            if switch["f12"] == 1:
-                f12.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "12.png")
-            if switch["f13"] == 1:
-                f13.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "13.png")
-            if switch["f14"] == 1:
-                f14.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "14.png")
-            if switch["f15"] == 1:
-                f15.savefig(self.str_temp + os.path.basename(self.pcap_fp).split(".")[0] + "_" + "15.png")
-            plt.close('all')
             print(">> Plots saved", flush=True)
         elif mode == 0:
-            print(">> Displaying plots", flush=True)
-            plt.show()
+            print(">> Plots displayed", flush=True)
         else:
             print(">> Invalid mode", flush=True)
 
@@ -717,6 +849,9 @@ cdef class parser:
 data = {
         "data_fp": "",
         "delta_t": 10,
+        "alpha": 0.5, # Plot transparency
+        "dpi": 600, # Plot resolution
+        "figsize": (16, 9), # Plot size
         "read_mode": 0, # 0: Packet stream, 1: Load into memory (make sure you have enough memory)
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
@@ -736,10 +871,13 @@ switch = {
         "f9": 1, # Plot average IAT skew
         "f10": 1, # Plot average IAT Kurt
         "f11": 1, # Plot Entropy
-        "f12": 1, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution
-        "f13": 1, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution
-        "f14": 1, # Plot 3D x: time, y: port number, z: udp_src_ports distribution
-        "f15": 1, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution
+        "f12": 1, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
+        "f13": 1, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
+        "f14": 1, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
+        "f15": 1, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
+        "f16": 1, # Plot 3D x: time, y: port number, z: tcp total ports distribution
+        "f17": 1, # Plot 3D x: time, y: port number, z: udp total ports distribution
+        "f18": 1, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
         }
 
 # Execute parser
@@ -749,10 +887,10 @@ switch = {
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz"
 #p2 = parser(data)
 #p2.exec()
-#data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-p3 = parser(data)
-p3.exec()
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+#data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+#p3 = parser(data)
+#p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
 #p4 = parser(data)
 #p4.exec()

@@ -6,6 +6,15 @@ Focuses on improving the performance of the original code by Cython.
 
 Note: Cython version of the code doesn't support memory dump.
 
+## Hardware Recommendation
+
+```
+CPU:  High single core score
+SWAP: 64GB
+RAM:  "read_mode" = 1, RAM >= pcap file size times 40
+RAM:  plotting f12~18 requires 48GB RAM, recommended 64GB (3.6GB pcap file)
+```
+
 ## Time
 
 ```
