@@ -492,7 +492,7 @@ cdef class parser:
     # Plot data
     def plot(self, switch, mode=0):
         def save_plot(fig, filename):
-            dirname = os.path.join(os.path.dirname(__file__), "plots")
+            dirname = os.path.join(os.path.dirname(__file__), "plot")
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
             filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_" + filename + ".png")
