@@ -2,21 +2,25 @@
 
 This is a re-write version of the original code from [LAB518/Traffic_PcapParser](https://github.com/Lab518/Traffic_PcapParser)
 
-Focuses on improving the performance of the original code by Cython.
+Focuses on improving the performance of the original code by Cython, and add additional functionalities for ease of use.
 
 Note: Cython version of the code doesn't support memory dump.
 
 ## Execution
 
+```
 native_run.ps1: Run the code with native python (port from original code)
 cython_run.ps1: Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
 native_re_run.ps1: Run the re-write code with native python (port from cython code)
+```
 
 ## Functionality (re-write)
 
 1. Input interface easy to integrate with other code. (walk through all pcap files in a directory, multi-processing, etc.)
 2. Memory dump and recover, separate the parsing and plotting process. (plotting requires large amount of memory; this is not supported in cython version)
 3. Both powershell and bash scripts are provided for easy execution and minimum repository size.
+4. Set maximum packet count or interval count for quick testing on parsing function.
+5. Set interval count to limit data displayed in the plot.
 
 ## Hardware Recommendation (re-write)
 
