@@ -8,9 +8,9 @@ Note: Cython version of the code doesn't support memory dump.
 
 ## Execution
 
-- [native_run.ps1](native_run.ps1): Run the code with native python (port from original code)
-- [cython_run.ps1](cython_run.ps1): Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
-- [native_re_run.ps1](native_re_run.ps1): Run the re-write code with native python (port from cython code)
+- [native_run.ps1](native_run.ps1)/[native_run.sh](native_run.sh): Run the code with native python (port from original code)
+- [cython_run.ps1](cython_run.ps1)/[cython_run.sh](cython_run.sh): Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
+- [native_re_run.ps1](native_re_run.ps1)/[native_re_run.sh](native_re_run.sh): Run the re-write code with native python (port from cython code)
 
 ## Functionality (re-write)
 
