@@ -860,24 +860,24 @@ data = {
 }
 # Input switch for parser.plot
 switch = {
-        "f1": 1, # Plot Packet Count
-        "f2": 1, # Plot src & dst IP count
-        "f3": 1, # Plot f2 of src & dst IP count
-        "f4": 1, # Plot average IAT
-        "f5": 1, # Plot average packet length
-        "f6": 1, # Plot Protocol Percentage
-        "f7": 1, # Plot Syn Fin
+        "f1": 0, # Plot Packet Count
+        "f2": 0, # Plot src & dst IP count
+        "f3": 0, # Plot f2 of src & dst IP count
+        "f4": 0, # Plot average IAT
+        "f5": 0, # Plot average packet length
+        "f6": 0, # Plot Protocol Percentage
+        "f7": 0, # Plot Syn Fin
         "f8": 0, # Plot average IAT mean, stdv (not finished yet)
-        "f9": 1, # Plot average IAT skew
-        "f10": 1, # Plot average IAT Kurt
-        "f11": 1, # Plot Entropy
-        "f12": 1, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
-        "f13": 1, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
-        "f14": 1, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
-        "f15": 1, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
-        "f16": 1, # Plot 3D x: time, y: port number, z: tcp total ports distribution
+        "f9": 0, # Plot average IAT skew
+        "f10": 0, # Plot average IAT Kurt
+        "f11": 0, # Plot Entropy
+        "f12": 0, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
+        "f13": 0, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
+        "f14": 0, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
+        "f15": 0, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
+        "f16": 0, # Plot 3D x: time, y: port number, z: tcp total ports distribution
         "f17": 1, # Plot 3D x: time, y: port number, z: udp total ports distribution
-        "f18": 1, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
+        "f18": 0, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
         }
 
 # Execute parser
@@ -887,8 +887,8 @@ switch = {
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz"
 #p2 = parser(data)
 #p2.exec()
-data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-#data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+#data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
 #p3 = parser(data)
 #p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
