@@ -6,7 +6,19 @@ Focuses on improving the performance of the original code by Cython.
 
 Note: Cython version of the code doesn't support memory dump.
 
-## Hardware Recommendation
+## Execution
+
+native_run.ps1: Run the code with native python (port from original code)
+cython_run.ps1: Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
+native_re_run.ps1: Run the re-write code with native python (port from cython code)
+
+## Functionality (re-write)
+
+1. Input interface easy to integrate with other code. (walk through all pcap files in a directory, multi-processing, etc.)
+2. Memory dump and recover, separate the parsing and plotting process. (plotting requires large amount of memory; this is not supported in cython version)
+3. Both powershell and bash scripts are provided for easy execution and minimum repository size.
+
+## Hardware Recommendation (re-write)
 
 ```
 CPU:  High single core score
@@ -28,26 +40,35 @@ Re-write code in cython ([./traffic_pcap_parser.pyx](./traffic_pcap_parser.pyx))
 Re-write code in python native (auto-generated from cython version): ~443 min (202301261400) (dual launched)
 ```
 
-## Run
+## Documentation(re-write)
 
-native_run.ps1: Run the code with native python (port from original code)
-cython_run.ps1: Run the code compiled with cython (develop focused)
-native_re_run.ps1: Run the re-write code with native python (port from cython code)
-
-## Data
-
-[http://www.fukuda-lab.org/mawilab/v1.1/index.html](http://www.fukuda-lab.org/mawilab/v1.1/index.html)
-
-## Code Flow Improvement (for speed)
+### Code Flow Improvement (for speed)
 
 1. Use Cython to compile the code. (Refers to .pyx file)
 2. Use [This Solution](https://stackoverflow.com/questions/14456513/speed-up-python-loop-processing-packets) to push the loop into C level.
 
-## Focused Packet Layers
+### Data
+
+[http://www.fukuda-lab.org/mawilab/v1.1/index.html](http://www.fukuda-lab.org/mawilab/v1.1/index.html)
+
+### Focused Packet Layers
 
 1. TCP
 2. UDP
 3. ICMP
 
-[https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.IP.payload_guess](https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.IP.payload_guess)
-[https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.TCP.payload_guess](https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.TCP.payload_guess)
+[https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.IP.payload_guess](https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.IP.payload_guess)  
+[https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.TCP.payload_guess](https://scapy.readthedocs.io/en/latest/api/scapy.layers.inet.html#scapy.layers.inet.TCP.payload_guess)  
+
+### Class Documentation
+
+- ```parser.__init__```: Initialize data structures and check input data dictionary values.
+- ```parser.init_var``` (private): Initialize data structures.
+- ```parser.reset_var``` (private): Reset data structures when parsing interval changes.
+- ```parser.load_parse```: Load and parse pcap file. (can be gunzip files)
+- ```parser.print_critical``` (private): Print critical information during parsing interval to verify parsing result.
+- ```parser.write```: Dump data structures to file.
+- ```parser.read```: Load data structures from file.
+- ```parser.write_critical```: Write critical information to file.
+- ```parser.exec```: Execute the parser with preset work flow. (include ```parser.__init__```, ```parser.load_parse```, ```parser.write_critical```, ```parser.write```)
+- ```parser.plot```: Plot data structures to figures.
