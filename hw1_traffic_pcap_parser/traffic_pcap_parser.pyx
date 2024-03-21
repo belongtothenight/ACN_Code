@@ -22,7 +22,8 @@ import numpy as np
 import statistics
 import math
 import os
-import multiprocessing
+#import multiprocessing
+#from multiprocessing.pool import ThreadPool
 import pickle
 
 # The input is the list of frequency count
@@ -434,6 +435,7 @@ cdef class parser:
 
     # Read class mem from file
     def read(self):
+        print(">> Reading data from file...", flush=True)
         dirname = os.path.join(os.path.dirname(__file__), "mem_dump")
         filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + ".pickle")
         with open(filename, 'rb') as f:
@@ -490,7 +492,7 @@ cdef class parser:
         print(">> Execution complete\n", flush=True)
 
     # Plot data
-    def plot(self, switch, mode=0):
+    def plot(self, switch, mode=0, dynamic_alpha=0):
         def save_plot(fig, filename):
             print(">> Saving plot to file ...", flush=True)
             dirname = os.path.join(os.path.dirname(__file__), "plot")
@@ -500,8 +502,27 @@ cdef class parser:
             fig.savefig(filename, dpi=self.dpi)
             print(">> Plot saved to file:           \t" + filename, flush=True)
             plt.close(fig)
+        def plot_ax(ax, x, y, bottom, width, depth, top, shade, alpha, color, dynamic_alpha=0):
+            # Coloring: https://stackoverflow.com/questions/42086276/get-default-line-color-cycle
+            if dynamic_alpha == 0:
+                ax.bar3d(x, y, bottom, width, depth, top, shade=shade, alpha=alpha)
+            elif dynamic_alpha == 1:
+                max_top = top.max()
+                for i in range(len(x)):
+                    alpha_temp = top[i]/max_top*alpha
+                    ax.bar3d(x[i], y[i], bottom[i], width, depth, top[i], shade=shade, alpha=alpha_temp, color=color)
+            else:
+                print(">> Invalid dynamic_alpha value", flush=True)
+                sys.exit(1)
+            return ax
         # mode 0: show plot, 1: save plot
-        print(">> Total interval count: {0}".format(self.interval_cnt), flush=True)
+        # dynamic_alpha 0: static, 1: dynamic (slow)
+        self.str_temp = ">> Selected interval count:     {}"
+        print(self.str_temp.format(self.interval_cnt), flush=True)
+        self.str_temp = ">> Mode:                        {}"
+        print(self.str_temp.format("Show plot" if mode == 0 else "Save plot"), flush=True)
+        self.str_temp = ">> Dynamic alpha:               {}"
+        print(self.str_temp.format("Enabled (slow)" if dynamic_alpha == 1 else "Disabled"), flush=True)
         if self.n_delta_t != 0:
             self.interval_cnt = self.n_delta_t
             print(">> Selected interval count: {0}".format(self.interval_cnt), flush=True)
@@ -659,7 +680,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77b4', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -682,7 +703,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -705,7 +726,8 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
+            ax.set_xlabel('Interval')
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -728,7 +750,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -752,13 +774,13 @@ cdef class parser:
                 temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
             # dst
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -783,13 +805,13 @@ cdef class parser:
                 temp_list[i] = count_array(self.udp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
             # dst
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -814,23 +836,23 @@ cdef class parser:
                 temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha)
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha)
             # udp
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#2ca02c', dynamic_alpha)
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            ax.bar3d(x, y, bottom, width, depth, top, shade=True, alpha=self.alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#d62728', dynamic_alpha)
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
@@ -857,7 +879,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 30, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
@@ -872,13 +894,13 @@ switch = {
         "f9": 0, # Plot average IAT skew
         "f10": 0, # Plot average IAT Kurt
         "f11": 0, # Plot Entropy
-        "f12": 0, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
+        "f12": 1, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
         "f13": 0, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
         "f14": 0, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
         "f15": 0, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
         "f16": 0, # Plot 3D x: time, y: port number, z: tcp total ports distribution
-        "f17": 1, # Plot 3D x: time, y: port number, z: udp total ports distribution
-        "f18": 1, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
+        "f17": 0, # Plot 3D x: time, y: port number, z: udp total ports distribution
+        "f18": 0, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
         }
 
 # Execute parser
@@ -899,4 +921,4 @@ data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.
 # Plot data
 p = parser(data)
 p.read()
-p.plot(switch=switch, mode=1)
+p.plot(switch=switch, mode=1, dynamic_alpha=1)
