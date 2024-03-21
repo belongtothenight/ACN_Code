@@ -25,9 +25,9 @@ Note: Cython version of the code doesn't support memory dump.
 ```
 CPU:  High single core score
 SWAP: 128GB (or use swapspace to dynamically allocate swap size)
-RAM(SWAP):  "read_mode" = 1, >= pcap file size times 40; "read_mode" = 0, ~= 10GB (3.6GB pcap file)
-RAM(SWAP):  plotting f12~15 requires 48GB RAM, recommended 64GB (3.6GB pcap file)
-RAM(SWAP):  plotting f16~18 requires 80GB RAM, recommended 128GB (3.6GB pcap file)
+RAM(SWAP):  "read_mode" = 1, >= pcap file size times 40; "read_mode" = 0, ~= 10GB (3.6GB pcap.gz file)
+RAM(SWAP):  plotting f12~15 requires 48GB RAM, recommended 64GB (3.6GB pcap.gz file)
+RAM(SWAP):  plotting f16~18 requires 80GB RAM, recommended 128GB (3.6GB pcap.gz file)
 ```
 
 Windows platform will support medium amount of auto-swapping, but can't handle large swap size (Exact size is hard to tell). If python gives "memory error" during plotting, it is recommended to use WSL with 32GB RAM and 128GB SWAP ([setup](https://youtu.be/Tu95sdnALJk?si=TzmAeBTVXM0doXC6)) or native Linux system with [swapspace by rubo77](https://unix.stackexchange.com/a/134372) enabled.
