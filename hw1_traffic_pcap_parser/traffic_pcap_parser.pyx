@@ -170,9 +170,9 @@ cdef class parser:
         self.str_temp = ">> self.display_critical:       {}"
         print(self.str_temp.format("On" if self.display_critical == 1 else "Off"), flush=True)
         self.str_temp = ">> self.max_packets:            {}"
-        print(self.str_temp.format("No limit" if self.max_packets == 0 else self.max_packets), flush=True)
+        print(self.str_temp.format("Maximum available" if self.max_packets == 0 else self.max_packets), flush=True)
         self.str_temp = ">> self.n_delta_t:              {}"
-        print(self.str_temp.format("No limit" if self.n_delta_t == 0 else self.n_delta_t), flush=True)
+        print(self.str_temp.format("Maximum available" if self.n_delta_t == 0 else self.n_delta_t), flush=True)
         print("=============================================", flush=True)
 
     # Initialize data structures
@@ -856,7 +856,7 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 30, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
@@ -877,7 +877,7 @@ switch = {
         "f15": 0, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
         "f16": 0, # Plot 3D x: time, y: port number, z: tcp total ports distribution
         "f17": 1, # Plot 3D x: time, y: port number, z: udp total ports distribution
-        "f18": 0, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
+        "f18": 1, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
         }
 
 # Execute parser
@@ -887,8 +887,8 @@ switch = {
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz"
 #p2 = parser(data)
 #p2.exec()
-#data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
-data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
+#data["data_fp"] = "/mnt/e/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz"
 #p3 = parser(data)
 #p3.exec()
 #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
