@@ -517,6 +517,8 @@ cdef class parser:
                 print(">> Invalid dynamic_alpha value", flush=True)
                 sys.exit(1)
             return ax
+        if self.n_delta_t != 0:
+            self.interval_cnt = self.n_delta_t
         print("========================================", flush=True)
         self.str_temp = ">> Selected interval count:     {}"
         print(self.str_temp.format(self.n_delta_t), flush=True)
@@ -525,9 +527,6 @@ cdef class parser:
         self.str_temp = ">> Dynamic alpha:               {}"
         print(self.str_temp.format("Enabled (slow)" if dynamic_alpha == 1 else "Disabled"), flush=True)
         print("========================================", flush=True)
-        if self.n_delta_t != 0:
-            self.interval_cnt = self.n_delta_t
-            print(">> Selected interval count: {0}".format(self.interval_cnt), flush=True)
         times = [datetime.fromtimestamp(float(sec)) for sec in self.timestamps]
         # [+]  Plot the packet count using matplotlib
         if switch["f1"] == 1:
