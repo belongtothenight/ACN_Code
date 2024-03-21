@@ -492,7 +492,9 @@ cdef class parser:
         print(">> Execution complete\n", flush=True)
 
     # Plot data
-    def plot(self, switch, mode=0, dynamic_alpha=0):
+    def plot(self, switch, output_mode=0, dynamic_alpha=0):
+        # output_mode 0: show plot, 1: save plot
+        # dynamic_alpha 0: static, 1: dynamic (slow) (only for 3D bar plots)
         def save_plot(fig, filename):
             print(">> Saving plot to file ...", flush=True)
             dirname = os.path.join(os.path.dirname(__file__), "plot")
@@ -515,14 +517,14 @@ cdef class parser:
                 print(">> Invalid dynamic_alpha value", flush=True)
                 sys.exit(1)
             return ax
-        # mode 0: show plot, 1: save plot
-        # dynamic_alpha 0: static, 1: dynamic (slow)
+        print("========================================", flush=True)
         self.str_temp = ">> Selected interval count:     {}"
-        print(self.str_temp.format(self.interval_cnt), flush=True)
+        print(self.str_temp.format(self.n_delta_t), flush=True)
         self.str_temp = ">> Mode:                        {}"
-        print(self.str_temp.format("Show plot" if mode == 0 else "Save plot"), flush=True)
+        print(self.str_temp.format("Show plot" if output_mode == 0 else "Save plot"), flush=True)
         self.str_temp = ">> Dynamic alpha:               {}"
         print(self.str_temp.format("Enabled (slow)" if dynamic_alpha == 1 else "Disabled"), flush=True)
+        print("========================================", flush=True)
         if self.n_delta_t != 0:
             self.interval_cnt = self.n_delta_t
             print(">> Selected interval count: {0}".format(self.interval_cnt), flush=True)
@@ -531,90 +533,90 @@ cdef class parser:
         if switch["f1"] == 1:
             print(">> Plotting figure 1", flush=True)
             f1 = plt.figure(1, figsize=self.figsize)
-            plt.plot(times, self.ip_packet_counts, label='Packet Count',marker=".")
+            plt.plot(times[:self.interval_cnt], self.ip_packet_counts[:self.interval_cnt], label='Packet Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
             plt.title('Packet Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f1, "1")
+            if output_mode == 1: save_plot(f1, "1")
             else: plt.show()
         # [+]  Plot the source IP count using matplotlib
         if switch["f2"] == 1:
             print(">> Plotting figure 2", flush=True)
             f2 = plt.figure(2, figsize=self.figsize)
-            plt.plot(times, self.ip_distinct_src_counts, label='Distinct Source IP Count',marker=".")
-            plt.plot(times, self.ip_distinct_dst_counts, label='Distinct Destination IP Count',marker=".")
+            plt.plot(times[:self.interval_cnt], self.ip_distinct_dst_counts[:self.interval_cnt], label='Distinct Destination IP Count',marker=".")
+            plt.plot(times[:self.interval_cnt], self.ip_distinct_src_counts[:self.interval_cnt], label='Distinct Source IP Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
             plt.title('Distinct Source & Dest IP Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f2, "2")
+            if output_mode == 1: save_plot(f2, "2")
             else: plt.show()
         # [+] Plot F2 of Src and Dest IPs
         if switch["f3"] == 1:
             print(">> Plotting figure 3", flush=True)
             f3 = plt.figure(3, figsize=self.figsize)
-            plt.plot(times, self.f2_src_ips, label='F2 Source IP Count',marker=".")
-            plt.plot(times, self.f2_dst_ips, label='F2 Destination IP Count',marker=".")
+            plt.plot(times[:self.interval_cnt], self.f2_dst_ips[:self.interval_cnt], label='F2 Destination IP Count',marker=".")
+            plt.plot(times[:self.interval_cnt], self.f2_src_ips[:self.interval_cnt], label='F2 Source IP Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
             plt.title('F2 of Src & Dest IP Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f3, "3")
+            if output_mode == 1: save_plot(f3, "3")
             else: plt.show()
         # [+] Plot average IAT
         if switch["f4"] == 1:
             print(">> Plotting figure 4", flush=True)
             f4 = plt.figure(4, figsize=self.figsize)
-            plt.plot(times, self.average_iats, label='Average IAT',marker=".")
+            plt.plot(times[:self.interval_cnt], self.average_iats[:self.interval_cnt], label='Average IAT',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Sec')
             plt.title('Average IAT over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f4, "4")
+            if output_mode == 1: save_plot(f4, "4")
             else: plt.show()
         # [+] Plot Average packet length
         if switch["f5"] == 1:
             print(">> Plotting figure 5", flush=True)
             f5 = plt.figure(5, figsize=self.figsize)
-            plt.plot(times, self.average_packet_lengths, label='Average PKT Length',marker=".")
+            plt.plot(times[:self.interval_cnt], self.average_packet_lengths[:self.interval_cnt], label='Average PKT Length',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('Bytes')
             plt.title('Average PKT Length over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f5, "5")
+            if output_mode == 1: save_plot(f5, "5")
             else: plt.show()
         # [+] Plot Protocol Percentage
         if switch["f6"] == 1:
             print(">> Plotting figure 6", flush=True)
             f6 = plt.figure(6, figsize=self.figsize)
-            plt.plot(times, self.icmp_percentages, label='ICMP',marker=".")
-            plt.plot(times, self.tcp_percentages, label='TCP',marker=".")
-            plt.plot(times, self.udp_percentages, label='UDP',marker=".")
+            plt.plot(times[:self.interval_cnt], self.icmp_percentages[:self.interval_cnt], label='ICMP',marker=".")
+            plt.plot(times[:self.interval_cnt], self.tcp_percentages[:self.interval_cnt], label='TCP',marker=".")
+            plt.plot(times[:self.interval_cnt], self.udp_percentages[:self.interval_cnt], label='UDP',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('%')
             plt.title('Protocol Percentage over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f6, "6")
+            if output_mode == 1: save_plot(f6, "6")
             else: plt.show()
         # [+] Plot Syn FIN
         if switch["f7"] == 1:
             print(">> Plotting figure 7", flush=True)
             f7 = plt.figure(7, figsize=self.figsize)
-            plt.plot(times, self.tcp_syn_counts, label='SYN',marker=".")
-            plt.plot(times, self.tcp_fin_counts, label='FIN',marker=".")
+            plt.plot(times[:self.interval_cnt], self.tcp_syn_counts[:self.interval_cnt], label='SYN',marker=".")
+            plt.plot(times[:self.interval_cnt], self.tcp_fin_counts[:self.interval_cnt], label='FIN',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('Packet Count')
             plt.title('SYN & FIN over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f7, "7")
+            if output_mode == 1: save_plot(f7, "7")
             else: plt.show()
         # [+] Plot average IAT mean, stdv
         if switch["f8"] == 1:
@@ -626,43 +628,43 @@ cdef class parser:
             plt.title('Average IAT over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f8, "8")
+            if output_mode == 1: save_plot(f8, "8")
             else: plt.show()
         # [+] Plot average IAT skew 
         if switch["f9"] == 1:
             print(">> Plotting figure 9", flush=True)
             f9 = plt.figure(9, figsize=self.figsize)
-            plt.plot(times, self.iat_delta_t_skews, label='Skew',marker=".")
+            plt.plot(times[:self.interval_cnt], self.iat_delta_t_skews[:self.interval_cnt], label='Skew',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('IAT Skew')
             plt.title('IAT Skew over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f9, "9")
+            if output_mode == 1: save_plot(f9, "9")
             else: plt.show()
         # [+] Plot average IAT Kurt
         if switch["f10"] == 1:
             print(">> Plotting figure 10", flush=True)
             f10 = plt.figure(10, figsize=self.figsize)
-            plt.plot(times, self.iat_delta_t_kurts, label='Kurts',marker=".")
+            plt.plot(times[:self.interval_cnt], self.iat_delta_t_kurts[:self.interval_cnt], label='Kurts',marker=".")
             plt.xlabel('Time (s)')
             plt.title('IAT Kurts over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f10, "10")
+            if output_mode == 1: save_plot(f10, "10")
             else: plt.show()
         # [+] Plot Entropy
         if switch["f11"] == 1:
             print(">> Plotting figure 11", flush=True)
             f11 = plt.figure(11, figsize=self.figsize)
-            plt.plot(times, self.entropy_src_ips, label='Source IP',marker=".")
-            plt.plot(times, self.entropy_dst_ips, label='Destnation IP',marker=".")
+            plt.plot(times[:self.interval_cnt], self.entropy_src_ips[:self.interval_cnt], label='Source IP',marker=".")
+            plt.plot(times[:self.interval_cnt], self.entropy_dst_ips[:self.interval_cnt], label='Destnation IP',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Entropy')
             plt.title('Normalized Entropy over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
-            if mode == 1: save_plot(f11, "11")
+            if output_mode == 1: save_plot(f11, "11")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f12"] == 1:
@@ -685,7 +687,7 @@ cdef class parser:
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D TCP Source Port Distribution (interval: {})'.format(self.interval_cnt))
-            if mode == 1: save_plot(f12, "12")
+            if output_mode == 1: save_plot(f12, "12")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f13"] == 1:
@@ -708,7 +710,7 @@ cdef class parser:
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D TCP Destination Port Distribution (interval: {})'.format(self.interval_cnt))
-            if mode == 1: save_plot(f13, "13")
+            if output_mode == 1: save_plot(f13, "13")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_src_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f14"] == 1:
@@ -732,7 +734,7 @@ cdef class parser:
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D UDP Source Port Distribution (interval: {})'.format(self.interval_cnt))
-            if mode == 1: save_plot(f14, "14")
+            if output_mode == 1: save_plot(f14, "14")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f15"] == 1:
@@ -755,7 +757,7 @@ cdef class parser:
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D UDP Destination Port Distribution (interval: {})'.format(self.interval_cnt))
-            if mode == 1: save_plot(f15, "15")
+            if output_mode == 1: save_plot(f15, "15")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp total ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f16"] == 1:
@@ -786,7 +788,7 @@ cdef class parser:
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D TCP Total Port Distribution (interval: {})'.format(self.interval_cnt))
             ax.legend(["Source", "Destination"])
-            if mode == 1: save_plot(f16, "16")
+            if output_mode == 1: save_plot(f16, "16")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp total ports distribution (can't use time as x-axis, so use interval number instead)
         if switch["f17"] == 1:
@@ -817,7 +819,7 @@ cdef class parser:
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D UDP Total Port Distribution (interval: {})'.format(self.interval_cnt))
             ax.legend(["Source", "Destination"])
-            if mode == 1: save_plot(f17, "17")
+            if output_mode == 1: save_plot(f17, "17")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: total ports distribution (can't use time as x-axis, so use interval number instead) (tcp vs. udp)
         if switch["f18"] == 1:
@@ -858,15 +860,15 @@ cdef class parser:
             ax.set_zlabel('Count / Total Count')
             ax.set_title('3D Total Port Distribution (TCP vs. UDP) (interval: {})'.format(self.interval_cnt))
             ax.legend(["TCP Source", "TCP Destination", "UDP Source", "UDP Destination"])
-            if mode == 1: save_plot(f18, "18")
+            if output_mode == 1: save_plot(f18, "18")
             else: plt.show()
 
-        if mode == 1:
+        if output_mode == 1:
             print(">> Plots saved", flush=True)
-        elif mode == 0:
+        elif output_mode == 0:
             print(">> Plots displayed", flush=True)
         else:
-            print(">> Invalid mode", flush=True)
+            print(">> Invalid output_mode", flush=True)
 
 # Input data for parser class
 data = {
@@ -879,28 +881,28 @@ data = {
         "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
         "display_critical": 1, # 1: On
         "max_packets": 0, # Extract first x packets # 0: Off
-        "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
+        "n_delta_t": 10, # Extract packets for first n x delta_t seconds # 0: Off
 }
 # Input switch for parser.plot
 switch = {
-        "f1": 0, # Plot Packet Count
-        "f2": 0, # Plot src & dst IP count
-        "f3": 0, # Plot f2 of src & dst IP count
-        "f4": 0, # Plot average IAT
-        "f5": 0, # Plot average packet length
-        "f6": 0, # Plot Protocol Percentage
-        "f7": 0, # Plot Syn Fin
+        "f1": 1, # Plot Packet Count
+        "f2": 1, # Plot src & dst IP count
+        "f3": 1, # Plot f2 of src & dst IP count
+        "f4": 1, # Plot average IAT
+        "f5": 1, # Plot average packet length
+        "f6": 1, # Plot Protocol Percentage
+        "f7": 1, # Plot Syn Fin
         "f8": 0, # Plot average IAT mean, stdv (not finished yet)
-        "f9": 0, # Plot average IAT skew
-        "f10": 0, # Plot average IAT Kurt
-        "f11": 0, # Plot Entropy
+        "f9": 1, # Plot average IAT skew
+        "f10": 1, # Plot average IAT Kurt
+        "f11": 1, # Plot Entropy
         "f12": 1, # Plot 3D x: time, y: port number, z: tcp_src_ports distribution (Giant memory required)
-        "f13": 0, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
-        "f14": 0, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
-        "f15": 0, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
-        "f16": 0, # Plot 3D x: time, y: port number, z: tcp total ports distribution
-        "f17": 0, # Plot 3D x: time, y: port number, z: udp total ports distribution
-        "f18": 0, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
+        "f13": 1, # Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (Giant memory required)
+        "f14": 1, # Plot 3D x: time, y: port number, z: udp_src_ports distribution (Giant memory required)
+        "f15": 1, # Plot 3D x: time, y: port number, z: udp_dst_ports distribution (Giant memory required)
+        "f16": 1, # Plot 3D x: time, y: port number, z: tcp total ports distribution
+        "f17": 1, # Plot 3D x: time, y: port number, z: udp total ports distribution
+        "f18": 1, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
         }
 
 # Execute parser
@@ -921,4 +923,4 @@ data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.
 # Plot data
 p = parser(data)
 p.read()
-p.plot(switch=switch, mode=1, dynamic_alpha=1)
+p.plot(switch=switch, output_mode=1, dynamic_alpha=1)
