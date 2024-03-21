@@ -492,6 +492,7 @@ cdef class parser:
     # Plot data
     def plot(self, switch, mode=0):
         def save_plot(fig, filename):
+            print(">> Saving plot to file ...", flush=True)
             dirname = os.path.join(os.path.dirname(__file__), "plot")
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
@@ -512,7 +513,7 @@ cdef class parser:
             plt.plot(times, self.ip_packet_counts, label='Packet Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
-            plt.title('Packet Count over Time')
+            plt.title('Packet Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f1, "1")
@@ -525,7 +526,7 @@ cdef class parser:
             plt.plot(times, self.ip_distinct_dst_counts, label='Distinct Destination IP Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
-            plt.title('Distinct Source & Dest IP Count over Time')
+            plt.title('Distinct Source & Dest IP Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f2, "2")
@@ -538,7 +539,7 @@ cdef class parser:
             plt.plot(times, self.f2_dst_ips, label='F2 Destination IP Count',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Count')
-            plt.title('F2 of Src & Dest IP Count over Time')
+            plt.title('F2 of Src & Dest IP Count over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f3, "3")
@@ -550,7 +551,7 @@ cdef class parser:
             plt.plot(times, self.average_iats, label='Average IAT',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Sec')
-            plt.title('Average IAT over Time')
+            plt.title('Average IAT over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f4, "4")
@@ -562,7 +563,7 @@ cdef class parser:
             plt.plot(times, self.average_packet_lengths, label='Average PKT Length',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('Bytes')
-            plt.title('Average PKT Length over Time')
+            plt.title('Average PKT Length over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f5, "5")
@@ -576,7 +577,7 @@ cdef class parser:
             plt.plot(times, self.udp_percentages, label='UDP',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('%')
-            plt.title('Protocol Percentage over Time')
+            plt.title('Protocol Percentage over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f6, "6")
@@ -589,7 +590,7 @@ cdef class parser:
             plt.plot(times, self.tcp_fin_counts, label='FIN',marker=".")
             plt.xlabel('Sec')
             plt.ylabel('Packet Count')
-            plt.title('SYN & FIN over Time')
+            plt.title('SYN & FIN over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f7, "7")
@@ -601,7 +602,7 @@ cdef class parser:
             plt.errorbar(time_stamps, average_IATs, IAT_list_deltaT_stds, linestyle='None', marker='^')
             plt.xlabel('Time (s)')
             plt.ylabel('Sec')
-            plt.title('Average IAT over Time')
+            plt.title('Average IAT over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f8, "8")
@@ -613,7 +614,7 @@ cdef class parser:
             plt.plot(times, self.iat_delta_t_skews, label='Skew',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('IAT Skew')
-            plt.title('IAT Skew over Time')
+            plt.title('IAT Skew over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f9, "9")
@@ -624,7 +625,7 @@ cdef class parser:
             f10 = plt.figure(10, figsize=self.figsize)
             plt.plot(times, self.iat_delta_t_kurts, label='Kurts',marker=".")
             plt.xlabel('Time (s)')
-            plt.title('IAT Kurts over Time')
+            plt.title('IAT Kurts over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f10, "10")
@@ -637,7 +638,7 @@ cdef class parser:
             plt.plot(times, self.entropy_dst_ips, label='Destnation IP',marker=".")
             plt.xlabel('Time (s)')
             plt.ylabel('Entropy')
-            plt.title('Normalized Entropy over Time')
+            plt.title('Normalized Entropy over Time (interval: {})'.format(self.interval_cnt))
             plt.legend()
             plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
             if mode == 1: save_plot(f11, "11")
@@ -662,7 +663,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Source Port Distribution')
+            ax.set_title('3D TCP Source Port Distribution (interval: {})'.format(self.interval_cnt))
             if mode == 1: save_plot(f12, "12")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -685,7 +686,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Destination Port Distribution')
+            ax.set_title('3D TCP Destination Port Distribution (interval: {})'.format(self.interval_cnt))
             if mode == 1: save_plot(f13, "13")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_src_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -708,7 +709,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Source Port Distribution')
+            ax.set_title('3D UDP Source Port Distribution (interval: {})'.format(self.interval_cnt))
             if mode == 1: save_plot(f14, "14")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -731,7 +732,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Destination Port Distribution')
+            ax.set_title('3D UDP Destination Port Distribution (interval: {})'.format(self.interval_cnt))
             if mode == 1: save_plot(f15, "15")
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp total ports distribution (can't use time as x-axis, so use interval number instead)
@@ -761,7 +762,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Total Port Distribution')
+            ax.set_title('3D TCP Total Port Distribution (interval: {})'.format(self.interval_cnt))
             ax.legend(["Source", "Destination"])
             if mode == 1: save_plot(f16, "16")
             else: plt.show()
@@ -792,7 +793,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Total Port Distribution')
+            ax.set_title('3D UDP Total Port Distribution (interval: {})'.format(self.interval_cnt))
             ax.legend(["Source", "Destination"])
             if mode == 1: save_plot(f17, "17")
             else: plt.show()
@@ -833,7 +834,7 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D Total Port Distribution (TCP vs. UDP)')
+            ax.set_title('3D Total Port Distribution (TCP vs. UDP) (interval: {})'.format(self.interval_cnt))
             ax.legend(["TCP Source", "TCP Destination", "UDP Source", "UDP Destination"])
             if mode == 1: save_plot(f18, "18")
             else: plt.show()
