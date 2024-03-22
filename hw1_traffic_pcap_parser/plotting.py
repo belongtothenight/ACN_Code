@@ -18,7 +18,7 @@ if __name__ == '__main__':
     freeze_support()
 
     execution_mode = 1 # 0: Single, 1: Multi
-    process_count = 2 #os.cpu_count() # Number of processes, can be adjusted, doesn't drastically increase ram usage (f1-11)
+    process_count = 2 #os.cpu_count() # Number of processes, can be adjusted, each process still need to have independent copy of data
 
     # Print input parameters
     print("=====================================================", flush=True)
