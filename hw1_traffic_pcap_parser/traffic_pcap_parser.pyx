@@ -154,7 +154,6 @@ cdef class parser:
         self.display_critical = data["display_critical"]
         self.max_packets = data["max_packets"]
         self.n_delta_t = data["n_delta_t"]
-        print("", flush=True)
         self.str_temp = ">> self.pcap_fp:                {}"
         print(self.str_temp.format(self.pcap_fp), flush=True)
         self.str_temp = ">> self.delta_t:                {}"
