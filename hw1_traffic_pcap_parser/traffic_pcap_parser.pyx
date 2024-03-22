@@ -505,8 +505,7 @@ cdef class parser:
                 os.makedirs(dirname)
             filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_" + filename + ".png")
             fig.savefig(filename, dpi=self.dpi)
-            if hide_info != 1:
-                print(">> Plot saved to file:           \t" + filename, flush=True)
+            print(">> Plot saved to file:           \t" + filename, flush=True)
             plt.close(fig)
         def plot_ax(ax, x, y, bottom, width, depth, top, shade, alpha, color, dynamic_alpha=0, min_alpha=0.1):
             # Coloring: https://stackoverflow.com/questions/42086276/get-default-line-color-cycle
