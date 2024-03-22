@@ -498,14 +498,14 @@ cdef class parser:
         # dynamic_alpha 0: static, 1: dynamic (slow) (only for 3D bar plots)
         # hide_info 0: show info, 1: hide info
         def save_plot(fig, filename, hide_info=0):
-            if hide_info == 1:
+            if hide_info != 1:
                 print(">> Saving plot to file ...", flush=True)
             dirname = os.path.join(os.path.dirname(__file__), "plot")
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
             filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_" + filename + ".png")
             fig.savefig(filename, dpi=self.dpi)
-            if hide_info == 1:
+            if hide_info != 1:
                 print(">> Plot saved to file:           \t" + filename, flush=True)
             plt.close(fig)
         def plot_ax(ax, x, y, bottom, width, depth, top, shade, alpha, color, dynamic_alpha=0, min_alpha=0.1):
@@ -524,7 +524,7 @@ cdef class parser:
             return ax
         if self.n_delta_t != 0:
             self.interval_cnt = self.n_delta_t
-        if hide_info == 1:
+        if hide_info != 1:
             print("=============================================", flush=True)
             self.str_temp = ">> Selected interval count:     {}"
             print(self.str_temp.format(self.n_delta_t), flush=True)
@@ -869,12 +869,13 @@ cdef class parser:
             if output_mode == 1: save_plot(f18, "18", hide_info)
             else: plt.show()
 
-        if output_mode == 1:
-            print(">> Plots saved", flush=True)
-        elif output_mode == 0:
-            print(">> Plots displayed", flush=True)
-        else:
-            print(">> Invalid output_mode", flush=True)
+        if hide_info != 1:
+            if output_mode == 1:
+                print(">> Plots saved", flush=True)
+            elif output_mode == 0:
+                print(">> Plots displayed", flush=True)
+            else:
+                print(">> Invalid output_mode", flush=True)
 
 if __name__ == "__main__":
     # Input data for parser class
