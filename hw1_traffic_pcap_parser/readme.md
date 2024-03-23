@@ -6,12 +6,17 @@ Focuses on improving the performance of the original code by Cython, and add add
 
 Note: Cython version of the code doesn't support memory dump.
 
-## Execution
+## Structure/Execution
 
 - [native_run.ps1](native_run.ps1)/[native_run.sh](native_run.sh): Run the code with native python (port from original code)
 - [cython_run.ps1](cython_run.ps1)/[cython_run.sh](cython_run.sh): Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
 - [native_re_run.ps1](native_re_run.ps1)/[native_re_run.sh](native_re_run.sh): Run the re-write code with native python (port from cython code)
 - [native_plot_re_run.ps1](native_plot_re_run.ps1)/[native_plot_re_run.sh](native_plot_re_run.sh): Run the re-write code with native python to perform multiprocessing plotting.
+- [.gitignore](.gitignore)
+- [plotting.py](plotting.py)
+- [readme.md](readme.md)
+- [traffic_pcap_parser.py](traffic_pcap_parser.py)
+- [traffic_pcap_parser.pyx](traffic_pcap_parser.pyx)
 
 ## Functionality (re-write)
 
