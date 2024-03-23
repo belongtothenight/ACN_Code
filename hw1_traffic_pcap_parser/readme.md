@@ -11,6 +11,7 @@ Note: Cython version of the code doesn't support memory dump.
 - awk/gawk
 - (windows) python3.12
 - (linux) python3
+- (python/pip) matplotlib scapy scipy
 
 ## Structure/Execution
 
