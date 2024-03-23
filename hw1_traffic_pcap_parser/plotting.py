@@ -77,8 +77,8 @@ if __name__ == '__main__':
             plot_index(i, switch, switch_key, data, p)
     else:
         # Need to be careful with memory usage
-        print(">> Spawning {} processes ...".format(process_count), flush=True)
         fig_count = len(switch_key)
+        print(">> Spawning pool of {} processes and execute {} in parallel ...".format(fig_count, process_count), flush=True)
         input_data = [(i, switch, switch_key, data, p) for i in range(fig_count)]
         with mp.Pool(processes=process_count) as p:
             p.map(plot_index2, input_data)
