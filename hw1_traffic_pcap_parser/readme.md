@@ -6,6 +6,12 @@ Focuses on improving the performance of the original code by Cython, and add add
 
 Note: Cython version of the code doesn't support memory dump.
 
+## Requirement
+
+- awk/gawk
+- (windows) python3.12
+- (linux) python3
+
 ## Structure/Execution
 
 - [native_run.ps1](native_run.ps1)/[native_run.sh](native_run.sh): Run the code with native python (port from original code)
