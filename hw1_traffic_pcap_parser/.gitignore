@@ -1,8 +1,8 @@
 __pycache__/
 build/
-data/
+data/*pcap*
 plot/
-mem_dump/
+mem_dump/*pickle*
 critical/
 log/
 *.c
