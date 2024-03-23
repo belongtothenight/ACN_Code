@@ -88,5 +88,5 @@ Re-write code in python native (auto-generated from cython version): ~443 min (2
 - ```parser.write```: Dump data structures to file.
 - ```parser.read```: Load data structures from file.
 - ```parser.write_critical```: Write critical information to file.
-- ```parser.exec```: Execute the parser with preset work flow. (include ```parser.__init__```, ```parser.load_parse```, ```parser.write_critical```, ```parser.write```)
+- ```parser.exec```: Execute the parser with preset work flow. (include ```__init__```, ```load_parse```, ```write_critical```, ```write```)
 - ```parser.plot```: Plot data structures to figures.
