@@ -12,11 +12,12 @@ Note: Cython version of the code doesn't support memory dump.
 - [cython_run.ps1](cython_run.ps1)/[cython_run.sh](cython_run.sh): Run the code compiled with cython (develop focused, doesn't support memory dump and recover)
 - [native_re_run.ps1](native_re_run.ps1)/[native_re_run.sh](native_re_run.sh): Run the re-write code with native python (port from cython code)
 - [native_plot_re_run.ps1](native_plot_re_run.ps1)/[native_plot_re_run.sh](native_plot_re_run.sh): Run the re-write code with native python to perform multiprocessing plotting.
-- [.gitignore](.gitignore)
-- [plotting.py](plotting.py)
-- [readme.md](readme.md)
-- [traffic_pcap_parser.py](traffic_pcap_parser.py)
-- [traffic_pcap_parser.pyx](traffic_pcap_parser.pyx)
+
+- [.gitignore](.gitignore): Commit filter.
+- [plotting.py](plotting.py): Import parser class from Cython file and execute with multiprocessing. 
+- [readme.md](readme.md): This file.
+- [traffic_pcap_parser.py](traffic_pcap_parser.py): Original JupyterNotebook code directly ported to native Python.
+- [traffic_pcap_parser.pyx](traffic_pcap_parser.pyx): Rewrite parsing code frim original version and add support for: input interdace, protocol port support, more data plotting (3D), class memory dump and recover.
 
 ## Functionality (re-write)
 
