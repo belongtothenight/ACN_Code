@@ -540,6 +540,7 @@ cdef class parser:
             print(self.str_temp.format("Enabled (slow)" if dynamic_alpha == 1 else "Disabled"), flush=True)
             print("=============================================", flush=True)
         times = [datetime.fromtimestamp(float(sec)) for sec in self.timestamps]
+        colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
         # [+]  Plot the packet count using matplotlib
         if switch["f1"] == 1:
             print(">> Plotting figure 1", flush=True)
@@ -702,7 +703,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77b4', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             if output_mode == 1: save_plot(f12, "12", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -729,7 +730,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             if output_mode == 1: save_plot(f13, "13", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_src_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -756,7 +757,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             if output_mode == 1: save_plot(f14, "14", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp_dst_ports distribution (can't use time as x-axis, so use interval number instead)
@@ -783,7 +784,7 @@ cdef class parser:
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
             width = depth = 1
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             if output_mode == 1: save_plot(f15, "15", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: tcp total ports distribution (can't use time as x-axis, so use interval number instead)
@@ -811,14 +812,14 @@ cdef class parser:
                 temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             # dst
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha, min_alpha)
-            ax.legend(["Source", "Destination"])
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[1], dynamic_alpha, min_alpha)
+            ax.legend(["Source {}".format(colors[0]), "Destination {}".format(colors[1])])
             if output_mode == 1: save_plot(f16, "16", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: udp total ports distribution (can't use time as x-axis, so use interval number instead)
@@ -846,14 +847,14 @@ cdef class parser:
                 temp_list[i] = count_array(self.udp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             # dst
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha, min_alpha)
-            ax.legend(["Source", "Destination"])
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[1], dynamic_alpha, min_alpha)
+            ax.legend(["Source {}".format(colors[0]), "Destination {}".format(colors[1])])
             if output_mode == 1: save_plot(f17, "17", hide_info)
             else: plt.show()
         # [+] Plot 3D x: time, y: port number, z: total ports distribution (can't use time as x-axis, so use interval number instead) (tcp vs. udp)
@@ -881,24 +882,24 @@ cdef class parser:
                 temp_list[i] = count_array(self.tcp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#1f77ba', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[0], dynamic_alpha, min_alpha)
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.tcp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#ff7f0e', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[1], dynamic_alpha, min_alpha)
             # udp
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_src_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#2ca02c', dynamic_alpha, min_alpha)
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[2], dynamic_alpha, min_alpha)
             for i in range(self.interval_cnt):
                 temp_list[i] = count_array(self.udp_dst_ports[i], port_max)
             top = np.array(temp_list).ravel() / self.packet_count
             bottom = np.zeros_like(top)
-            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, '#d62728', dynamic_alpha, min_alpha)
-            ax.legend(["TCP Source", "TCP Destination", "UDP Source", "UDP Destination"])
+            plot_ax(ax, x, y, bottom, width, depth, top, True, self.alpha, colors[3], dynamic_alpha, min_alpha)
+            ax.legend(["TCP Source {}".format(colors[0]), "TCP Destination {}".format(colors[1]), "UDP Source {}".format(colors[2]), "UDP Destination {}".format(colors[3])])
             if output_mode == 1: save_plot(f18, "18", hide_info)
             else: plt.show()
 
