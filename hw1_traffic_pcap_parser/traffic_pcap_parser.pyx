@@ -690,7 +690,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Source Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D TCP Source Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D TCP Source Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -713,7 +717,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Destination Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D TCP Destination Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D TCP Destination Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -736,7 +744,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Source Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D UDP Source Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D UDP Source Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -759,7 +771,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Destination Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D UDP Destination Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D UDP Destination Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -779,7 +795,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D TCP Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D TCP Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D TCP Total Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -810,7 +830,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D UDP Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D UDP Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D UDP Total Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
@@ -841,7 +865,11 @@ cdef class parser:
             ax.set_xlabel('Interval')
             ax.set_ylabel('Port')
             ax.set_zlabel('Count / Total Count')
-            ax.set_title('3D Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            if dynamic_alpha == 1:
+                ax.set_title('3D Total Port Distribution (interval: {}, max_alpha: {}, min_alpha: {})'.format(self.interval_cnt, self.alpha, min_alpha))
+            else:
+                ax.set_title('3D Total Port Distribution (interval: {}, alpha: {})'.format(self.interval_cnt, self.alpha))
+                min_alpha = self.alpha
             x = np.arange(0, self.interval_cnt)
             y = np.arange(port_max)
             _x, _y = np.meshgrid(x, y)
