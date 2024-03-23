@@ -13,7 +13,7 @@ Note: Cython version of the code doesn't support memory dump.
 - (linux) python3
 - (python/pip) matplotlib scapy scipy
 - (parsing/plotting) pcap file in "data" directory
-- (plotting) memory dump file in "mem_dump" directory
+- (plotting) pickle file in "mem_dump" directory
 
 ## Structure/Execution
 
