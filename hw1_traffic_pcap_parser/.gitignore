@@ -7,6 +7,6 @@ critical/
 log/
 *.c
 *.pyd
-execute.py
-setup.py
+execute_tmp.py
+setup_tmp.py
 *re.py*

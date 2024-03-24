@@ -4,6 +4,6 @@ awk '!/cdef/ || /cdef class/' traffic_pcap_parser.pyx > traffic_pcap_parser_re.p
 awk '{sub(/cdef /, ""); print}' traffic_pcap_parser_re.py.tmp > traffic_pcap_parser_re.py
 rm traffic_pcap_parser_re.py.tmp
 
-python3 plotting.py
+python3 execute.py
 
 rm traffic_pcap_parser_re.py

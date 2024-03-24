@@ -4,6 +4,6 @@ awk '!/cdef/ || /cdef class/' traffic_pcap_parser.pyx > traffic_pcap_parser_re.p
 awk '{sub(/cdef /, ""); print}' traffic_pcap_parser_re.py.tmp > traffic_pcap_parser_re.py
 Remove-Item traffic_pcap_parser_re.py.tmp
 
-C:\Python312\python.exe plotting.py
+C:\Python312\python.exe execute.py
 
 Remove-Item traffic_pcap_parser_re.py

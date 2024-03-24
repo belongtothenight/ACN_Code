@@ -5,17 +5,17 @@ awk '{sub(/if __name__ == \"__main__\":/, "if __name__ != \"__main__\":"); print
 "import distutils.core
 import Cython.Build
 
-distutils.core.setup(ext_modules = Cython.Build.cythonize(`"traffic_pcap_parser_tmp.pyx`"))" > setup.py
+distutils.core.setup(ext_modules = Cython.Build.cythonize(`"traffic_pcap_parser_tmp.pyx`"))" > setup_tmp.py
 
 # Compile the code
-C:\Python312\python.exe .\setup.py build_ext --inplace
+C:\Python312\python.exe .\setup_tmp.py build_ext --inplace
 Remove-Item traffic_pcap_parser_tmp.pyx
 
 # Generate execute.py to execute the compiled code
-"import traffic_pcap_parser_tmp" > execute.py
-C:\Python312\python.exe .\execute.py
+"import traffic_pcap_parser_tmp" > execute_tmp.py
+C:\Python312\python.exe .\execute_tmp.py
 
-Remove-Item execute.py
-Remove-Item setup.py
+Remove-Item execute_tmp.py
+Remove-Item setup_tmp.py
 Remove-Item *.pyd
 Remove-Item *.c
