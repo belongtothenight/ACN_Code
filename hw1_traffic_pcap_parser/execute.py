@@ -4,12 +4,7 @@ from multiprocessing import freeze_support
 import os
 import copy
 
-def exec_index(switch_key_index, switch, switch_key, data, p):
-    switch[switch_key[switch_key_index]] = 1
-    p.plot(switch=switch, output_mode=1, dynamic_alpha=1)
-    switch[switch_key[switch_key_index]] = 0
-
-def exec_index2(input_data):
+def exec_index(input_data):
     switch_key_index, switch, switch_key, data, p = input_data
     switch[switch_key[switch_key_index]] = 1
     p.plot(switch=switch, output_mode=1, dynamic_alpha=1)
@@ -22,16 +17,15 @@ def exec_single(input_data):
         p.exec()
     if plot_switch == 1:
         p.read()
+        fig_count = len(switch_key)
+        input_data = [(i, switch, switch_key, data, p) for i in range(fig_count)]
         if execution_mode == 0:
-            for i in range(len(switch_key)):
-                exec_index(i, switch, switch_key, data, p)
+            for i in range(fig_count):
+                exec_index(input_data[i])
         else:
-            # Need to be careful with memory usage
-            fig_count = len(switch_key)
             print(">> File: {} - Spawning pool of {} plotting processes and execute {} in parallel ...".format(os.path.basename(data["data_fp"]), fig_count, process_count), flush=True)
-            input_data = [(i, switch, switch_key, data, p) for i in range(fig_count)]
             with mp.Pool(processes=process_count) as p:
-                p.map(exec_index2, input_data)
+                p.map(exec_index, input_data)
 
 if __name__ == '__main__':
     freeze_support()
@@ -56,7 +50,7 @@ if __name__ == '__main__':
             "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
             "display_critical": 0, # 1: On
             "max_packets": 0, # Extract first x packets # 0: Off
-            "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
+            "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
     }
     # Input switch for parser.plot
     switch = {
