@@ -1,15 +1,3 @@
-# To utilize all CPU cores to process, modify following code by
-# 1. Use multiprocessing from example code below to parallelize parser class execution (outside of the class)
-        #total_tasks = len(self.pcap_fp)
-        #if total_tasks < os.cpu_count():
-        #    tasks = total_tasks
-        #else:
-        #    tasks = os.cpu_count()
-        #with multiprocessing.Pool(tasks) as pool:
-        #    pool.map(self.load_parse, range(total_tasks))
-        #pool.close()
-        #pool.join()
-
 from scapy.all import IP, TCP, UDP, PcapReader, rdpcap
 from collections import defaultdict, Counter
 from scipy.stats import skew, kurtosis
@@ -444,9 +432,9 @@ cdef class parser:
 
     # Read class mem from file
     def read(self):
-        print(">> Reading data from file...", flush=True)
         dirname = os.path.join(os.path.dirname(__file__), "mem_dump")
         filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + ".pickle")
+        print(">> Reading data from {} ..." .format(filename), flush=True)
         with open(filename, 'rb') as f:
             temp = pickle.load(f)
             # Port latest setting
@@ -492,12 +480,28 @@ cdef class parser:
                 f.write(f"{i1}\t{i2}\t{i3}\t{i4}\t{i5}\t{i6}\t{i7}\t{i8}\t{i8}\t{i9}\t{i10}\t{i11}\t{i12}\t{i13}\t{i14}\t{i15}\t{i16}\t{i17}\t{i18}\t{i19}\t{i20}\t{i21}\n")
         print(">> Critical data written to file:\t" + filename, flush=True)
 
+    # Write port count to file
+    def write_port_count(self):
+        dirname = os.path.join(os.path.dirname(__file__), "port_count")
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        filename = os.path.join(dirname, os.path.basename(self.pcap_fp).split(".")[0] + "_port_count.txt")
+        if os.path.exists(filename):
+            os.remove(filename)
+        with open(filename, 'w') as f:
+            f.write("List of distinct port counts in {} intervals\n".format(self.n_delta_t))
+            f.write("TCP SRC:\t{}\n".format(len(self.tcp_src_port_distinct)))
+            f.write("TCP DST:\t{}\n".format(len(self.tcp_dst_port_distinct)))
+            f.write("UDP SRC:\t{}\n".format(len(self.udp_src_port_distinct)))
+            f.write("UDP DST:\t{}\n".format(len(self.udp_dst_port_distinct)))
+            f.write("Total:\t\t{}\n".format(len(self.tcp_src_port_distinct) + len(self.tcp_dst_port_distinct) + len(self.udp_src_port_distinct) + len(self.udp_dst_port_distinct)))
+        print(">> Port count written to file:\t\t" + filename, flush=True)
+
     # Execute multiple parsing tasks
     def exec(self):
         self.init_time = time.time()
         self.load_parse()
         print(">> Time taken for file {0}: {1:.4f} seconds".format(self.pcap_fp, time.time()-self.init_time), flush=True)
-        self.write_critical()
         self.write()
         print(">> Execution complete\n", flush=True)
 
@@ -971,8 +975,10 @@ if __name__ == "__main__":
     #data["data_fp"] = "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"
     #p4 = parser(data)
     #p4.exec()
-    
+
     # Plot data
     p = parser(data)
     p.read()
+    p.write_critical()
+    p.write_port_count()
     p.plot(switch=switch, output_mode=1, dynamic_alpha=1)

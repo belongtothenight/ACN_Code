@@ -4,6 +4,7 @@ data/*pcap*
 plot/*/*.png*
 mem_dump/*pickle*
 critical/
+port_count/
 log/
 *.c
 *.pyd

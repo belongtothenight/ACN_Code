@@ -81,6 +81,7 @@ Re-write code in python native (auto-generated from cython version): ~443 min (2
 ### Class Documentation
 
 - ```parser.__init__```: Initialize data structures and check input data dictionary values.
+- ```parser.print_data```: Print input option values.
 - ```parser.init_var``` (private): Initialize data structures.
 - ```parser.reset_var``` (private): Reset data structures when parsing interval changes.
 - ```parser.load_parse```: Load and parse pcap file. (can be gunzip files)
@@ -88,5 +89,6 @@ Re-write code in python native (auto-generated from cython version): ~443 min (2
 - ```parser.write```: Dump data structures to file.
 - ```parser.read```: Load data structures from file.
 - ```parser.write_critical```: Write critical information to file.
+- ```parser.write_port_count```: Write port count information to file.
 - ```parser.exec```: Execute the parser with preset work flow. (include ```__init__```, ```load_parse```, ```write_critical```, ```write```)
 - ```parser.plot```: Plot data structures to figures.

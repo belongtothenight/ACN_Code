@@ -11,32 +11,40 @@ def exec_index(input_data):
     switch[switch_key[switch_key_index]] = 0
 
 def exec_single(input_data):
-    switch_key, switch, data, execution_mode, process_count, parse_switch, plot_switch = input_data
+    switch_key, switch, data, option = input_data
     p = tppr.parser(data)
-    if parse_switch == 1:
+    if option["parse_switch"] == 1:
         p.exec()
-    if plot_switch == 1:
-        p.read()
+    p.read()
+    if option["write_critical_switch"] == 1:
+        p.write_critical()
+    if option["write_port_count_switch"] == 1:
+        p.write_port_count()
+    if option["plot_switch"] == 1:
         fig_count = len(switch_key)
         input_data = [(i, switch, switch_key, data, p) for i in range(fig_count)]
-        if execution_mode == 0:
+        if option["plot_execution_mode"] == 0:
             for i in range(fig_count):
                 exec_index(input_data[i])
         else:
-            print(">> File: {} - Spawning pool of {} plotting processes and execute {} in parallel ...".format(os.path.basename(data["data_fp"]), fig_count, process_count), flush=True)
-            with mp.Pool(processes=process_count) as p:
+            print(">> File: {} - Spawning pool of {} plotting processes and execute {} in parallel ...".format(os.path.basename(data["data_fp"]), fig_count, option["plot_process_count"]), flush=True)
+            with mp.Pool(processes=options["plot_process_count"]) as p:
                 p.map(exec_index, input_data)
 
 if __name__ == '__main__':
     freeze_support()
 
-    parse_switch = 1 # 0: Off, 1: On
-    plot_switch = 0 # 0: Off, 1: On
-    parse_execution_mode = 1 # 0: Single, 1: Multi
-    parse_process_count = 4 #os.cpu_count() # Number of processes, can be adjusted, each process still need to have independent copy of data
-    plot_execution_mode = 0 # 0: Single, 1: Multi # If multiple parsing processes, this should be single, or set "memory_limit to 1" (out of memory error)
-    plot_process_count = 2 #os.cpu_count() # Number of processes, can be adjusted, each process still need to have independent copy of data
-    memory_limit = 1 # If higher, will allow more plot_process_count, but may cause memory error
+    option = {
+            "parse_switch": 0, # 0: Off, 1: On
+            "plot_switch": 0, # 0: Off, 1: On
+            "write_critical_switch": 1, # 0: Off, 1: On
+            "write_port_count_switch": 1, # 0: Off, 1: On
+            "parse_execution_mode": 1, # 0: Single, 1: Multi
+            "parse_process_count": 4, # Number of processes, can be adjusted, each process still need to have independent copy of data
+            "plot_execution_mode": 0, # 0: Single, 1: Multi # If multiple parsing processes, this should be single, or set "memory_limit to 1" (out of memory error)
+            "plot_process_count": 2, # Number of processes, can be adjusted, each process still need to have independent copy of data
+            "memory_limit": 1, # If higher, will allow more plot_process_count, but may cause memory error
+            }
     
     # Input data for parser class
     data = {
@@ -82,19 +90,23 @@ if __name__ == '__main__':
     # Display setting information
     print("=====================================================", flush=True)
     str_temp = ">> Parsing switch:\t\t{}"
-    print(str_temp.format("On" if parse_switch == 1 else "Off"), flush=True)
+    print(str_temp.format("On" if option["parse_switch"] == 1 else "Off"), flush=True)
     str_temp = ">> Plotting switch:\t\t{}"
-    print(str_temp.format("On" if plot_switch == 1 else "Off"), flush=True)
+    print(str_temp.format("On" if option["plot_switch"] == 1 else "Off"), flush=True)
+    str_temp = ">> Write critical switch:\t{}"
+    print(str_temp.format("On" if option["write_critical_switch"] == 1 else "Off"), flush=True)
+    str_temp = ">> Write port count switch:\t{}"
+    print(str_temp.format("On" if option["write_port_count_switch"] == 1 else "Off"), flush=True)
     str_temp = ">> Parsing execution mode:\t{}"
-    print(str_temp.format("Single" if parse_execution_mode == 0 else "Multi"), flush=True)
+    print(str_temp.format("single" if option["parse_execution_mode"] == 0 else "multi"), flush=True)
     str_temp = ">> Parsing process count:\t{}"
-    print(str_temp.format(parse_process_count), flush=True)
+    print(str_temp.format(option["parse_process_count"]), flush=True)
     str_temp = ">> Plotting execution mode:\t{}"
-    print(str_temp.format("Single" if plot_execution_mode == 0 else "Multi"), flush=True)
+    print(str_temp.format("Single" if option["plot_execution_mode"] == 0 else "Multi"), flush=True)
     str_temp = ">> Plotting process count:\t{}"
-    print(str_temp.format(plot_process_count), flush=True)
+    print(str_temp.format(option["plot_process_count"]), flush=True)
     str_temp = ">> Memory limit:\t\t{}"
-    print(str_temp.format(memory_limit), flush=True)
+    print(str_temp.format(option["memory_limit"]), flush=True)
     print("=====================================================", flush=True)
     temp = data["hide_info"]
     data["data_fp"] = __file__
@@ -104,18 +116,18 @@ if __name__ == '__main__':
     data["hide_info"] = temp
 
     # Execute
-    if parse_execution_mode == 0:
+    if option["parse_execution_mode"] == 0:
         for path in paths:
             data["data_fp"] = path
-            input_data = (switch_key, switch, data, plot_execution_mode, plot_process_count, parse_switch, plot_switch)
+            input_data = (switch_key, switch, data, option)
             exec_single(input_data)
     else:
-        if parse_process_count > memory_limit:
-            plot_execution_mode = 0
-        print(">> Spawning pool of {} parsing processes and execute {} in parallel ...".format(len(paths), parse_process_count), flush=True)
+        if option["parse_process_count"] > option["memory_limit"]:
+            option["plot_execution_mode"] = 0
+        print(">> Spawning pool of {} parsing processes and execute {} in parallel ...".format(len(paths), option["parse_process_count"]), flush=True)
         input_data = []
         for path in paths:
             data["data_fp"] = path
-            input_data.append((switch_key, switch, copy.deepcopy(data), plot_execution_mode, plot_process_count, parse_switch, plot_switch))
-        with mp.Pool(processes=parse_process_count) as p:
+            input_data.append((switch_key, switch, copy.deepcopy(data), option))
+        with mp.Pool(processes=option["parse_process_count"]) as p:
             p.map(exec_single, input_data)
