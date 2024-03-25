@@ -35,7 +35,7 @@ if __name__ == '__main__':
     freeze_support()
 
     option = {
-            "parse_switch": 0, # 0: Off, 1: On
+            "parse_switch": 1, # 0: Off, 1: On
             "plot_switch": 1, # 0: Off, 1: On
             "write_critical_switch": 1, # 0: Off, 1: On
             "write_port_count_switch": 1, # 0: Off, 1: On
