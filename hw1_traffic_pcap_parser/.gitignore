@@ -2,6 +2,7 @@ __pycache__/
 build/
 data/*pcap*
 plot/*/*.png*
+plot/*
 mem_dump/*pickle*
 critical/
 port_count/

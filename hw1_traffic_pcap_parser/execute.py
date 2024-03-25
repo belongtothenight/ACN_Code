@@ -28,7 +28,7 @@ def exec_single(input_data):
                 exec_index(input_data[i])
         else:
             print(">> File: {} - Spawning pool of {} plotting processes and execute {} in parallel ...".format(os.path.basename(data["data_fp"]), fig_count, option["plot_process_count"]), flush=True)
-            with mp.Pool(processes=options["plot_process_count"]) as p:
+            with mp.Pool(processes=option["plot_process_count"]) as p:
                 p.map(exec_index, input_data)
 
 if __name__ == '__main__':
@@ -36,12 +36,12 @@ if __name__ == '__main__':
 
     option = {
             "parse_switch": 0, # 0: Off, 1: On
-            "plot_switch": 0, # 0: Off, 1: On
+            "plot_switch": 1, # 0: Off, 1: On
             "write_critical_switch": 1, # 0: Off, 1: On
             "write_port_count_switch": 1, # 0: Off, 1: On
-            "parse_execution_mode": 1, # 0: Single, 1: Multi
-            "parse_process_count": 4, # Number of processes, can be adjusted, each process still need to have independent copy of data
-            "plot_execution_mode": 0, # 0: Single, 1: Multi # If multiple parsing processes, this should be single, or set "memory_limit to 1" (out of memory error)
+            "parse_execution_mode": 0, # 0: Single, 1: Multi
+            "parse_process_count": 1, # Number of processes, can be adjusted, each process still need to have independent copy of data
+            "plot_execution_mode": 1, # 0: Single, 1: Multi # If multiple parsing processes, this should be single, or set "memory_limit to 1" (out of memory error)
             "plot_process_count": 2, # Number of processes, can be adjusted, each process still need to have independent copy of data
             "memory_limit": 1, # If higher, will allow more plot_process_count, but may cause memory error
             }
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
             "display_critical": 0, # 1: On
             "max_packets": 0, # Extract first x packets # 0: Off
-            "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
+            "n_delta_t": 30, # Extract packets for first n x delta_t seconds # 0: Off
     }
     # Input switch for parser.plot
     switch = {
