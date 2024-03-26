@@ -546,7 +546,7 @@ cdef class parser:
         if self.hide_info != 1:
             print("=============================================", flush=True)
             self.str_temp = ">> Selected interval count:     {}"
-            print(self.str_temp.format(self.n_delta_t), flush=True)
+            print(self.str_temp.format("Maximum available" if self.n_delta_t == 0 else self.n_delta_t), flush=True)
             self.str_temp = ">> Mode:                        {}"
             print(self.str_temp.format("Show plot" if output_mode == 0 else "Save plot"), flush=True)
             self.str_temp = ">> Dynamic alpha:               {}"
