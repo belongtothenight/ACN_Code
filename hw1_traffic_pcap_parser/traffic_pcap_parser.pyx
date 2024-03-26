@@ -12,9 +12,8 @@ import statistics
 import math
 import os
 import sys
-#import multiprocessing
-#from multiprocessing.pool import ThreadPool
 import pickle
+import gc
 
 # The input is the list of frequency count
 def norm_entropy(freq_counts):
@@ -520,6 +519,7 @@ cdef class parser:
             fig.savefig(filename, dpi=self.dpi)
             print(">> Plot saved to file:           \t" + filename, flush=True)
             plt.close(fig)
+            gc.collect()
         def plot_ax(ax, x, y, bottom, width, depth, top, shade, alpha, color, dynamic_alpha=0, min_alpha=0.2):
             # Coloring: https://stackoverflow.com/questions/42086276/get-default-line-color-cycle
             #           https://stackoverflow.com/questions/24767355/individual-alpha-values-in-scatter-plot
@@ -937,7 +937,7 @@ if __name__ == "__main__":
             "progress_display_mode": 1, # 0: by packet (waste compute resource), 1: by delta_t
             "display_critical": 1, # 1: On
             "max_packets": 0, # Extract first x packets # 0: Off
-            "n_delta_t": 1, # Extract packets for first n x delta_t seconds # 0: Off
+            "n_delta_t": 0, # Extract packets for first n x delta_t seconds # 0: Off
     }
     # Input switch for parser.plot
     switch = {

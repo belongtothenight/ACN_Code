@@ -35,7 +35,7 @@ if __name__ == '__main__':
     freeze_support()
 
     option = {
-            "parse_switch": 1, # 0: Off, 1: On
+            "parse_switch": 0, # 0: Off, 1: On
             "plot_switch": 1, # 0: Off, 1: On
             "write_critical_switch": 1, # 0: Off, 1: On
             "write_port_count_switch": 1, # 0: Off, 1: On
@@ -81,10 +81,12 @@ if __name__ == '__main__':
             "f17": 0, # Plot 3D x: time, y: port number, z: udp total ports distribution
             "f18": 0, # Plot 3D x: time, y: port number, z: tcp vs udp total ports distribution
             }
-    paths = ["E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301261400.pcap.gz",
-             "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz",
-             "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz",
-             "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz"]
+    paths = [
+            "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301261400.pcap.gz",
+            "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301281400.pcap.gz",
+            "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301301400.pcap.gz",
+            "E:/GitHub/ACN_Code/hw1_traffic_pcap_parser/data/202301311400.pcap.gz",
+            ]
     switch_key = list(switch.keys())
     
     # Display setting information
