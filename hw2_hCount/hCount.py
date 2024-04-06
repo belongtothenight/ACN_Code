@@ -1,5 +1,8 @@
 import numpy as np
+import pandas as pd
 import time
+import os
+import csv
 
 class hCount:
     def __init__(self, window_size, hash_cnt, m):
@@ -60,6 +63,8 @@ class hCount:
                 self.hash_table[i][hash_idx] -= 1
 
     def _insert(self, value, ground_truth=False):
+        self.window_cnt += 1
+        self.window_data[self.window_cursor] = value
         if ground_truth:
             #print("Adding item: {}".format(value), flush=True)
             if value in self.ground_truth_dict:
@@ -67,17 +72,15 @@ class hCount:
             else:
                 self.ground_truth_dict[value] = 1
         else:
-            self.window_cnt += 1
-            self.window_data[self.window_cursor] = value
             self._group_hash(value, mode_add=True)
-            self.window_cursor = (self.window_cursor + 1) % self.window_size
+        self.window_cursor = (self.window_cursor + 1) % self.window_size
 
     def _delete(self, ground_truth=False):
+        self.window_cnt -= 1
         if ground_truth:
             #print("Deleting item: {}".format(self.window_data[self.window_cursor]), flush=True)
             self.ground_truth_dict[self.window_data[self.window_cursor]] -= 1
         else:
-            self.window_cnt -= 1
             self._group_hash(self.window_data[self.window_cursor], mode_add=False)
 
     def _compensate_hash_collision(self):
@@ -134,30 +137,62 @@ class hCount:
         pass
 
 if __name__ == "__main__":
+    # Parameters
+    params = {
+        "data_stream_length": 1000,
+        "min_value": 0,
+        "max_value": 100,
+        "window_size": 500,
+        "hash_cnt": 10,
+        "m": 100,
+        "p_digit": 3,
+        "a_digit": 3,
+        "b_digit": 3
+        }
+
     # Generate data stream
-    data_stream_length = 1000
-    min_value = 0
-    max_value = 100
-    random_data = np.random.randint(low=min_value, high=max_value, size=data_stream_length)
-    #random_data = np.arange(start=min_value, stop=max_value, step=1)
+    random_data = np.random.randint(low=params["min_value"], high=params["max_value"], size=params["data_stream_length"])
+    #random_data = np.arange(start=params["min_value"], stop=params["max_value"], step=1)
 
     # hCount
-    hc = hCount(window_size=50, hash_cnt=10, m=100)
+    hc = hCount(window_size=params["window_size"], hash_cnt=params["hash_cnt"], m=params["m"])
     print("initiating hash functions ...", flush=True)
-    hc.init_hash(p_digit=3, a_digit=3, b_digit=3)
+    hc.init_hash(p_digit=params["p_digit"], a_digit=params["a_digit"], b_digit=params["b_digit"])
     print("hCount in progress ...", flush=True)
-    for i in range(data_stream_length):
+    for i in range(params["data_stream_length"]):
         hc.hCount(random_data[i])
     print("hCount done", flush=True)
-    print(hc.query_all_maxCount(min_value, max_value))
+    #print(hc.query_all_maxCount(min_value, max_value))
 
     # Ground truth
     print("resetting parameters ...", flush=True)
     hc._reset_param()
     print("Ground truth in progress ...", flush=True)
-    for i in range(data_stream_length):
+    for i in range(params["data_stream_length"]):
         hc.verify(random_data[i])
     print("Ground truth done", flush=True)
-    print(hc.ground_truth_dict)
+    #print(hc.ground_truth_dict)
 
+    # Compare
+    if not os.path.exists("data"):
+        os.makedirs("data")
+    print("Comparing ...", flush=True)
+    df = pd.DataFrame()
+    df["value"] = list(hc.ground_truth_dict.keys())
+    df["ground_truth"] = list(hc.ground_truth_dict.values())
+    df["hCount"] = [hc.query_maxCount(i) for i in df["value"]]
+    df["diff"] = df["ground_truth"] - df["hCount"]
+    df["diff"] = df["diff"].apply(lambda x: abs(x))
+    df.sort_values(by="value", inplace=True)
+    df.to_csv("data/hCount.csv", index=False)
 
+    with open("data/hCount_sum.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        # Write parameters
+        for key, value in params.items():
+            writer.writerow([key, value])
+        # Write summary data
+        writer.writerow(["item_cnt", len(df)])
+        writer.writerow(["ground_truth_sum", df["ground_truth"].sum()])
+        writer.writerow(["hCount_sum", df["hCount"].sum()])
+        writer.writerow(["diff_sum", df["diff"].sum()])
