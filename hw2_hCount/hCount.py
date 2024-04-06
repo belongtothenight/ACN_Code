@@ -85,7 +85,8 @@ class hCount:
     def _group_hash(self, value, mode_add=True):
         for i in range(self.hash_cnt):
             hash_idx = self._hash(value, i)
-            #print("hash_idx: {}, type: {}".format(hash_idx, type(hash_idx)), flush=True)
+            if self.verbose:
+                print("hash_idx: {}, type: {}".format(hash_idx, type(hash_idx)), flush=True)
             if mode_add:
                 self.hash_table[i][hash_idx] += 1
             else:
@@ -95,7 +96,8 @@ class hCount:
         self.window_cnt += 1
         self.window_data[self.window_cursor] = value
         if ground_truth:
-            #print("Adding item: {}".format(value), flush=True)
+            if self.verbose:
+                print("Adding item: {}".format(value), flush=True)
             if value in self.ground_truth_dict:
                 self.ground_truth_dict[value] += 1
             else:
@@ -107,7 +109,8 @@ class hCount:
     def _delete(self, ground_truth=False):
         self.window_cnt -= 1
         if ground_truth:
-            #print("Deleting item: {}".format(self.window_data[self.window_cursor]), flush=True)
+            if self.verbose:
+                print("Deleting item: {}".format(self.window_data[self.window_cursor]), flush=True)
             self.ground_truth_dict[self.window_data[self.window_cursor]] -= 1
         else:
             self._group_hash(self.window_data[self.window_cursor], mode_add=False)
@@ -151,7 +154,8 @@ class hCount:
         value_set = []
         for i in range(self.hash_cnt):
             hash_idx = self._hash(value, i)
-            #print("hash_idx: {}, type: {}".format(hash_idx, type(hash_idx)), flush=True)
+            if self.verbose:
+                print("hash_idx: {}, type: {}".format(hash_idx, type(hash_idx)), flush=True)
             value_set.append(self.hash_table[i][hash_idx])
         return min(value_set)
 
