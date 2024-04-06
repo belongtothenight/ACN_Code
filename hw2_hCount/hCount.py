@@ -1,29 +1,45 @@
 import numpy as np
 import pandas as pd
-import time
 import os
 import csv
+import math
+import copy
+import time
 
 class hCount:
-    def __init__(self, window_size, hash_cnt, m):
-        # paper parameter
+    def __init__(self, window_size, delta, epsilon, max_value, hash_digit, hash_Delta=0, verbose=False):
         self.window_size = window_size
-        self.hash_cnt = hash_cnt # k
-        self.window_cnt = 0 # N
-        self.hash_table = np.zeros((hash_cnt, m), dtype=int)
-        self.hash_a = np.zeros(hash_cnt, dtype=int)
-        self.hash_b = np.zeros(hash_cnt, dtype=int)
+        self.delta = delta
+        self.epsilon = epsilon
+        self.max_value = max_value
+        self.hash_digit = hash_digit
+        self.hash_Delta = hash_Delta              # In percentage
+        self.verbose = verbose
+        # initialize
+        self.hCount_star = False
+        self._cal_params(delta=self.delta, epsilon=self.epsilon, M=self.max_value, hash_Delta=self.hash_Delta, verbose=self.verbose)
+        self.window_cnt = 0
+        self.primes = []
+        self.hash_table = np.zeros((self.hash_cnt, self.hash_m), dtype=int)
+        self.hash_a = np.zeros(self.hash_cnt, dtype=int)
+        self.hash_b = np.zeros(self.hash_cnt, dtype=int)
         self.hash_p = 0
-        self.hash_m = m
         self.ground_truth_dict = {}
+        self._init_hash(verbose=self.verbose)
         # circular buffer
         self.window_size = window_size
         self.window_data = np.zeros(window_size, dtype=int)
         self.window_cursor = 0
 
-    def _reset_param(self):
-        self.window_cursor = 0
-        self.window_cnt = 0
+    # convert delta and epsilon to data structure dimension
+    def _cal_params(self, delta, epsilon, M, hash_Delta=0, verbose=False):
+        self.rho = 1 - delta
+        self.hash_m = round(math.e / epsilon)
+        self.hash_m_default = copy.deepcopy(self.hash_m)    # m
+        self.hash_m += round(self.hash_m * hash_Delta)      # m + Delta
+        self.hash_cnt = round(math.log(-1 * M / math.log(self.rho)))
+        if verbose:
+            print("rho: {}, m: {}, k: {}".format(self.rho, self.hash_m, self.hash_cnt))
 
     # mode: last, random, ... (default: last)
     def _gen_prime(self, digit, mode="last", prime_cnt=1):
@@ -34,21 +50,34 @@ class hCount:
                 if num % x == 0:
                     return False
             return True
-        data = list(filter(is_prime, range(10 ** (digit-1), 10 ** (digit))))
+        if len(self.primes) == 0: # cache primes
+            self.primes = list(filter(is_prime, range(10 ** (digit-1), 10 ** (digit))))
         if prime_cnt > 1:
             if mode == "last":
-                return np.array(data[-prime_cnt:])
+                return np.array(self.primes[-prime_cnt:])
             elif mode == "random":
-                return np.random.choice(data, prime_cnt, replace=False)
+                return np.random.choice(self.primes, prime_cnt, replace=True)
             else:
-                return np.array(data[:prime_cnt])
+                return np.array(self.primes[:prime_cnt])
         else:
             if mode == "last":
-                return data[-1]
+                return self.primes[-1]
             elif mode == "random":
-                return np.random.choice(data)
+                return np.random.choice(self.primes)
             else:
-                return data[0]
+                return self.primes[0]
+
+    def _init_hash(self, verbose=False):
+        digit = self.hash_digit
+        if verbose:
+            print("Generating hash p ...", flush=True)
+        self.hash_p = self._gen_prime(digit, mode="last")
+        if verbose:
+            print("Generating hash a ...", flush=True)
+        self.hash_a = self._gen_prime(digit, prime_cnt=self.hash_cnt, mode="random")
+        if verbose:
+            print("Generating hash b ...", flush=True)
+        self.hash_b = self._gen_prime(digit, prime_cnt=self.hash_cnt, mode="random")
 
     def _hash(self, value, hash_idx):
         return int(((self.hash_a[hash_idx] * value + self.hash_b[hash_idx]) % self.hash_p) % self.hash_m)
@@ -83,13 +112,9 @@ class hCount:
         else:
             self._group_hash(self.window_data[self.window_cursor], mode_add=False)
 
-    def _compensate_hash_collision(self):
-        pass
-
-    def init_hash(self, p_digit=10, a_digit=5, b_digit=5):
-        self.hash_p = self._gen_prime(p_digit, mode="last")
-        self.hash_a = self._gen_prime(a_digit, prime_cnt=self.hash_cnt, mode="random")
-        self.hash_b = self._gen_prime(b_digit, prime_cnt=self.hash_cnt, mode="random")
+    def reset_param(self):
+        self.window_cursor = 0
+        self.window_cnt = 0
 
     def hCount(self, value):
         if self.window_cnt < self.window_size:
@@ -100,16 +125,6 @@ class hCount:
             self._delete()
             self._insert(value)
 
-    def hCount_star(self, value):
-        if self.window_cnt < self.window_size:
-            # window is not full
-            self._insert(value)
-        else:
-            # window is full
-            self._delete()
-            self._insert(value)
-            self._compensate_hash_collision()
-
     def verify(self, value):
         if self.window_cnt < self.window_size:
             # window is not full
@@ -119,6 +134,19 @@ class hCount:
             self._delete(ground_truth=True)
             self._insert(value, ground_truth=True)
 
+    # hCount star algorithm
+    def compensate_hash_collision(self):
+        self.hCount_star = True
+        for i in range(self.hash_cnt):
+            collision_cnt = 0
+            for j in range(self.hash_m_default, self.hash_m):
+                if self.hash_table[i][j] > 0:
+                    collision_cnt += 1
+            collision_compensation = collision_cnt / (self.hash_m - self.hash_m_default)
+            self.hash_table[i] -= round(collision_compensation)
+            if self.verbose:
+                print("Hash table[{}]: collision_cnt: {}, collision_compensation: {}".format(i, collision_cnt, collision_compensation))
+
     def query_maxCount(self, value):
         value_set = []
         for i in range(self.hash_cnt):
@@ -127,72 +155,60 @@ class hCount:
             value_set.append(self.hash_table[i][hash_idx])
         return min(value_set)
 
-    def query_all_maxCount(self, min_value, max_value):
+    def query_all_maxCount(self, max_value):
         value_dict = {}
-        for i in range(min_value, max_value):
+        for i in range(0, max_value):
             value_dict[i] = self.query_maxCount(i)
         return value_dict
 
     def query_eFreq(self, freq_threshold):
-        pass
+        if self.verbose:
+            print("Querying frequent items ...")
+        freq_item = []
+        for i in range(0, self.max_value):
+            if self.query_maxCount(i) > self.window_size * freq_threshold:
+                freq_item.append(i)
+                if self.verbose:
+                    print("Item: {}, freq: {}".format(i, self.query_maxCount(i)/self.window_size))
+        if self.verbose:
+            print("Querying frequent items done.")
+        return freq_item
 
-if __name__ == "__main__":
-    # Parameters
-    params = {
-        "data_stream_length": 1000,
-        "min_value": 0,
-        "max_value": 100,
-        "window_size": 500,
-        "hash_cnt": 10,
-        "m": 100,
-        "p_digit": 3,
-        "a_digit": 3,
-        "b_digit": 3
-        }
+    def query_all_eFreq(self):
+        if self.verbose:
+            print("Querying all frequent items ...")
+        freq_dict = {}
+        for i in range(0, self.max_value):
+            freq_dict[i] = self.query_maxCount(i) / self.window_size
+        if self.verbose:
+            print("Querying all frequent items done.")
+        return freq_dict
 
-    # Generate data stream
-    random_data = np.random.randint(low=params["min_value"], high=params["max_value"], size=params["data_stream_length"])
-    #random_data = np.arange(start=params["min_value"], stop=params["max_value"], step=1)
+    def dump_general_params(self, params):
+        if not os.path.exists("data"):
+            os.makedirs("data")
+        file_path = "data/hCount_general.csv"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        with open(file_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            for key, value in params.items():
+                writer.writerow([key, value])
+            writer.writerow(["rho", self.rho])
+            writer.writerow(["m(int)", self.hash_m_default])
+            writer.writerow(["m+delta(int)", self.hash_m])
+            writer.writerow(["k(int)", self.hash_cnt])
+            writer.writerow(["hCount_star", self.hCount_star])
 
-    # hCount
-    hc = hCount(window_size=params["window_size"], hash_cnt=params["hash_cnt"], m=params["m"])
-    print("initiating hash functions ...", flush=True)
-    hc.init_hash(p_digit=params["p_digit"], a_digit=params["a_digit"], b_digit=params["b_digit"])
-    print("hCount in progress ...", flush=True)
-    for i in range(params["data_stream_length"]):
-        hc.hCount(random_data[i])
-    print("hCount done", flush=True)
-    #print(hc.query_all_maxCount(min_value, max_value))
-
-    # Ground truth
-    print("resetting parameters ...", flush=True)
-    hc._reset_param()
-    print("Ground truth in progress ...", flush=True)
-    for i in range(params["data_stream_length"]):
-        hc.verify(random_data[i])
-    print("Ground truth done", flush=True)
-    #print(hc.ground_truth_dict)
-
-    # Compare
-    if not os.path.exists("data"):
-        os.makedirs("data")
-    print("Comparing ...", flush=True)
-    df = pd.DataFrame()
-    df["value"] = list(hc.ground_truth_dict.keys())
-    df["ground_truth"] = list(hc.ground_truth_dict.values())
-    df["hCount"] = [hc.query_maxCount(i) for i in df["value"]]
-    df["diff"] = df["ground_truth"] - df["hCount"]
-    df["diff"] = df["diff"].apply(lambda x: abs(x))
-    df.sort_values(by="value", inplace=True)
-    df.to_csv("data/hCount.csv", index=False)
-
-    with open("data/hCount_sum.csv", "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        # Write parameters
-        for key, value in params.items():
-            writer.writerow([key, value])
-        # Write summary data
-        writer.writerow(["item_cnt", len(df)])
-        writer.writerow(["ground_truth_sum", df["ground_truth"].sum()])
-        writer.writerow(["hCount_sum", df["hCount"].sum()])
-        writer.writerow(["diff_sum", df["diff"].sum()])
+    def dump_hash_params(self):
+        if not os.path.exists("data"):
+            os.makedirs("data")
+        file_path = "data/hCount_hash.csv"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        df = pd.DataFrame()
+        df["hash_a"] = self.hash_a
+        df["hash_b"] = self.hash_b
+        df["hash_p"] = self.hash_p
+        df["hash_m"] = self.hash_m
+        df.to_csv(file_path, index=False)
