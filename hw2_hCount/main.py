@@ -53,7 +53,7 @@ if __name__ == "__main__":
     hc.reset_param()
     print("Ground truth in progress ...", flush=True)
     for i in range(params["data_stream_length"]):
-        hc.verify(random_data[i])
+        hc.ground_truth(random_data[i])
     print("Ground truth done", flush=True)
 
     # eFreq

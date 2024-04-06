@@ -125,7 +125,7 @@ class hCount:
             self._delete()
             self._insert(value)
 
-    def verify(self, value):
+    def ground_truth(self, value):
         if self.window_cnt < self.window_size:
             # window is not full
             self._insert(value, ground_truth=True)
