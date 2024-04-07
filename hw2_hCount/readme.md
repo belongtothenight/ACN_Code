@@ -87,3 +87,7 @@ This is a Python implementation of the hCount algorithm for data stream processi
 - `hCount.dump_general_params(params: dict[param: str, value: any]) -> None`: Dump general parameters to CSV file.
     - `params`: Dictionary of parameters to dump. (constructor parameters)
 - `hCount.dump_hash_params() -> None`: Dump hash function parameters to CSV file.
+
+## Bugs
+
+1. [main.py](main.py): Line 102-120, likely wrong in calculating precision and recall, should not be using sum but count individual occurance
