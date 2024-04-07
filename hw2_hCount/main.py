@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import csv
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 
 # https://stackoverflow.com/questions/57413721/how-can-i-generate-random-variables-using-np-random-zipf-for-a-given-range-of-va
 def Zipf(a: np.float64, min: np.uint64, max: np.uint64, size=None):
@@ -32,12 +33,24 @@ if __name__ == "__main__":
         "epsilon": 0.01,
         "delta": 0.0001,
         }
+    stream_type = "truncnorm" # "seq", "rand", "zipf1", "zipf2", "truncnorm"
 
     # Generate data stream
-    #random_data = np.arange(start=params["min_value"], stop=params["max_value"], step=1)
-    #random_data = np.random.randint(low=params["min_value"], high=params["max_value"], size=params["data_stream_length"])
-    random_data = Zipf(a=1.1, min=np.uint64(1), max=np.uint64(params["max_value"]), size=params["data_stream_length"])
-    #params["max_value"] = max(random_data)
+    if stream_type == "seq":
+        random_data = np.arange(start=params["min_value"], stop=params["max_value"], step=1)
+    elif stream_type == "rand":
+        random_data = np.random.randint(low=params["min_value"], high=params["max_value"], size=params["data_stream_length"])
+    elif stream_type == "zipf1":
+        random_data = Zipf(a=1.1, min=np.uint64(1), max=np.uint64(params["max_value"]), size=params["data_stream_length"])
+    elif stream_type == "zipf2": # overflow, error prone
+        random_data = stats.zipf(a=1.1).rvs(size=params["data_stream_length"]).astype(np.uint64)
+    elif stream_type == "truncnorm":
+        # https://stackoverflow.com/questions/18441779/how-to-specify-upper-and-lower-limits-when-using-numpy-random-normal
+        mu = 50
+        sigma = 10
+        random_data = stats.truncnorm((params["min_value"]-mu)/sigma, (params["max_value"]-mu)/sigma, loc=mu, scale=sigma).rvs(size=params["data_stream_length"]).astype(np.uint64)
+    else:
+        raise ValueError("Invalid stream type")
     print("Data stream generated", flush=True)
 
     # hCount
@@ -86,6 +99,26 @@ if __name__ == "__main__":
         writer.writerow(["ground_truth_sum", df["ground_truth"].sum()])
         writer.writerow(["hCount_sum", df["hCount"].sum()])
         writer.writerow(["diff_sum", df["diff"].sum()])
+        # https://en.wikipedia.org/wiki/Precision_and_recall
+        # TP = ground_truth - diff
+        TP = df["ground_truth"].sum() - df["diff"].sum()
+        writer.writerow(["TP?", TP])
+        # FP = hCount - ground_truth
+        FP = df["hCount"].sum() - df["ground_truth"].sum()
+        writer.writerow(["FP?", FP])
+        # FN = ground_truth - hCount
+        FN = df["ground_truth"].sum() - df["hCount"].sum()
+        writer.writerow(["FN?", FN])
+        # TN = item_cnt - ground_truth - FP
+        TN = len(df) - df["ground_truth"].sum() - FP
+        writer.writerow(["TN?", TN])
+        # precision = TP / (TP + FP)
+        precision = TP / (TP + FP)
+        writer.writerow(["precision?", precision])
+        # recall = TP / (TP + FN)
+        recall = TP / (TP + FN)
+        writer.writerow(["recall?", recall])
+        writer.writerow(["stream_type", stream_type])
 
     plot_dir = "plots"
     if not os.path.exists(plot_dir):
@@ -101,9 +134,9 @@ if __name__ == "__main__":
     plt.plot(df["item"], df["hCount"], label="hCount", alpha=0.5)
     plt.legend()
     plt.xlabel("item")
-    plt.ylabel("count")
+    plt.ylabel("count (log scale)")
     plt.yscale("log")
-    plt.title("hCount")
+    plt.title("hCount vs ground_truth (data stream: {})".format(stream_type))
     plt.savefig(filename)
     plt.close()
 
@@ -117,7 +150,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.xlabel("item")
     plt.ylabel("count")
-    plt.title("hCount - ground_truth = diff")
+    plt.title("hCount - ground_truth = diff (data stream: {})".format(stream_type))
     plt.savefig(filename)
     plt.close()
 
@@ -130,8 +163,8 @@ if __name__ == "__main__":
     plt.plot(df["item"], df["eFreq"], label="eFreq")
     plt.legend()
     plt.xlabel("item")
-    plt.ylabel("freq")
+    plt.ylabel("freq (log scale)")
     plt.yscale("log")
-    plt.title("eFreq")
+    plt.title("eFreq (data stream: {})".format(stream_type))
     plt.savefig(filename)
     plt.close()
