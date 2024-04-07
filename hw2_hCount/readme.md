@@ -31,13 +31,13 @@ This is a Python implementation of the hCount algorithm for data stream processi
     - `epsilon`: Error factor. (How likely the error is to be within delta) (0~1)
     - `max_value`: Maximum value of data stream.
     - `hash_digit`: Number of digits of prime numbers to use in hash function. (Recommended to be larger than input item, takes a long time to compute)
-    - `hash_Delta`: hCount$\star$ parameter in percentage, extra space for collision calculation. (0~1)
+    - `hash_Delta`: hCount $\star$ parameter in percentage, extra space for collision calculation. (0~1)
     - `verbose`: Print debug information if True. (Set accross all functions)
 - `hCount._cal_params(delta: float, epsilon: float, M: int, hash_Delta: float = 0, verbose: bool = False) -> None`: Helper function to calculate data structure (hash table) dimension.
     - `delta`: Error probability. (0~1)
     - `epsilon`: Error factor. (How likely the error is to be within delta) (0~1)
     - `M`: Maximum value of data stream.
-    - `hash_Delta`: hCount$\star$ parameter in percentage, extra space for collision calculation. (0~1)
+    - `hash_Delta`: hCount $\star$ parameter in percentage, extra space for collision calculation. (0~1)
     - `verbose`: Print debug information if True.
 - `hCount._gen_prime(digit: int, mode: str = 'last', prime_cnt: int = 1) -> int/List[int]`: Helper function to generate prime number(s).
     - `digit`: Number of digits of prime numbers to use in hash function. (Recommended to be larger than input item, takes a long time to compute)
@@ -61,7 +61,7 @@ This is a Python implementation of the hCount algorithm for data stream processi
     - `value`: New arriving value.
 - `hCount.ground_truth(value: int) -> None`: Ground truth to accept new arriving value and update ground truth dictionary.
     - `value`: New arriving value.
-- `hCount.compensate_hash_collision() -> None`: hCount$\star$ algorithm to compensate hash collision.
+- `hCount.compensate_hash_collision() -> None`: hCount $\star$ algorithm to compensate hash collision.
 - `hCount.query_maxCount(value: int) -> int`: Query hash table to get maximum possible count of value. (minimum of all queries)
     - `value`: Value to query.
 - `hCount.query_all_maxCount() -> dict[item: int, count: int]`: Query hash table to get all maximum possible counts of all items.
