@@ -159,9 +159,9 @@ class hCount:
             value_set.append(self.hash_table[i][hash_idx])
         return min(value_set)
 
-    def query_all_maxCount(self, max_value):
+    def query_all_maxCount(self):
         value_dict = {}
-        for i in range(0, max_value):
+        for i in range(0, self.max_value):
             value_dict[i] = self.query_maxCount(i)
         return value_dict
 
