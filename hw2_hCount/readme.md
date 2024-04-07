@@ -37,18 +37,11 @@ This is a Python implementation of the hCount algorithm for data stream processi
     - `hash_digit`: Number of digits of prime numbers to use in hash function. (Recommended to be larger than input item, takes a long time to compute)
     - `hash_Delta`: hCount $\star$ parameter in percentage, extra space for collision calculation. (0~1)
     - `verbose`: Print debug information if True. (Set accross all functions)
-- `hCount._cal_params(delta: float, epsilon: float, M: int, hash_Delta: float = 0, verbose: bool = False) -> None`: Helper function to calculate data structure (hash table) dimension.
-    - `delta`: Error probability. (0~1)
-    - `epsilon`: Error factor. (How likely the error is to be within delta) (0~1)
-    - `M`: Maximum value of data stream.
-    - `hash_Delta`: hCount $\star$ parameter in percentage, extra space for collision calculation. (0~1)
-    - `verbose`: Print debug information if True.
-- `hCount._gen_prime(digit: int, mode: str = 'last', prime_cnt: int = 1) -> int/List[int]`: Helper function to generate prime number(s).
-    - `digit`: Number of digits of prime numbers to use in hash function. (Recommended to be larger than input item, takes a long time to compute)
+- `hCount._cal_params() -> None`: Helper function to calculate data structure (hash table) dimension.
+- `hCount._gen_prime(mode: str = 'last', prime_cnt: int = 1) -> int/List[int]`: Helper function to generate prime number(s).
     - `mode`: 'last' to return largest prime number(s), 'random' to return random prime number(s), or to return smallest prime number(s).
     - `prime_cnt`: Number of prime numbers to return.
-- `hCount._init_hash(verbose: bool = False) -> None`: Helper function to initialize hash functions.
-    - `verbose`: Print debug information if True.
+- `hCount._init_hash() -> None`: Helper function to initialize hash functions.
 - `hCount._hash(value: int, hash_idx: int) -> int`: Helper function to hash value with specified hash function.
     - `value`: Value to hash.
     - `hash_idx`: Index of hash function to use.
@@ -69,7 +62,7 @@ This is a Python implementation of the hCount algorithm for data stream processi
 - `hCount.query_maxCount(value: int) -> int`: Query hash table to get maximum possible count of value. (minimum of all queries)
     - `value`: Value to query.
 - `hCount.query_all_maxCount() -> dict[item: int, count: int]`: Query hash table to get all maximum possible counts of all items.
-- `hCount.query_eFreq(freq_threshold: float) -> list[item: int]`: Query hash table to get all items with frequency greater than threshold.
+- `hCount.query_eFreq(freq_threshold: float =0.01) -> list[item: int]`: Query hash table to get all items with frequency greater than threshold.
     - `freq_threshold`: Frequency threshold in range (0, 1).
 - `hCount.query_all_eFreq() -> dict[item: int, freq: float]`: Query hash table to get all items' frequency.
 - `hCount.dump_general_params(params: dict[param: str, value: any]) -> None`: Dump general parameters to CSV file.

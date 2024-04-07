@@ -7,17 +7,17 @@ import copy
 import time
 
 class hCount:
-    def __init__(self, window_size, delta, epsilon, max_value, hash_digit, hash_Delta=0, verbose=False):
+    def __init__(self, window_size: int, delta: float, epsilon: float, max_value: int, hash_digit: int, hash_Delta: float =0, verbose: bool =False):
         self.window_size = window_size
         self.delta = delta
         self.epsilon = epsilon
         self.max_value = max_value
         self.hash_digit = hash_digit
-        self.hash_Delta = hash_Delta              # In percentage
+        self.hash_Delta = hash_Delta    # In percentage
         self.verbose = verbose
         # initialize
         self.hCount_star = False
-        self._cal_params(delta=self.delta, epsilon=self.epsilon, M=self.max_value, hash_Delta=self.hash_Delta, verbose=self.verbose)
+        self._cal_params()
         self.window_cnt = 0
         self.primes = []
         self.hash_table = np.zeros((self.hash_cnt, self.hash_m), dtype=int)
@@ -25,24 +25,24 @@ class hCount:
         self.hash_b = np.zeros(self.hash_cnt, dtype=int)
         self.hash_p = 0
         self.ground_truth_dict = {}
-        self._init_hash(verbose=self.verbose)
+        self._init_hash()
         # circular buffer
         self.window_size = window_size
         self.window_data = np.zeros(window_size, dtype=int)
         self.window_cursor = 0
 
     # convert delta and epsilon to data structure dimension
-    def _cal_params(self, delta, epsilon, M, hash_Delta=0, verbose=False):
-        self.rho = 1 - delta
-        self.hash_m = round(math.e / epsilon)
+    def _cal_params(self):
+        self.rho = 1 - self.delta
+        self.hash_m = round(math.e / self.epsilon)
         self.hash_m_default = copy.deepcopy(self.hash_m)    # m
-        self.hash_m += round(self.hash_m * hash_Delta)      # m + Delta
-        self.hash_cnt = round(math.log(-1 * M / math.log(self.rho)))
-        if verbose:
+        self.hash_m += round(self.hash_m * self.hash_Delta)      # m + Delta
+        self.hash_cnt = round(math.log(-1 * self.max_value / math.log(self.rho)))
+        if self.verbose:
             print("rho: {}, m: {}, k: {}".format(self.rho, self.hash_m, self.hash_cnt))
 
     # mode: last, random, ... (default: last)
-    def _gen_prime(self, digit, mode="last", prime_cnt=1):
+    def _gen_prime(self, mode: str ="last", prime_cnt: int =1):
         def is_prime(num):
             if num == 0 or num == 1:
                 return False
@@ -51,7 +51,7 @@ class hCount:
                     return False
             return True
         if len(self.primes) == 0: # cache primes
-            self.primes = list(filter(is_prime, range(10 ** (digit-1), 10 ** (digit))))
+            self.primes = list(filter(is_prime, range(10 ** (self.hash_digit-1), 10 ** (self.hash_digit))))
         if prime_cnt > 1:
             if mode == "last":
                 return np.array(self.primes[-prime_cnt:])
@@ -67,22 +67,21 @@ class hCount:
             else:
                 return self.primes[0]
 
-    def _init_hash(self, verbose=False):
-        digit = self.hash_digit
-        if verbose:
+    def _init_hash(self):
+        if self.verbose:
             print("Generating hash p ...", flush=True)
-        self.hash_p = self._gen_prime(digit, mode="last")
-        if verbose:
+        self.hash_p = self._gen_prime(mode="last")
+        if self.verbose:
             print("Generating hash a ...", flush=True)
-        self.hash_a = self._gen_prime(digit, prime_cnt=self.hash_cnt, mode="random")
-        if verbose:
+        self.hash_a = self._gen_prime(prime_cnt=self.hash_cnt, mode="random")
+        if self.verbose:
             print("Generating hash b ...", flush=True)
-        self.hash_b = self._gen_prime(digit, prime_cnt=self.hash_cnt, mode="random")
+        self.hash_b = self._gen_prime(prime_cnt=self.hash_cnt, mode="random")
 
-    def _hash(self, value, hash_idx):
+    def _hash(self, value: int, hash_idx: int):
         return int(((self.hash_a[hash_idx] * value + self.hash_b[hash_idx]) % self.hash_p) % self.hash_m)
 
-    def _group_hash(self, value, mode_add=True):
+    def _group_hash(self, value: int, mode_add: bool =True):
         for i in range(self.hash_cnt):
             hash_idx = self._hash(value, i)
             if self.verbose:
@@ -92,7 +91,7 @@ class hCount:
             else:
                 self.hash_table[i][hash_idx] -= 1
 
-    def _insert(self, value, ground_truth=False):
+    def _insert(self, value: int, ground_truth: bool =False):
         self.window_cnt += 1
         self.window_data[self.window_cursor] = value
         if ground_truth:
@@ -106,7 +105,7 @@ class hCount:
             self._group_hash(value, mode_add=True)
         self.window_cursor = (self.window_cursor + 1) % self.window_size
 
-    def _delete(self, ground_truth=False):
+    def _delete(self, ground_truth: bool =False):
         self.window_cnt -= 1
         if ground_truth:
             if self.verbose:
@@ -119,7 +118,7 @@ class hCount:
         self.window_cursor = 0
         self.window_cnt = 0
 
-    def hCount(self, value):
+    def hCount(self, value: int):
         if self.window_cnt < self.window_size:
             # window is not full
             self._insert(value)
@@ -128,7 +127,7 @@ class hCount:
             self._delete()
             self._insert(value)
 
-    def ground_truth(self, value):
+    def ground_truth(self, value: int):
         if self.window_cnt < self.window_size:
             # window is not full
             self._insert(value, ground_truth=True)
@@ -150,7 +149,7 @@ class hCount:
             if self.verbose:
                 print("Hash table[{}]: collision_cnt: {}, collision_compensation: {}".format(i, collision_cnt, collision_compensation))
 
-    def query_maxCount(self, value):
+    def query_maxCount(self, value: int):
         value_set = []
         for i in range(self.hash_cnt):
             hash_idx = self._hash(value, i)
@@ -165,7 +164,7 @@ class hCount:
             value_dict[i] = self.query_maxCount(i)
         return value_dict
 
-    def query_eFreq(self, freq_threshold):
+    def query_eFreq(self, freq_threshold: float =0.01):
         if self.verbose:
             print("Querying frequent items ...")
         freq_item = []
@@ -188,7 +187,7 @@ class hCount:
             print("Querying all frequent items done.")
         return freq_dict
 
-    def dump_general_params(self, params):
+    def dump_general_params(self, params: dict):
         if not os.path.exists("data"):
             os.makedirs("data")
         file_path = "data/hCount_general.csv"
