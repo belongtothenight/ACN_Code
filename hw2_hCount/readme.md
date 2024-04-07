@@ -10,12 +10,25 @@ This is a Python implementation of the hCount algorithm for data stream processi
 
 1. Navigate to this directory in your terminal.
 2. Initialize environment with:
-    ```bash
-    ./scripts/setup.sh
+    ```pwsh Windows PowerShell
+    ./scripts/setup.ps1
+    ```
+    ```bash Linux Bash (use source to keep environment variables)
+    source ./scripts/setup.sh
     ```
 3. Execute program:
-    ```bash
+    ```pwsh Windows PowerShell
     python main.py
+    ```
+    ```bash Linux Bash
+    python main.py
+    ```
+4. Clean up environment with:
+    ```pwsh Windows PowerShell
+    ./scripts/remove.ps1
+    ```
+    ```bash Linux Bash
+    ./scripts/remove.sh
     ```
     
 ## Structure
