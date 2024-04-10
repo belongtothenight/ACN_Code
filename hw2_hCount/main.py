@@ -5,6 +5,7 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import time
 
 # https://stackoverflow.com/questions/57413721/how-can-i-generate-random-variables-using-np-random-zipf-for-a-given-range-of-va
 def Zipf(a: np.float64, min: np.uint64, max: np.uint64, size=None):
@@ -24,7 +25,7 @@ def Zipf(a: np.float64, min: np.uint64, max: np.uint64, size=None):
 if __name__ == "__main__":
     # Parameters
     params = {
-        "data_stream_length": 100000,
+        "data_stream_length": 10000000,
         "window_size": 50000,
         "min_value": 0,     # 0, Must be 0
         "max_value": 100,   # M
@@ -56,18 +57,20 @@ if __name__ == "__main__":
     # hCount
     hc = hCount(window_size=params["window_size"], delta=params["delta"], epsilon=params["epsilon"], max_value=params["max_value"], hash_digit=params["hash_digit"], hash_Delta=params["hash_Delta"], verbose=False)
     print("hCount in progress ...", flush=True)
+    start_time = time.time()
     for i in range(params["data_stream_length"]):
         hc.hCount(random_data[i])
-    print("hCount done", flush=True)
+    print("hCount done in {} seconds".format(time.time()-start_time), flush=True)
     hc.compensate_hash_collision() # hCount star
 
     # Ground truth count
     print("Resetting ...", flush=True)
     hc.reset_param()
     print("Ground truth in progress ...", flush=True)
+    start_time = time.time()
     for i in range(params["data_stream_length"]):
         hc.ground_truth(random_data[i])
-    print("Ground truth done", flush=True)
+    print("Ground truth done in {} seconds".format(time.time()-start_time), flush=True)
 
     # eFreq
     freq_threshold = 0.01
