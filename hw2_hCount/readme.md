@@ -41,10 +41,13 @@ This is a Python implementation of the hCount algorithm for data stream processi
 
 - [scripts](scripts): Contains scripts for setting up and cleaning up local execution environment.
 - [.gitignore](.gitignore): Files and directories to be ignored by git.
+- [data_stream.py](data_stream.py): Data stream generator functions.
 - [hCount.py](hCount.py): Implementation of hCount algorithm in Python class.
 - [main.py](main.py): Main program to execute hCount algorithm.
 - [readme.md](readme.md): This file.
 - [requirements.txt](requirements.txt): Python packages required for execution.
+- [time_by_input_range.py](time_by_input_range.py): Program to measure execution time by input range.
+- [time_hCount.py](time_hCount.py): Timing API built for hCount class.
 
 ## Class hCount Documentation
 
