@@ -9,7 +9,7 @@ if __name__ == "__main__":
     cm_param = {
             'epsilon': 0.01,
             'delta': 0.0001,
-            'omega': 99,
+            'omega': 100,
             'verbose': False,
             'data_dir': 'data',
             }

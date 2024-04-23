@@ -13,7 +13,8 @@ class CM_Sketch():
         self.primes = []
         self.ground_truth_dict = {}
         self._cal_params()
-        self._display_params()
+        if self.verbose:
+            self._display_params()
         self._init_hash()
 
     def _cal_params(self) -> None:
