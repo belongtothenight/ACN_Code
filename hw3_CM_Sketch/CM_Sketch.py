@@ -109,8 +109,5 @@ class CM_Sketch():
     def group_query(self, min_value: int, max_value: int, ground_truth: bool =False):
         result_dict = {}
         for value in range(min_value, max_value):
-            if not ground_truth:
-                result_dict[value] = self.query(value)
-            else:
-                result_dict[value] = self.query(value, ground_truth=True)
+            result_dict[value] = self.query(value, ground_truth=ground_truth)
         return result_dict
