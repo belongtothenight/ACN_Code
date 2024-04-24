@@ -26,7 +26,7 @@ Please apply the moving average methodology to analyze trends.
 While $m$ is the stream length count.
 
 1. $F_k$ score (frequency moment): $F_k=\sum f^k_i$
-2. $F_0$ score (distinct item count): $F_0=\sum^{n=m}_{i=1}f_i^0=f_1^0+f_2^0+\cdots+f_m^0$
+2. $F_0$ score (distinct item count): $F_0=\sum_{n=m}^{i=1}f_i^0=f_1^0+f_2^0+\cdots+f_m^0$
 3. $F_1$ score (total item count): $F_1=\sum^{n=m}_{i=1}f_i^1=f_1+f_2+\cdots+f_m$
 4. $F_2$ score (item count variation): $F_2=\sum^{n=m}_{i=1}f_i^2=f_1^2+f_2^2+\cdots+f_m^2$
 5. Mersenne Prime aided hash (pseudo-code)
