@@ -30,7 +30,6 @@ if __name__ == "__main__":
     # MA/Windowed Count-Min Update
     window_size = 9990
     #window_size = 10
-    tracking_element_value = 50 # stream_param['min_value'] <= value <= stream_param['max_value']
     element_history = []
 
     # Since CM Sketch does not have removal operation, we need to create a new CM Sketch for each window
@@ -39,7 +38,7 @@ if __name__ == "__main__":
         cm = CM_Sketch(epsilon=cm_param['epsilon'], delta=cm_param['delta'], omega=cm_param['omega'], verbose=cm_param['verbose'], data_dir=cm_param['data_dir'])
         for value in stream[i:i+window_size]:
             cm.update(value)
-        element_history.append(cm.query(tracking_element_value))
+        element_history.append(cm.get_F2(min_value=stream_param['min_value'], max_value=stream_param['max_value']))
         del cm
     print(element_history)
 
