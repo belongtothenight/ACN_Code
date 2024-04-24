@@ -111,3 +111,18 @@ class CM_Sketch():
         for value in range(min_value, max_value):
             result_dict[value] = self.query(value, ground_truth=ground_truth)
         return result_dict
+
+    # Distinct count
+    def get_F0(self, min_value: int, max_value: int, ground_truth: bool =False):
+        count_dict = self.group_query(min_value, max_value, ground_truth=ground_truth)
+        return sum([1 for value in count_dict if count_dict[value] != 0])
+
+    # Item count
+    def get_F1(self, min_value: int, max_value: int, ground_truth: bool =False):
+        count_dict = self.group_query(min_value, max_value, ground_truth=ground_truth)
+        return sum([count_dict[value] for value in count_dict])
+
+    # Count variation
+    def get_F2(self, min_value: int, max_value: int, ground_truth: bool =False):
+        count_dict = self.group_query(min_value, max_value, ground_truth=ground_truth)
+        return sum([count_dict[value]**2 for value in count_dict])

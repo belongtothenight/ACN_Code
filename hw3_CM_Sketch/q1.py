@@ -34,12 +34,26 @@ if __name__ == "__main__":
         cm.update(value, ground_truth=True)
     cm.dump_table()
 
+    # F scores
+    cm_score = cm.get_F0(min_value=stream_param['min_value'], max_value=stream_param['max_value'])
+    gt_score = cm.get_F0(min_value=stream_param['min_value'], max_value=stream_param['max_value'], ground_truth=True)
+    diff = cm_score - gt_score
+    print("F0 score (distinct item count)\t CM/GT/DIFF: {}/{}/{}".format(cm_score, gt_score, diff))
+    cm_score = cm.get_F1(min_value=stream_param['min_value'], max_value=stream_param['max_value'])
+    gt_score = cm.get_F1(min_value=stream_param['min_value'], max_value=stream_param['max_value'], ground_truth=True)
+    diff = cm_score - gt_score
+    print("F1 score (total item count)\t CM/GT/DIFF: {}/{}/{}".format(cm_score, gt_score, diff))
+    cm_score = cm.get_F2(min_value=stream_param['min_value'], max_value=stream_param['max_value'])
+    gt_score = cm.get_F2(min_value=stream_param['min_value'], max_value=stream_param['max_value'], ground_truth=True)
+    diff = cm_score - gt_score
+    print("F2 score (item count variation)\t CM/GT/DIFF: {}/{}/{}".format(cm_score, gt_score, diff))
+    
     # Compare Query Results
     df = pd.DataFrame()
     df['value'] = [i for i in range(stream_param['min_value'], stream_param['max_value'])]
     df['cm_result'] = df['value'].map(cm.group_query(min_value=stream_param['min_value'], max_value=stream_param['max_value']))
     df['gt_result'] = df['value'].map(cm.group_query(min_value=stream_param['min_value'], max_value=stream_param['max_value'], ground_truth=True))
-    df['diff'] = df['gt_result'] - df['cm_result']
+    df['diff'] = df['cm_result'] - df['gt_result']
     csv_file = os.path.join(cm_param['data_dir'], 'query_result.csv')
     if os.path.exists(csv_file):
         os.remove(csv_file)
