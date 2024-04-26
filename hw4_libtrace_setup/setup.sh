@@ -14,17 +14,18 @@ bash_function_url="https://raw.githubusercontent.com/belongtothenight/bash_scrip
 bash_function_file="functions.sh"
 libwandder_release_url="https://github.com/LibtraceTeam/libwandder/archive/refs/tags/2.0.11-1.tar.gz"
 libwandder_name="libwandder"
-libwandder_file="${libwandder_name}-${libwandder_release_url##*/}"
-libwandder_ln="${libwandder_file//.tar.gz}"
 wandio_release_url="https://github.com/LibtraceTeam/wandio/archive/refs/tags/4.2.6-1.tar.gz"
 wandio_name="wandio"
-wandio_file="${wandio_name}-${wandio_release_url##*/}"
-wandio_ln="${wandio_file//.tar.gz}"
 libtrace_release_url="https://github.com/LibtraceTeam/libtrace/archive/refs/tags/4.0.24-1.tar.gz"
 libtrace_name="libtrace"
+libtrace_turorial_repo_url="https://github.com/ylai/libtrace_tutorial.git"
+
+libwandder_file="${libwandder_name}-${libwandder_release_url##*/}"
+libwandder_ln="${libwandder_file//.tar.gz}"
+wandio_file="${wandio_name}-${wandio_release_url##*/}"
+wandio_ln="${wandio_file//.tar.gz}"
 libtrace_file="${libtrace_name}-${libtrace_release_url##*/}"
 libtrace_ln="${libtrace_file//.tar.gz}"
-libtrace_turorial_repo_url="https://github.com/ylai/libtrace_tutorial.git"
 
 # Install mutual dependencies
 echo "Installing mutual dependencies"
@@ -110,6 +111,8 @@ elif [ $script_stat == "prod" ]; then
     sudo ln -s "${program_install_dir}/${wandio_ln}" "${program_install_dir}/${wandio_name}"
     sudo ln -s "${program_install_dir}/${libtrace_ln}" "${program_install_dir}/${libtrace_name}"
 fi
+
+# Build libwandder
 
 # End of file
 echo_notice "$this_script" "base" "Setup complete"
