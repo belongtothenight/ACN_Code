@@ -26,6 +26,7 @@ wandio_file="${wandio_name}-${wandio_release_url##*/}"
 wandio_ln="${wandio_file//.tar.gz}"
 libtrace_file="${libtrace_name}-${libtrace_release_url##*/}"
 libtrace_ln="${libtrace_file//.tar.gz}"
+current_dir=$(pwd)
 
 # Install mutual dependencies
 echo "Installing mutual dependencies"
@@ -72,27 +73,35 @@ fi
 
 # Install wandio dependencies
 echo_notice "$this_script" "base" "Installing wandio dependencies"
-err_retry_exec "aptins automake"                1 5 "${this_script}" "base" 1 # >= 1.9
-err_retry_exec "aptins libpthread-stubs0-dev"   1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins zlib1g-dev"              1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins libbz2-dev"              1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins liblzma-dev"             1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins liblzo2-dev"             1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins liblz4-dev"              1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins libzstd-dev"             1 5 "${this_script}" "base" 1 # (optional)
+if [ $script_stat == "dev" ]; then
+    :
+elif [ $script_stat == "prod" ]; then
+    err_retry_exec "aptins automake"                1 5 "${this_script}" "base" 1 # >= 1.9
+    err_retry_exec "aptins libpthread-stubs0-dev"   1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins zlib1g-dev"              1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins libbz2-dev"              1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins liblzma-dev"             1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins liblzo2-dev"             1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins liblz4-dev"              1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins libzstd-dev"             1 5 "${this_script}" "base" 1 # (optional)
+fi
 
 # Install libtrace dependencies
 echo_notice "$this_script" "base" "Installing libtrace dependencies"
-#err_retry_exec "aptins automake"                1 5 "${this_script}" "base" 1 # >= 1.9, done
-err_retry_exec "aptins libpcap-dev"             1 5 "${this_script}" "base" 1 # >= 0.8
-err_retry_exec "aptins flex"                    1 5 "${this_script}" "base" 1
-err_retry_exec "aptins bison"                   1 5 "${this_script}" "base" 1
-err_retry_exec "aptins pkg-config"              1 5 "${this_script}" "base" 1
-#err_retry_exec "aptins libwandio-dev"           1 5 "${this_script}" "base" 1 # build from source
-err_retry_exec "aptins libyaml-dev"             1 5 "${this_script}" "base" 1 # (optional)
-err_retry_exec "aptins libssl-dev"              1 5 "${this_script}" "base" 1 # (optional) for libcrypto
-err_retry_exec "aptins libncurses5-dev"         1 5 "${this_script}" "base" 1 # (optional) for libncurses
-err_retry_exec "aptins libncursesw5-dev"        1 5 "${this_script}" "base" 1 # (optional) for libncurses
+if [ $script_stat == "dev" ]; then
+    :
+elif [ $script_stat == "prod" ]; then
+    #err_retry_exec "aptins automake"                1 5 "${this_script}" "base" 1 # >= 1.9, done
+    err_retry_exec "aptins libpcap-dev"             1 5 "${this_script}" "base" 1 # >= 0.8
+    err_retry_exec "aptins flex"                    1 5 "${this_script}" "base" 1
+    err_retry_exec "aptins bison"                   1 5 "${this_script}" "base" 1
+    err_retry_exec "aptins pkg-config"              1 5 "${this_script}" "base" 1
+    #err_retry_exec "aptins libwandio-dev"           1 5 "${this_script}" "base" 1 # build from source
+    err_retry_exec "aptins libyaml-dev"             1 5 "${this_script}" "base" 1 # (optional)
+    err_retry_exec "aptins libssl-dev"              1 5 "${this_script}" "base" 1 # (optional) for libcrypto
+    err_retry_exec "aptins libncurses5-dev"         1 5 "${this_script}" "base" 1 # (optional) for libncurses
+    err_retry_exec "aptins libncursesw5-dev"        1 5 "${this_script}" "base" 1 # (optional) for libncurses
+fi
 
 # Extract .tar.gz files
 echo_notice "$this_script" "base" "Extracting .tar.gz files"
@@ -113,6 +122,9 @@ elif [ $script_stat == "prod" ]; then
 fi
 
 # Build libwandder
+echo_notice "$this_script" "base" "Building libwandder"
+cd "${program_install_dir}/${libwandder_name}"
+ls
 
 # End of file
 echo_notice "$this_script" "base" "Setup complete"
