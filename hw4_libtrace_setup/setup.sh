@@ -193,7 +193,6 @@ if [ $task_libtrace == 1 ]; then
 fi
 
 if [ $task_libtrace_tutorial == 1 ]; then
-    echo_notice "$this_script" "base" "Building libtrace tutorial"
     libtrace_tutorial_lib_massdal="${program_install_dir}/${libtrace_tutorial_name}/lib/massdal"
     libtrace_tutorial_hw0="${program_install_dir}/${libtrace_tutorial_name}/hw0"
     libtrace_tutorial_codedemo="${program_install_dir}/${libtrace_tutorial_name}/codedemo"
