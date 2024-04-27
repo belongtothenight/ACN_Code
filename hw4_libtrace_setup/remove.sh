@@ -18,8 +18,10 @@ load_preset "./config.ini"
 msg="backup"
 if [ $task_uthash == 1 ] || [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]; then
     echo_notice "$this_script" "$msg" "Backing up files"
+    sudo rm -rf "${program_install_dir}/backup_include"
     sudo cp -rf "${system_include_dir}/" "${program_install_dir}/"
     sudo mv "${program_install_dir}/include/" "${program_install_dir}/backup_include/"
+    sudo rm -rf "${program_install_dir}/backup_lib"
     sudo cp -rf "${system_lib_dir}/" "${program_install_dir}/"
     sudo mv "${program_install_dir}/lib/" "${program_install_dir}/backup_lib/"
 fi
