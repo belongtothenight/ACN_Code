@@ -2,11 +2,11 @@
 
 ## Structure
 
-1. [.gitignore](.gitignore): Git ignore file.
+1. [./.gitignore](./.gitignore): Git ignore file.
 2. [./common_functions.sh](./common_functions.sh): Common bash functions used in setup and remove scripts.
-3. [config.ini](config.ini): Configuration file.
+3. [./config.ini](./config.ini): Configuration file.
 4. [./readme.md](./readme.md): This file.
-5. [remove.sh](remove.sh): Remove script. If error occurs, please find backup in `${program_install_dir}/backup*` and restore them.
+5. [./remove.sh](./remove.sh): Remove script. If error occurs, please find backup in `${program_install_dir}/backup*` and restore them.
 6. [./setup.sh](./setup.sh): Setup script, for installing, configurating and compiling.
 
 ## Tested Platforms
