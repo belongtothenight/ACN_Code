@@ -15,8 +15,9 @@ load_preset "./config.ini"
 # ====================================================================================
 # Backup files
 # ====================================================================================
+msg="backup"
 if [ $task_uthash == 1 ] || [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]; then
-    echo_notice "$this_script" "base" "Backing up files"
+    echo_notice "$this_script" "$msg" "Backing up files"
     sudo cp -rf "${system_include_dir}/" "${program_install_dir}/"
     sudo mv "${program_install_dir}/include/" "${program_install_dir}/backup_include/"
     sudo cp -rf "${system_lib_dir}/" "${program_install_dir}/"
@@ -26,8 +27,9 @@ fi
 # ====================================================================================
 # Remove uthash
 # ====================================================================================
+msg="remove uthash"
 if [ $task_uthash == 1 ]; then
-    echo_notice "$this_script" "base" "Removing uthash"
+    echo_notice "$this_script" "$msg" "Removing uthash"
     sudo rm -rf "${program_install_dir}/${uthash_name}"
     sudo rm -f ${system_include_dir}/ut*.h
 fi
@@ -35,8 +37,9 @@ fi
 # ====================================================================================
 # Remove libwandder
 # ====================================================================================
+msg="remove libwandder"
 if [ $task_libwandder == 1 ]; then
-    echo_notice "$this_script" "base" "Removing libwandder"
+    echo_notice "$this_script" "$msg" "Removing libwandder"
     sudo rm -f ${system_include_dir}/libwandder*.h
     sudo rm -f ${system_lib_dir}/libwandder*
     sudo rm -f "${program_install_dir}/${libwandder_file}"
@@ -47,8 +50,9 @@ fi
 # ====================================================================================
 # Remove wandio
 # ====================================================================================
+msg="remove wandio"
 if [ $task_wandio == 1 ]; then
-    echo_notice "$this_script" "base" "Removing wandio"
+    echo_notice "$this_script" "$msg" "Removing wandio"
     sudo rm -f ${system_include_dir}/wandio*.h
     sudo rm -f ${system_lib_dir}/libwandio*
     sudo rm -f "${program_install_dir}/${wandio_file}"
@@ -59,8 +63,9 @@ fi
 # ====================================================================================
 # Remove libtrace
 # ====================================================================================
+msg="remove libtrace"
 if [ $task_libtrace == 1 ]; then
-    echo_notice "$this_script" "base" "Removing libtrace"
+    echo_notice "$this_script" "$msg" "Removing libtrace"
     sudo rm -f ${system_include_dir}/libtrace*.h
     sudo rm -f ${system_include_dir}/libpacketdump*.h
     sudo rm -rf "${system_include_dir}/${libtrace_name}"
@@ -74,10 +79,12 @@ fi
 # ====================================================================================
 # Remove libtrace tutorial repo
 # ====================================================================================
+msg="remove libtrace tutorial"
 if [ $task_libtrace_tutorial == 1 ]; then
-    echo_notice "$this_script" "base" "Removing libtrace tutorial repo"
+    echo_notice "$this_script" "$msg" "Removing libtrace tutorial repo"
     sudo rm -rf "${program_install_dir}/libtrace_tutorial"
 fi
 
 # End of file
-echo_notice "$this_script" "base" "Cleanup complete"
+msg="cleanup"
+echo_notice "$this_script" "$msg" "Cleanup complete"
