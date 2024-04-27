@@ -53,6 +53,9 @@ load_preset () {
         :
     elif [ $script_stat == "prod" ]; then
         make_flags="-j$(nproc)"
+    else
+        echo_error "$message1" "$message2" "Invalid script_stat"
+        exit $error_exit_code
     fi
     libwandder_file="${libwandder_name}-${libwandder_release_url##*/}"
     libwandder_ln="${libwandder_file//.tar.gz}"

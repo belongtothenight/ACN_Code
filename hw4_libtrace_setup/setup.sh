@@ -11,6 +11,10 @@
 bash_function_url="https://raw.githubusercontent.com/belongtothenight/bash_scripts/main/src/functions.sh"
 bash_function_file="./functions.sh"
 
+echo "Updating system package"
+sudo apt update || { echo 'apt update failed' ; exit 1; }
+sudo apt upgrade -y || { echo 'apt upgrade failed' ; exit 1; }
+
 echo "Installing mutual dependencies"
 sudo apt install -y build-essential git wget || { echo 'apt failed' ; exit 1; }
 
