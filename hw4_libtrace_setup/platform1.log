@@ -1,0 +1,1504 @@
+dachu@LAPTOP-RMAEL4EO:/mnt/e/GitHub/ACN_Code/hw4_libtrace_setup$ ./setup.sh
+Installing mutual dependencies
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+build-essential is already the newest version (12.9ubuntu3).
+wget is already the newest version (1.21.2-2ubuntu1).
+git is already the newest version (1:2.34.1-1ubuntu1.10).
+The following packages were automatically installed and are no longer required:
+  javascript-common libjs-jquery libjs-sphinxdoc libjs-underscore
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 11 not upgraded.
+Downloading bash functions
+./functions.sh                                  100%[=====================================================================================================>]   9.36K  --.-KB/s    in 0.004s
+2024-04-27 21:23:46 URL:https://raw.githubusercontent.com/belongtothenight/bash_scripts/main/src/functions.sh [9581/9581] -> "./functions.sh" [1]
+Sourcing bash functions
+[NOTICE-common/function] Loaded 22 config items from ./config.ini
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/download] Cloning uthash repo
+Cloning into '/opt/uthash'...
+remote: Enumerating objects: 2788, done.
+remote: Counting objects: 100% (169/169), done.
+remote: Compressing objects: 100% (63/63), done.
+remote: Total 2788 (delta 107), reused 137 (delta 102), pack-reused 2619
+Receiving objects: 100% (2788/2788), 1.51 MiB | 6.11 MiB/s, done.
+Resolving deltas: 100% (1876/1876), done.
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/download] Downloading libwandder release
+/opt/libwandder-2.0.11-1.tar.gz                     [ <=>                                                                                                  ]  72.58K  --.-KB/s    in 0.08s
+2024-04-27 21:23:48 URL:https://codeload.github.com/LibtraceTeam/libwandder/tar.gz/refs/tags/2.0.11-1 [74319] -> "/opt/libwandder-2.0.11-1.tar.gz" [1]
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/download] Downloading wandio release
+/opt/wandio-4.2.6-1.tar.gz                          [                <=>                                                                                   ]  16.39M  5.36MB/s    in 3.1s
+2024-04-27 21:23:52 URL:https://codeload.github.com/LibtraceTeam/wandio/tar.gz/refs/tags/4.2.6-1 [17183116] -> "/opt/wandio-4.2.6-1.tar.gz" [1]
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/download] Cloning libtrace repo
+/opt/libtrace-4.0.24-1.tar.gz                       [             <=>                                                                                      ]   3.57M  1.17MB/s    in 3.1s
+2024-04-27 21:23:56 URL:https://codeload.github.com/LibtraceTeam/libtrace/tar.gz/refs/tags/4.0.24-1 [3748483] -> "/opt/libtrace-4.0.24-1.tar.gz" [1]
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/download] Cloning libtrace tutorial repo
+Cloning into '/opt/libtrace_tutorial'...
+remote: Enumerating objects: 115, done.
+remote: Counting objects: 100% (39/39), done.
+remote: Compressing objects: 100% (28/28), done.
+remote: Total 115 (delta 17), reused 24 (delta 8), pack-reused 76
+Receiving objects: 100% (115/115), 90.02 MiB | 4.50 MiB/s, done.
+Resolving deltas: 100% (33/33), done.
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/install dependencies] Installing wandio dependencies
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/install dependencies] Installing libtrace dependencies
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/source code preparation] Extracting .tar.gz files
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/source code preparation] Creating symbolic links
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Copying uthash headers to system include path
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building libwandder
++ aclocal
++ libtoolize --force --copy
+libtoolize: putting auxiliary files in '.'.
+libtoolize: copying file './ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
+libtoolize: copying file 'm4/libtool.m4'
+libtoolize: copying file 'm4/ltoptions.m4'
+libtoolize: copying file 'm4/ltsugar.m4'
+libtoolize: copying file 'm4/ltversion.m4'
+libtoolize: copying file 'm4/lt~obsolete.m4'
+libtoolize: Consider adding '-I m4' to ACLOCAL_AMFLAGS in Makefile.am.
++ autoheader
++ automake --add-missing --copy --foreign
+configure.ac:14: installing './compile'
+configure.ac:17: installing './config.guess'
+configure.ac:17: installing './config.sub'
+configure.ac:5: installing './install-sh'
+configure.ac:5: installing './missing'
+src/Makefile.am: installing './depcomp'
++ autoconf
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables...
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... yes
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking if -Werror flag is supported by compiler... yes
+checking if compiler supports __attribute__((packed))... yes
+checking for ceil in -lm... yes
+checking for pthread_mutex_trylock in -lpthread... yes
+checking for OPENSSL_init_crypto in -lcrypto... yes
+checking for uthash.h... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating src/Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+make  all-recursive
+make[1]: Entering directory '/opt/libwandder-2.0.11-1'
+Making all in src
+make[2]: Entering directory '/opt/libwandder-2.0.11-1/src'
+  CC       libwandder_la-encoder.lo
+  CC       libwandder_la-decoder.lo
+  CC       libwandder_la-libwandder_etsili.lo
+  CC       libwandder_la-itemhandler.lo
+  CCLD     libwandder.la
+make[2]: Leaving directory '/opt/libwandder-2.0.11-1/src'
+make[2]: Entering directory '/opt/libwandder-2.0.11-1'
+make[2]: Nothing to be done for 'all-am'.
+make[2]: Leaving directory '/opt/libwandder-2.0.11-1'
+make[1]: Leaving directory '/opt/libwandder-2.0.11-1'
+Making install in src
+make[1]: Entering directory '/opt/libwandder-2.0.11-1/src'
+make[2]: Entering directory '/opt/libwandder-2.0.11-1/src'
+ /usr/bin/mkdir -p '/usr/local/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libwandder.la '/usr/local/lib'
+libtool: install: /usr/bin/install -c .libs/libwandder.so.2.2.4 /usr/local/lib/libwandder.so.2.2.4
+libtool: install: (cd /usr/local/lib && { ln -s -f libwandder.so.2.2.4 libwandder.so.2 || { rm -f libwandder.so.2 && ln -s libwandder.so.2.2.4 libwandder.so.2; }; })
+libtool: install: (cd /usr/local/lib && { ln -s -f libwandder.so.2.2.4 libwandder.so || { rm -f libwandder.so && ln -s libwandder.so.2.2.4 libwandder.so; }; })
+libtool: install: /usr/bin/install -c .libs/libwandder.lai /usr/local/lib/libwandder.la
+libtool: install: /usr/bin/install -c .libs/libwandder.a /usr/local/lib/libwandder.a
+libtool: install: chmod 644 /usr/local/lib/libwandder.a
+libtool: install: ranlib /usr/local/lib/libwandder.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/usr/local/include'
+ /usr/bin/install -c -m 644 libwandder.h libwandder_etsili.h '/usr/local/include'
+make[2]: Leaving directory '/opt/libwandder-2.0.11-1/src'
+make[1]: Leaving directory '/opt/libwandder-2.0.11-1/src'
+make[1]: Entering directory '/opt/libwandder-2.0.11-1'
+make[2]: Entering directory '/opt/libwandder-2.0.11-1'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/opt/libwandder-2.0.11-1'
+make[1]: Leaving directory '/opt/libwandder-2.0.11-1'
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building wandio
+./bootstrap.sh: 5: aclocal-1.11: not found
+./bootstrap.sh: 6: aclocal-1.9: not found
+/usr/bin/libtoolize
+libtoolize: putting auxiliary files in '.'.
+libtoolize: copying file './ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
+libtoolize: copying file 'm4/libtool.m4'
+libtoolize: copying file 'm4/ltoptions.m4'
+libtoolize: copying file 'm4/ltsugar.m4'
+libtoolize: copying file 'm4/ltversion.m4'
+libtoolize: copying file 'm4/lt~obsolete.m4'
+./bootstrap.sh: 13: autoheader2.50: not found
+./bootstrap.sh: 17: automake-1.11: not found
+./bootstrap.sh: 18: automake-1.10: not found
+./bootstrap.sh: 19: automake-1.9: not found
+configure.ac:56: installing './compile'
+configure.ac:71: installing './config.guess'
+configure.ac:71: installing './config.sub'
+configure.ac:21: installing './install-sh'
+configure.ac:21: installing './missing'
+lib/Makefile.am: installing './depcomp'
+./bootstrap.sh: 22: autoconf2.50: not found
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables...
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking for g++... g++
+checking whether the compiler supports GNU C++... yes
+checking whether g++ accepts -g... yes
+checking for g++ option to enable C++11 features... none needed
+checking dependency style of g++... gcc3
+checking whether the C++ compiler works... yes
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking for GNU libc compatible malloc... yes
+checking for GNU libc compatible realloc... yes
+checking for an ANSI C-conforming const... yes
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for sys/time.h... yes
+checking whether byte ordering is bigendian... no
+checking for size_t... yes
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking for simple visibility declarations... yes
+checking if -Werror flag is supported by compiler... yes
+checking if compiler supports __attribute__((packed))... yes
+checking if compiler supports __attribute__((deprecated))... yes
+checking if compiler supports __attribute__((unused))... yes
+checking if compiler supports __attribute__((pure))... no
+checking if compiler supports __attribute__((format(printf)))... yes
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... yes
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking how to run the C++ preprocessor... g++ -E
+checking for ld used by g++... /usr/bin/ld -m elf_x86_64
+checking if the linker (/usr/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for g++ option to produce PIC... -fPIC -DPIC
+checking if g++ PIC flag -fPIC -DPIC works... yes
+checking if g++ static flag -static works... yes
+checking if g++ supports -c -o file.o... yes
+checking if g++ supports -c -o file.o... (cached) yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking how to run the C preprocessor... gcc -E
+checking whether gcc needs -traditional... no
+checking size of long int... 8
+checking for stddef.h... yes
+checking for inttypes.h... (cached) yes
+checking for sys/prctl.h... yes
+checking for pthread_create in -lpthread... yes
+checking for BZ2_bzDecompressInit in -lbz2... yes
+checking for deflate in -lz... yes
+checking for lzo1x_1_compress in -llzo2... yes
+checking for lzma.h... yes
+checking for ZSTD_createDStream in -lzstd... yes
+checking for qzCompress in -lqatzip... no
+checking for LZ4F_createDecompressionContext in -llz4... yes
+checking for LZ4F_getVersion in -llz4... yes
+checking for curl_easy_pause in -lcurl... no
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating lib/Makefile
+config.status: creating tools/wandiocat/Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+
+configure: WANDIO version 4.2.6
+configure: Compiled with compressed file (zlib) support: Yes
+configure: Compiled with compressed file (bz2) support: Yes
+configure: Compiled with compressed file (lzo write only) support: Yes
+configure: Compiled with compressed file (lzma) support: Yes
+configure: Compiled with compressed file (zstd) support: Yes
+configure: Compiled with compressed file (lz4) support: Yes
+configure: Compiled with Intel QuickAssist Technology support: No
+configure: Compiled with http read (libcurl) support: No
+make  all-recursive
+make[1]: Entering directory '/opt/wandio-4.2.6-1'
+Making all in lib
+make[2]: Entering directory '/opt/wandio-4.2.6-1/lib'
+  CC       wandio.lo
+  CC       ior-peek.lo
+  CC       ior-stdio.lo
+  CC       ior-thread.lo
+  CC       iow-stdio.lo
+  CC       iow-thread.lo
+  CC       ior-zlib.lo
+  CC       iow-zlib.lo
+  CC       ior-bzip.lo
+  CC       iow-bzip.lo
+  CC       iow-lzo.lo
+  CC       ior-lzma.lo
+  CC       iow-lzma.lo
+  CC       iow-zstd.lo
+  CC       iow-lz4.lo
+  CC       ior-zstd-lz4.lo
+  CCLD     libwandio.la
+make[2]: Leaving directory '/opt/wandio-4.2.6-1/lib'
+Making all in tools/wandiocat
+make[2]: Entering directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+  CC       wandiocat-wcat.o
+  CCLD     wandiocat
+make[2]: Leaving directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+make[2]: Entering directory '/opt/wandio-4.2.6-1'
+make[2]: Nothing to be done for 'all-am'.
+make[2]: Leaving directory '/opt/wandio-4.2.6-1'
+make[1]: Leaving directory '/opt/wandio-4.2.6-1'
+Making install in lib
+make[1]: Entering directory '/opt/wandio-4.2.6-1/lib'
+make[2]: Entering directory '/opt/wandio-4.2.6-1/lib'
+ /usr/bin/mkdir -p '/usr/local/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libwandio.la '/usr/local/lib'
+libtool: install: /usr/bin/install -c .libs/libwandio.so.6.0.5 /usr/local/lib/libwandio.so.6.0.5
+libtool: install: (cd /usr/local/lib && { ln -s -f libwandio.so.6.0.5 libwandio.so.6 || { rm -f libwandio.so.6 && ln -s libwandio.so.6.0.5 libwandio.so.6; }; })
+libtool: install: (cd /usr/local/lib && { ln -s -f libwandio.so.6.0.5 libwandio.so || { rm -f libwandio.so && ln -s libwandio.so.6.0.5 libwandio.so; }; })
+libtool: install: /usr/bin/install -c .libs/libwandio.lai /usr/local/lib/libwandio.la
+libtool: install: /usr/bin/install -c .libs/libwandio.a /usr/local/lib/libwandio.a
+libtool: install: chmod 644 /usr/local/lib/libwandio.a
+libtool: install: ranlib /usr/local/lib/libwandio.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/usr/local/include'
+ /usr/bin/install -c -m 644 wandio.h '/usr/local/include'
+make[2]: Leaving directory '/opt/wandio-4.2.6-1/lib'
+make[1]: Leaving directory '/opt/wandio-4.2.6-1/lib'
+Making install in tools/wandiocat
+make[1]: Entering directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+make[2]: Entering directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c wandiocat '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/wandiocat /usr/local/bin/wandiocat
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 wandiocat.1 '/usr/local/share/man/man1'
+make[2]: Leaving directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+make[1]: Leaving directory '/opt/wandio-4.2.6-1/tools/wandiocat'
+make[1]: Entering directory '/opt/wandio-4.2.6-1'
+make[2]: Entering directory '/opt/wandio-4.2.6-1'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/opt/wandio-4.2.6-1'
+make[1]: Leaving directory '/opt/wandio-4.2.6-1'
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building libtrace
++ aclocal-1.11 -I m4 -I /usr/share/aclocal
+./bootstrap.sh: 14: aclocal-1.11: not found
++ aclocal-1.9 -I m4 -I /usr/share/aclocal
+./bootstrap.sh: 15: aclocal-1.9: not found
++ aclocal -I m4 -I /usr/share/aclocal
+aclocal: warning: autoconf input should be named 'configure.ac', not 'configure.in'
++ libtoolize --force --copy
+libtoolize: putting auxiliary files in '.'.
+libtoolize: copying file './ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
+libtoolize: copying file 'm4/libtool.m4'
+libtoolize: copying file 'm4/ltoptions.m4'
+libtoolize: copying file 'm4/ltsugar.m4'
+libtoolize: copying file 'm4/ltversion.m4'
+libtoolize: copying file 'm4/lt~obsolete.m4'
++ autoheader2.50
+./bootstrap.sh: 22: autoheader2.50: not found
++ autoheader
+autoheader: warning: autoconf input should be named 'configure.ac', not 'configure.in'
++ automake-1.11 --add-missing --copy --foreign
+./bootstrap.sh: 25: automake-1.11: not found
++ automake-1.10 --add-missing --copy --foreign
+./bootstrap.sh: 26: automake-1.10: not found
++ automake-1.9 --add-missing --copy --foreign
+./bootstrap.sh: 27: automake-1.9: not found
++ automake --add-missing --copy --foreign
+automake: warning: autoconf input should be named 'configure.ac', not 'configure.in'
+configure.in:67: installing './compile'
+configure.in:76: installing './config.guess'
+configure.in:76: installing './config.sub'
+configure.in:21: installing './install-sh'
+configure.in:21: installing './missing'
+examples/parallel/Makefile.am: installing './depcomp'
+automake: warning: autoconf input should be named 'configure.ac', not 'configure.in'
+configure.in: installing './ylwrap'
++ autoconf2.50
+./bootstrap.sh: 30: autoconf2.50: not found
++ autoconf
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables...
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking for g++... g++
+checking whether the compiler supports GNU C++... yes
+checking whether g++ accepts -g... yes
+checking for g++ option to enable C++11 features... none needed
+checking dependency style of g++... gcc3
+checking whether the C++ compiler works... yes
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for sys/time.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... yes
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking how to run the C++ preprocessor... g++ -E
+checking for ld used by g++... /usr/bin/ld -m elf_x86_64
+checking if the linker (/usr/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for g++ option to produce PIC... -fPIC -DPIC
+checking if g++ PIC flag -fPIC -DPIC works... yes
+checking if g++ static flag -static works... yes
+checking if g++ supports -c -o file.o... yes
+checking if g++ supports -c -o file.o... (cached) yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking for bison... bison -y
+checking for flex... flex
+checking for lex output file root... lex.yy
+checking for lex library... none needed
+checking whether yytext is a pointer... yes
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking for GNU libc compatible malloc... yes
+checking for GNU libc compatible realloc... yes
+checking for an ANSI C-conforming const... yes
+checking for inline... inline
+checking whether byte ordering is bigendian... no
+checking for size_t... yes
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking for simple visibility declarations... yes
+checking if -Werror flag is supported by compiler... yes
+checking if compiler supports __attribute__((packed))... yes
+checking if compiler supports __attribute__((aligned(1)))... yes
+checking if compiler supports __attribute__((deprecated))... yes
+checking if compiler supports __attribute__((unused))... yes
+checking if compiler supports __attribute__((pure))... no
+checking if compiler supports __attribute__((format(printf)))... yes
+checking if compiler supports TLS __thread... yes
+checking how to run the C preprocessor... gcc -E
+checking whether gcc needs -traditional... no
+checking for gcc options needed to detect all undeclared functions... none needed
+checking whether strdup is declared... yes
+checking whether strlcpy is declared... no
+checking whether strcasecmp is declared... yes
+checking whether strncasecmp is declared... yes
+checking whether snprintf is declared... yes
+checking whether vsnprintf is declared... yes
+checking whether strndup is declared... yes
+checking whether posix_memalign is declared... yes
+checking whether socket is declared... yes
+checking whether recvmmsg is declared... yes
+checking size of long int... 8
+checking for pcap.h... yes
+checking for pcap-bpf.h... yes
+checking for sys/limits.h... no
+checking for stddef.h... yes
+checking for inttypes.h... (cached) yes
+checking for limits.h... yes
+checking for net/ethernet.h... yes
+checking for sys/prctl.h... yes
+checking for ncurses.h... yes
+checking for netinet/in.h... yes
+checking for netpacket/packet.h... yes
+checking for net/if.h... yes
+checking for linux/ethtool.h... yes
+checking for netinet/ether.h... yes
+checking for netinet/if_ether.h... yes
+checking for net/if_arp.h... yes
+checking for pcap-bpf.h... (cached) yes
+checking for net/bpf.h... no
+checking for gdc.h... no
+checking for wandio_wflush in -lwandio... yes
+checking for EVP_EncryptInit_ex in -lcrypto... yes
+checking for openssl/evp.h... yes
+checking for yaml_parser_initialize in -lyaml... yes
+checking for asn1_array2tree in -ltasn1... no
+checking for elf_begin in -lelf... no
+checking for pcap_next_ex in -lpcap... yes
+checking for pcap_create in -lpcap... yes
+checking for pcap_set_immediate_mode in -lpcap... yes
+checking whether BIOCSETIF is declared... no
+checking for pcap_inject... yes
+checking for pcap_sendpacket... yes
+checking for pcap_setnonblock... yes
+checking for dag_open in -ldag... no
+checking whether we have DAG 2.4 API instead... false
+checking whether PACKET_FANOUT is declared... yes
+checking for numa_node_to_cpus in -lnuma... no
+checking for wandder_etsili_get_cc_format in -lwandder... yes
+checking for pthread_create in -lpthread... yes
+checking for pthread_setname_np in -lpthread... yes
+checking for library containing pfring_recv... no
+checking for library containing getservent... none required
+checking for library containing inet_ntop... none required
+checking for library containing dlopen... none required
+checking for clock_gettime in -lrt... yes
+checking for ncurses... yes
+checking for library containing mvprintw... -lncurses
+checking for doxygen... false
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating lib/Makefile
+config.status: creating docs/Makefile
+config.status: creating libpacketdump/Makefile
+config.status: creating tools/Makefile
+config.status: creating tools/traceanon/Makefile
+config.status: creating tools/tracepktdump/Makefile
+config.status: creating tools/tracemerge/Makefile
+config.status: creating tools/tracereport/Makefile
+config.status: creating tools/tracertstats/Makefile
+config.status: creating tools/tracesplit/Makefile
+config.status: creating tools/tracestats/Makefile
+config.status: creating tools/tracetop/Makefile
+config.status: creating tools/tracereplay/Makefile
+config.status: creating tools/tracediff/Makefile
+config.status: creating tools/traceends/Makefile
+config.status: creating tools/tracemcast/Makefile
+config.status: creating examples/Makefile
+config.status: creating examples/skeleton/Makefile
+config.status: creating examples/rate/Makefile
+config.status: creating examples/stats/Makefile
+config.status: creating examples/tutorial/Makefile
+config.status: creating examples/parallel/Makefile
+config.status: creating docs/libtrace.doxygen
+config.status: creating lib/libtrace.h
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+
+configure: Libtrace version 4.0.24
+configure: Compiled with PCAP support: >= 1.0
+configure: Compiled with DAG live capture support: No
+configure: Compiled with USDT tracepoints: No
+configure: Compiled with XDP capture support: No
+configure: XDP Libtrace BPF program will be compiled: No
+configure: Compiled with PF_RING live capture support: No
+configure: Compiled with LLVM BPF JIT support: No
+configure: Compiled with live ETSI LI support (requires libwandder >= 2.0.6): Yes
+configure: Building man pages/documentation: No
+configure: Building tracetop (requires libncurses): Yes
+configure: Building traceanon (requires libyaml): Yes
+configure: Building traceanon with CryptoPan (requires libcrypto and openssl/evp.h): Yes
+
+make  all-recursive
+make[1]: Entering directory '/opt/libtrace-4.0.24-1'
+Making all in lib
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/lib'
+make  all-am
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/lib'
+  CC       trace.lo
+In file included from /usr/include/string.h:535,
+                 from trace.c:37:
+In function ‘strncpy’,
+    inlined from ‘xstrncpy’ at trace.c:116:9,
+    inlined from ‘xstrncpy’ at trace.c:103:20,
+    inlined from ‘trace_create_dead’ at trace.c:432:17:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:95:10: warning: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Wstringop-truncation]
+   95 |   return __builtin___strncpy_chk (__dest, __src, __len,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   96 |                                   __glibc_objsize (__dest));
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
+trace.c: In function ‘trace_create_dead’:
+trace.c:432:17: note: length computed here
+  432 |                 xstrncpy(scan, uri, strlen(uri), URI_PROTO_LINE);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  CC       trace_parallel.lo
+  CC       format_pktmeta.lo
+  CC       format_erf.lo
+  CC       format_pcap.lo
+  CC       format_legacy.lo
+  CC       format_rt.lo
+  CC       format_helper.lo
+  CC       format_pcapfile.lo
+  CC       format_duck.lo
+  CC       format_tsh.lo
+  CC       format_linux_common.lo
+  CC       format_linux_ring.lo
+format_linux_ring.c:411:12: warning: ‘linuxring_flush_output_nonblocking’ defined but not used [-Wunused-function]
+  411 | static int linuxring_flush_output_nonblocking(libtrace_out_t *libtrace)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  CC       format_linux_int.lo
+  CC       format_bpf.lo
+  CC       format_atmhdr.lo
+  CC       format_pcapng.lo
+  CC       format_tzsplive.lo
+  CC       linktypes.lo
+  CC       link_wireless.lo
+  CC       byteswap.lo
+  CC       checksum.lo
+  CC       protocols_pktmeta.lo
+  CC       protocols_l2.lo
+  CC       protocols_l3.lo
+  CC       protocols_transport.lo
+  CC       protocols_ospf.lo
+  CC       protocols_application.lo
+  CC       protocols_radius.lo
+  CC       format_ndag.lo
+  CC       format_etsilive.lo
+  CC       format_etsifile.lo
+  CC       format_linux_helpers.lo
+  CC       data-struct/ring_buffer.lo
+  CC       data-struct/vector.lo
+  CC       data-struct/message_queue.lo
+  CC       data-struct/deque.lo
+  CC       data-struct/sliding_window.lo
+  CC       data-struct/object_cache.lo
+  CC       data-struct/linked_list.lo
+  CC       hash_toeplitz.lo
+  CC       combiner_ordered.lo
+  CC       data-struct/buckets.lo
+  CC       data-struct/simple_circular_buffer.lo
+  CC       combiner_sorted.lo
+  CC       combiner_unordered.lo
+  CC       pthread_spinlock.lo
+  CC       strndup.lo
+  CXXLD    libtrace.la
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/lib'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/lib'
+Making all in libpacketdump
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+  YACC     parser.c
+updating parser.h
+make  all-am
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+  CXX      libpacketdump.lo
+  CC       ../lib/byteswap.lo
+  LEX      lexer.c
+  CC       lexer.lo
+  CC       parser.lo
+  CC       bitbuffer.lo
+  CXXLD    libpacketdump.la
+  CC       link_0.lo
+  CCLD     link_0.la
+  CC       link_1.lo
+  CCLD     link_1.la
+  CC       link_2.lo
+  CCLD     link_2.la
+  CC       link_4.lo
+  CCLD     link_4.la
+  CC       link_6.lo
+  CCLD     link_6.la
+  CC       link_9.lo
+  CCLD     link_9.la
+  CC       link_10.lo
+  CCLD     link_10.la
+  CC       link_11.lo
+  CCLD     link_11.la
+  CC       link_15.lo
+  CCLD     link_15.la
+  CC       link_21.lo
+  CCLD     link_21.la
+  CC       link_22.lo
+  CCLD     link_22.la
+  CC       link_23.lo
+  CCLD     link_23.la
+  CC       link_25.lo
+  CCLD     link_25.la
+  CC       eth_0.lo
+  CCLD     eth_0.la
+  CC       eth_2048.lo
+  CCLD     eth_2048.la
+  CC       eth_2054.lo
+  CCLD     eth_2054.la
+  CC       eth_33024.lo
+  CCLD     eth_33024.la
+  CC       eth_34887.lo
+  CCLD     eth_34887.la
+  CC       eth_34916.lo
+  CCLD     eth_34916.la
+  CC       eth_34958.lo
+  CCLD     eth_34958.la
+  CC       eth_34525.lo
+  CCLD     eth_34525.la
+  CC       ip_0.lo
+  CCLD     ip_0.la
+  CC       ip_1.lo
+  CCLD     ip_1.la
+  CC       ip_6.lo
+  CCLD     ip_6.la
+  CC       ip_17.lo
+  CCLD     ip_17.la
+  CC       ip_33.lo
+  CCLD     ip_33.la
+  CC       ip_43.lo
+  CCLD     ip_43.la
+  CC       ip_44.lo
+  CCLD     ip_44.la
+  CC       ip_47.lo
+  CCLD     ip_47.la
+  CC       ip_60.lo
+  CCLD     ip_60.la
+  CC       ip_89.lo
+  CCLD     ip_89.la
+  CC       ip_132.lo
+  CCLD     ip_132.la
+  CC       ospf2_1.lo
+  CCLD     ospf2_1.la
+  CC       ospf2_4.lo
+  CCLD     ospf2_4.la
+  CC       ospf2_5.lo
+  CCLD     ospf2_5.la
+  CC       ospf2_1000.lo
+  CCLD     ospf2_1000.la
+  CC       ospf2_1001.lo
+  CCLD     ospf2_1001.la
+  CC       ospf2_1002.lo
+  CCLD     ospf2_1002.la
+  CC       ospf2_1003.lo
+  CCLD     ospf2_1003.la
+  CC       ospf2_1004.lo
+  CCLD     ospf2_1004.la
+  CC       ospf2_1005.lo
+  CCLD     ospf2_1005.la
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+Making all in tools
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools'
+Making all in traceanon
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+  CXX      traceanon-traceanon.o
+  CXX      traceanon-Anon.o
+  CC       ../traceanon-tools_yaml.o
+  CC       traceanon-traceanon_config.o
+  CXXLD    traceanon
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+Making all in tracemerge
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+  CC       tracemerge.o
+  CCLD     tracemerge
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+Making all in tracesplit
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+  CC       tracesplit.o
+  CCLD     tracesplit
+  CC       tracesplit_dir.o
+  CCLD     tracesplit_dir
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+Making all in tracepktdump
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+  CXX      tracepktdump.o
+  CXXLD    tracepktdump
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+Making all in tracertstats
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+  CC       tracertstats.o
+  CC       output.o
+  CC       output_csv.o
+  CC       output_html.o
+  CC       output_txt.o
+  CCLD     tracertstats
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+Making all in tracestats
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+  CC       tracestats.o
+  CCLD     tracestats
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+Making all in tracereport
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+  CC       tracereport.o
+  CC       contain.o
+  CC       dir_report.o
+  CC       error_report.o
+  CC       flow_report.o
+  CC       misc_report.o
+  CC       port_report.o
+  CC       protocol_report.o
+  CC       tos_report.o
+  CC       ttl_report.o
+  CC       tcpopt_report.o
+  CC       synopt_report.o
+  CC       nlp_report.o
+  CC       ecn_report.o
+  CC       tcpsegment_report.o
+  CC       drops_report.o
+  CCLD     tracereport
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+Making all in tracetop
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+  CXX      tracetop-tracetop.o
+  CXXLD    tracetop
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+Making all in tracereplay
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+  CC       tracereplay.o
+  CCLD     tracereplay
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+Making all in tracediff
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+  CC       tracediff.o
+  CCLD     tracediff
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+Making all in traceends
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceends'
+  CXX      traceends.o
+  CXXLD    traceends
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceends'
+Making all in tracemcast
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+  CC       tracemcast.o
+  CCLD     tracemcast
+  CC       traceucast.o
+traceucast.c: In function ‘packet_reader_thread’:
+traceucast.c:534:25: warning: assignment to ‘ndag_encap_t *’ {aka ‘struct ndag_encap *’} from incompatible pointer type ‘uint8_t *’ {aka ‘unsigned char *’} [-Wincompatible-pointer-types]
+  534 |         rdata->encaphdr = rdata->pbuffer + encapoff;
+      |                         ^
+  CCLD     traceucast
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools'
+Making all in docs
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/docs'
+Sorry, you do not have doxygen in your PATH.
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/docs'
+Making all in examples
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples'
+Making all in skeleton
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+  CC       trivial.o
+  CCLD     trivial
+  CC       complete.o
+  CCLD     complete
+  CC       event.o
+  CCLD     event
+  CC       output.o
+  CCLD     output
+  CC       parallel.o
+  CCLD     parallel
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+Making all in rate
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/rate'
+  CC       rate.o
+  CCLD     rate
+  CC       rate-dir.o
+  CCLD     rate-dir
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/rate'
+Making all in stats
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/stats'
+  CC       stats.o
+  CCLD     stats
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/stats'
+Making all in tutorial
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+  CC       configdemo.o
+  CCLD     configdemo
+  CC       createdemo.o
+  CCLD     createdemo
+  CC       filterdemo.o
+  CCLD     filterdemo
+  CC       getpayloaddemo.o
+  CCLD     getpayloaddemo
+  CC       gettcpdemo.o
+  CCLD     gettcpdemo
+  CC       gettransportdemo.o
+  CCLD     gettransportdemo
+  CC       headerdemo.o
+  CCLD     headerdemo
+  CC       httpcount.o
+  CCLD     httpcount
+  CC       lengthdemo.o
+  CCLD     lengthdemo
+  CC       mplscount.o
+  CCLD     mplscount
+  CC       mplstag.o
+  CCLD     mplstag
+  CC       readdemo.o
+  CCLD     readdemo
+  CC       sourcedemo.o
+  CCLD     sourcedemo
+  CC       timedemo.o
+  CCLD     timedemo
+  CC       writedemo.o
+  CCLD     writedemo
+  CC       layer2-headers.o
+  CCLD     layer2-headers
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+Making all in parallel
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/parallel'
+  CC       timedemo.o
+  CCLD     timedemo
+  CC       trivial_skeleton.o
+  CCLD     trivial_skeleton
+  CC       network_capture.o
+  CCLD     network_capture
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/parallel'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples'
+make[2]: Entering directory '/opt/libtrace-4.0.24-1'
+make[2]: Nothing to be done for 'all-am'.
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1'
+Making install in lib
+make[1]: Entering directory '/opt/libtrace-4.0.24-1/lib'
+make  install-am
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/lib'
+  CXXLD    libtrace.la
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/lib'
+ /usr/bin/mkdir -p '/usr/local/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libtrace.la '/usr/local/lib'
+libtool: install: /usr/bin/install -c .libs/libtrace.so.7.0.8 /usr/local/lib/libtrace.so.7.0.8
+libtool: install: (cd /usr/local/lib && { ln -s -f libtrace.so.7.0.8 libtrace.so.7 || { rm -f libtrace.so.7 && ln -s libtrace.so.7.0.8 libtrace.so.7; }; })
+libtool: install: (cd /usr/local/lib && { ln -s -f libtrace.so.7.0.8 libtrace.so || { rm -f libtrace.so && ln -s libtrace.so.7.0.8 libtrace.so; }; })
+libtool: install: /usr/bin/install -c .libs/libtrace.lai /usr/local/lib/libtrace.la
+libtool: install: /usr/bin/install -c .libs/libtrace.a /usr/local/lib/libtrace.a
+libtool: install: chmod 644 /usr/local/lib/libtrace.a
+libtool: install: ranlib /usr/local/lib/libtrace.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/usr/local/include'
+ /usr/bin/install -c -m 644 libtrace.h libtrace_parallel.h '/usr/local/include'
+ /usr/bin/mkdir -p '/usr/local/include/libtrace'
+ /usr/bin/install -c -m 644 dagformat.h lt_inttypes.h daglegacy.h rt_protocol.h erftypes.h pthread_spinlock.h format_ndag.h data-struct/ring_buffer.h data-struct/object_cache.h data-struct/vector.h data-struct/deque.h data-struct/linked_list.h data-struct/buckets.h data-struct/sliding_window.h data-struct/message_queue.h hash_toeplitz.h data-struct/simple_circular_buffer.h libtrace_radius.h '/usr/local/include/libtrace'
+ /usr/bin/mkdir -p '/usr/local/share/libtrace'
+ /usr/bin/install -c -m 644 format_linux_xdp_kern.bpf '/usr/local/share/libtrace'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/lib'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/lib'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1/lib'
+Making install in libpacketdump
+make[1]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make  install-am
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+ /usr/bin/mkdir -p '/usr/local/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libpacketdump.la '/usr/local/lib'
+libtool: warning: relinking 'libpacketdump.la'
+libtool: install: (cd /opt/libtrace-4.0.24-1/libpacketdump; /bin/bash "/opt/libtrace-4.0.24-1/libtool"  --silent --tag CXX --mode=relink g++ -g -Wall -DDIRNAME=\"/usr/local/lib/libpacketdump\" -I../lib -g -O2 -Wall -DLT_BUILDING_DLL=1 -version-info 5:8:0 -L/opt/libtrace-4.0.24-1/lib -L/usr/local/lib -o libpacketdump.la -rpath /usr/local/lib libpacketdump.lo ../lib/byteswap.lo lexer.lo parser.lo bitbuffer.lo -ltrace )
+libtool: install: /usr/bin/install -c .libs/libpacketdump.so.5.0.8T /usr/local/lib/libpacketdump.so.5.0.8
+libtool: install: (cd /usr/local/lib && { ln -s -f libpacketdump.so.5.0.8 libpacketdump.so.5 || { rm -f libpacketdump.so.5 && ln -s libpacketdump.so.5.0.8 libpacketdump.so.5; }; })
+libtool: install: (cd /usr/local/lib && { ln -s -f libpacketdump.so.5.0.8 libpacketdump.so || { rm -f libpacketdump.so && ln -s libpacketdump.so.5.0.8 libpacketdump.so; }; })
+libtool: install: /usr/bin/install -c .libs/libpacketdump.lai /usr/local/lib/libpacketdump.la
+libtool: install: /usr/bin/install -c .libs/libpacketdump.a /usr/local/lib/libpacketdump.a
+libtool: install: chmod 644 /usr/local/lib/libpacketdump.a
+libtool: install: ranlib /usr/local/lib/libpacketdump.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make  install-exec-hook
+make[4]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+  GEN      install-exec-hook
+  GEN      install-exec-hook
+  GEN      install-exec-hook
+  GEN      install-exec-hook
+make[4]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+ /usr/bin/mkdir -p '/usr/local/lib/libpacketdump'
+ /usr/bin/install -c -m 644 link_3.protocol link_17.protocol ip_58.protocol '/usr/local/lib/libpacketdump'
+ /usr/bin/mkdir -p '/usr/local/include'
+ /usr/bin/install -c -m 644 libpacketdump.h '/usr/local/include'
+ /usr/bin/mkdir -p '/usr/local/lib/libpacketdump'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   link_0.la link_1.la link_2.la link_4.la link_6.la link_9.la link_10.la link_11.la link_15.la link_21.la link_22.la link_23.la link_25.la eth_0.la eth_2048.la eth_2054.la eth_33024.la eth_34887.la eth_34916.la eth_34958.la eth_34525.la ip_0.la ip_1.la ip_6.la ip_17.la ip_33.la ip_43.la ip_44.la ip_47.la ip_60.la ip_89.la ip_132.la ospf2_1.la ospf2_4.la ospf2_5.la ospf2_1000.la ospf2_1001.la ospf2_1002.la ospf2_1003.la ospf2_1004.la ospf2_1005.la '/usr/local/lib/libpacketdump'
+libtool: install: /usr/bin/install -c .libs/link_0.so /usr/local/lib/libpacketdump/link_0.so
+libtool: install: /usr/bin/install -c .libs/link_0.lai /usr/local/lib/libpacketdump/link_0.la
+libtool: install: /usr/bin/install -c .libs/link_1.so /usr/local/lib/libpacketdump/link_1.so
+libtool: install: /usr/bin/install -c .libs/link_1.lai /usr/local/lib/libpacketdump/link_1.la
+libtool: install: /usr/bin/install -c .libs/link_2.so /usr/local/lib/libpacketdump/link_2.so
+libtool: install: /usr/bin/install -c .libs/link_2.lai /usr/local/lib/libpacketdump/link_2.la
+libtool: install: /usr/bin/install -c .libs/link_4.so /usr/local/lib/libpacketdump/link_4.so
+libtool: install: /usr/bin/install -c .libs/link_4.lai /usr/local/lib/libpacketdump/link_4.la
+libtool: install: /usr/bin/install -c .libs/link_6.so /usr/local/lib/libpacketdump/link_6.so
+libtool: install: /usr/bin/install -c .libs/link_6.lai /usr/local/lib/libpacketdump/link_6.la
+libtool: install: /usr/bin/install -c .libs/link_9.so /usr/local/lib/libpacketdump/link_9.so
+libtool: install: /usr/bin/install -c .libs/link_9.lai /usr/local/lib/libpacketdump/link_9.la
+libtool: install: /usr/bin/install -c .libs/link_10.so /usr/local/lib/libpacketdump/link_10.so
+libtool: install: /usr/bin/install -c .libs/link_10.lai /usr/local/lib/libpacketdump/link_10.la
+libtool: install: /usr/bin/install -c .libs/link_11.so /usr/local/lib/libpacketdump/link_11.so
+libtool: install: /usr/bin/install -c .libs/link_11.lai /usr/local/lib/libpacketdump/link_11.la
+libtool: install: /usr/bin/install -c .libs/link_15.so /usr/local/lib/libpacketdump/link_15.so
+libtool: install: /usr/bin/install -c .libs/link_15.lai /usr/local/lib/libpacketdump/link_15.la
+libtool: install: /usr/bin/install -c .libs/link_21.so /usr/local/lib/libpacketdump/link_21.so
+libtool: install: /usr/bin/install -c .libs/link_21.lai /usr/local/lib/libpacketdump/link_21.la
+libtool: install: /usr/bin/install -c .libs/link_22.so /usr/local/lib/libpacketdump/link_22.so
+libtool: install: /usr/bin/install -c .libs/link_22.lai /usr/local/lib/libpacketdump/link_22.la
+libtool: install: /usr/bin/install -c .libs/link_23.so /usr/local/lib/libpacketdump/link_23.so
+libtool: install: /usr/bin/install -c .libs/link_23.lai /usr/local/lib/libpacketdump/link_23.la
+libtool: install: /usr/bin/install -c .libs/link_25.so /usr/local/lib/libpacketdump/link_25.so
+libtool: install: /usr/bin/install -c .libs/link_25.lai /usr/local/lib/libpacketdump/link_25.la
+libtool: install: /usr/bin/install -c .libs/eth_0.so /usr/local/lib/libpacketdump/eth_0.so
+libtool: install: /usr/bin/install -c .libs/eth_0.lai /usr/local/lib/libpacketdump/eth_0.la
+libtool: install: /usr/bin/install -c .libs/eth_2048.so /usr/local/lib/libpacketdump/eth_2048.so
+libtool: install: /usr/bin/install -c .libs/eth_2048.lai /usr/local/lib/libpacketdump/eth_2048.la
+libtool: install: /usr/bin/install -c .libs/eth_2054.so /usr/local/lib/libpacketdump/eth_2054.so
+libtool: install: /usr/bin/install -c .libs/eth_2054.lai /usr/local/lib/libpacketdump/eth_2054.la
+libtool: install: /usr/bin/install -c .libs/eth_33024.so /usr/local/lib/libpacketdump/eth_33024.so
+libtool: install: /usr/bin/install -c .libs/eth_33024.lai /usr/local/lib/libpacketdump/eth_33024.la
+libtool: install: /usr/bin/install -c .libs/eth_34887.so /usr/local/lib/libpacketdump/eth_34887.so
+libtool: install: /usr/bin/install -c .libs/eth_34887.lai /usr/local/lib/libpacketdump/eth_34887.la
+libtool: install: /usr/bin/install -c .libs/eth_34916.so /usr/local/lib/libpacketdump/eth_34916.so
+libtool: install: /usr/bin/install -c .libs/eth_34916.lai /usr/local/lib/libpacketdump/eth_34916.la
+libtool: install: /usr/bin/install -c .libs/eth_34958.so /usr/local/lib/libpacketdump/eth_34958.so
+libtool: install: /usr/bin/install -c .libs/eth_34958.lai /usr/local/lib/libpacketdump/eth_34958.la
+libtool: install: /usr/bin/install -c .libs/eth_34525.so /usr/local/lib/libpacketdump/eth_34525.so
+libtool: install: /usr/bin/install -c .libs/eth_34525.lai /usr/local/lib/libpacketdump/eth_34525.la
+libtool: install: /usr/bin/install -c .libs/ip_0.so /usr/local/lib/libpacketdump/ip_0.so
+libtool: install: /usr/bin/install -c .libs/ip_0.lai /usr/local/lib/libpacketdump/ip_0.la
+libtool: install: /usr/bin/install -c .libs/ip_1.so /usr/local/lib/libpacketdump/ip_1.so
+libtool: install: /usr/bin/install -c .libs/ip_1.lai /usr/local/lib/libpacketdump/ip_1.la
+libtool: install: /usr/bin/install -c .libs/ip_6.so /usr/local/lib/libpacketdump/ip_6.so
+libtool: install: /usr/bin/install -c .libs/ip_6.lai /usr/local/lib/libpacketdump/ip_6.la
+libtool: install: /usr/bin/install -c .libs/ip_17.so /usr/local/lib/libpacketdump/ip_17.so
+libtool: install: /usr/bin/install -c .libs/ip_17.lai /usr/local/lib/libpacketdump/ip_17.la
+libtool: install: /usr/bin/install -c .libs/ip_33.so /usr/local/lib/libpacketdump/ip_33.so
+libtool: install: /usr/bin/install -c .libs/ip_33.lai /usr/local/lib/libpacketdump/ip_33.la
+libtool: install: /usr/bin/install -c .libs/ip_43.so /usr/local/lib/libpacketdump/ip_43.so
+libtool: install: /usr/bin/install -c .libs/ip_43.lai /usr/local/lib/libpacketdump/ip_43.la
+libtool: install: /usr/bin/install -c .libs/ip_44.so /usr/local/lib/libpacketdump/ip_44.so
+libtool: install: /usr/bin/install -c .libs/ip_44.lai /usr/local/lib/libpacketdump/ip_44.la
+libtool: install: /usr/bin/install -c .libs/ip_47.so /usr/local/lib/libpacketdump/ip_47.so
+libtool: install: /usr/bin/install -c .libs/ip_47.lai /usr/local/lib/libpacketdump/ip_47.la
+libtool: install: /usr/bin/install -c .libs/ip_60.so /usr/local/lib/libpacketdump/ip_60.so
+libtool: install: /usr/bin/install -c .libs/ip_60.lai /usr/local/lib/libpacketdump/ip_60.la
+libtool: install: /usr/bin/install -c .libs/ip_89.so /usr/local/lib/libpacketdump/ip_89.so
+libtool: install: /usr/bin/install -c .libs/ip_89.lai /usr/local/lib/libpacketdump/ip_89.la
+libtool: install: /usr/bin/install -c .libs/ip_132.so /usr/local/lib/libpacketdump/ip_132.so
+libtool: install: /usr/bin/install -c .libs/ip_132.lai /usr/local/lib/libpacketdump/ip_132.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1.so /usr/local/lib/libpacketdump/ospf2_1.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1.lai /usr/local/lib/libpacketdump/ospf2_1.la
+libtool: install: /usr/bin/install -c .libs/ospf2_4.so /usr/local/lib/libpacketdump/ospf2_4.so
+libtool: install: /usr/bin/install -c .libs/ospf2_4.lai /usr/local/lib/libpacketdump/ospf2_4.la
+libtool: install: /usr/bin/install -c .libs/ospf2_5.so /usr/local/lib/libpacketdump/ospf2_5.so
+libtool: install: /usr/bin/install -c .libs/ospf2_5.lai /usr/local/lib/libpacketdump/ospf2_5.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1000.so /usr/local/lib/libpacketdump/ospf2_1000.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1000.lai /usr/local/lib/libpacketdump/ospf2_1000.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1001.so /usr/local/lib/libpacketdump/ospf2_1001.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1001.lai /usr/local/lib/libpacketdump/ospf2_1001.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1002.so /usr/local/lib/libpacketdump/ospf2_1002.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1002.lai /usr/local/lib/libpacketdump/ospf2_1002.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1003.so /usr/local/lib/libpacketdump/ospf2_1003.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1003.lai /usr/local/lib/libpacketdump/ospf2_1003.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1004.so /usr/local/lib/libpacketdump/ospf2_1004.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1004.lai /usr/local/lib/libpacketdump/ospf2_1004.la
+libtool: install: /usr/bin/install -c .libs/ospf2_1005.so /usr/local/lib/libpacketdump/ospf2_1005.so
+libtool: install: /usr/bin/install -c .libs/ospf2_1005.lai /usr/local/lib/libpacketdump/ospf2_1005.la
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib/libpacketdump
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /usr/local/lib/libpacketdump
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make  install-data-hook
+make[4]: Entering directory '/opt/libtrace-4.0.24-1/libpacketdump'
+rm -f /usr/local/lib/libpacketdump/*.la
+make[4]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1/libpacketdump'
+Making install in tools
+make[1]: Entering directory '/opt/libtrace-4.0.24-1/tools'
+Making install in traceanon
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c traceanon '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/traceanon /usr/local/bin/traceanon
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 traceanon.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceanon'
+Making install in tracemerge
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracemerge '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracemerge /usr/local/bin/tracemerge
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracemerge.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemerge'
+Making install in tracesplit
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracesplit tracesplit_dir '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracesplit /usr/local/bin/tracesplit
+libtool: install: /usr/bin/install -c .libs/tracesplit_dir /usr/local/bin/tracesplit_dir
+ /usr/bin/mkdir -p '/usr/local/bin'
+ /usr/bin/install -c tracefilter traceconvert '/usr/local/bin'
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracesplit.1 tracefilter.1 traceconvert.1 tracesplit_dir.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracesplit'
+Making install in tracepktdump
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracepktdump '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracepktdump /usr/local/bin/tracepktdump
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracepktdump.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracepktdump'
+Making install in tracertstats
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracertstats '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracertstats /usr/local/bin/tracertstats
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracertstats.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracertstats'
+Making install in tracestats
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracestats '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracestats /usr/local/bin/tracestats
+ /usr/bin/mkdir -p '/usr/local/bin'
+ /usr/bin/install -c tracesummary '/usr/local/bin'
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracestats.1 tracesummary.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracestats'
+Making install in tracereport
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracereport '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracereport /usr/local/bin/tracereport
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracereport.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereport'
+Making install in tracetop
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracetop '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracetop /usr/local/bin/tracetop
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracetop.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracetop'
+Making install in tracereplay
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracereplay '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracereplay /usr/local/bin/tracereplay
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracereplay.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracereplay'
+Making install in tracediff
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracediff '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracediff /usr/local/bin/tracediff
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracediff.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracediff'
+Making install in traceends
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceends'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/traceends'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c traceends '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/traceends /usr/local/bin/traceends
+ /usr/bin/mkdir -p '/usr/local/bin'
+ /usr/bin/install -c tracetopends '/usr/local/bin'
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 traceends.1 tracetopends.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceends'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/traceends'
+Making install in tracemcast
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+ /usr/bin/mkdir -p '/usr/local/bin'
+  /bin/bash ../../libtool   --mode=install /usr/bin/install -c tracemcast traceucast '/usr/local/bin'
+libtool: install: /usr/bin/install -c .libs/tracemcast /usr/local/bin/tracemcast
+libtool: install: /usr/bin/install -c .libs/traceucast /usr/local/bin/traceucast
+ /usr/bin/mkdir -p '/usr/local/share/man/man1'
+ /usr/bin/install -c -m 644 tracemcast.1 traceucast.1 '/usr/local/share/man/man1'
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools/tracemcast'
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/tools'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/tools'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/tools'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/tools'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1/tools'
+Making install in docs
+make[1]: Entering directory '/opt/libtrace-4.0.24-1/docs'
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/docs'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/docs'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1/docs'
+Making install in examples
+make[1]: Entering directory '/opt/libtrace-4.0.24-1/examples'
+Making install in skeleton
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples/skeleton'
+Making install in rate
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples/rate'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/rate'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/rate'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples/rate'
+Making install in stats
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples/stats'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/stats'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/stats'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples/stats'
+Making install in tutorial
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples/tutorial'
+Making install in parallel
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples/parallel'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples/parallel'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples/parallel'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples/parallel'
+make[2]: Entering directory '/opt/libtrace-4.0.24-1/examples'
+make[3]: Entering directory '/opt/libtrace-4.0.24-1/examples'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/opt/libtrace-4.0.24-1/examples'
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1/examples'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1/examples'
+make[1]: Entering directory '/opt/libtrace-4.0.24-1'
+make[2]: Entering directory '/opt/libtrace-4.0.24-1'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Leaving directory '/opt/libtrace-4.0.24-1'
+make[1]: Leaving directory '/opt/libtrace-4.0.24-1'
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building libtrace tutorial -> lib/massdal
+gcc -o hotitems hotitems.c prng.c cgt.c lossycount.c massdal.c  frequent.c ccfc.c countmin.c -lm -Wall
+cgt.c: In function ‘CGT_Output’:
+cgt.c:235:20: warning: pointer targets in passing argument 2 of ‘shell’ differ in signedness [-Wpointer-sign]
+  235 |       shell(hits-1,results);
+      |                    ^~~~~~~
+      |                    |
+      |                    unsigned int *
+cgt.c:70:33: note: expected ‘int *’ but argument is of type ‘unsigned int *’
+   70 | void shell(unsigned long n, int a[])
+      |                             ~~~~^~~
+frequent.c: In function ‘Freq_Init’:
+frequent.c:406:28: warning: variable ‘itemspace’ set but not used [-Wunused-but-set-variable]
+  406 |   int hashspace,groupspace,itemspace;
+      |                            ^~~~~~~~~
+frequent.c:406:17: warning: variable ‘groupspace’ set but not used [-Wunused-but-set-variable]
+  406 |   int hashspace,groupspace,itemspace;
+      |                 ^~~~~~~~~~
+frequent.c:406:7: warning: variable ‘hashspace’ set but not used [-Wunused-but-set-variable]
+  406 |   int hashspace,groupspace,itemspace;
+      |       ^~~~~~~~~
+countmin.c: In function ‘CMH_FindHH’:
+countmin.c:626:9: warning: pointer targets in returning ‘unsigned int *’ from a function with return type ‘int *’ differ in signedness [-Wpointer-sign]
+  626 |   return(results);
+      |         ^
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building libtrace tutorial -> hw0
+gcc  -o yk_demo_hash yk_demo_hash.c ../lib/massdal/prng.c -ltrace -lm
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/building & installing] Building libtrace tutorial -> codedemo
+gcc -o createdemo createdemo.c -ltrace
+gcc -o readdemo readdemo.c -ltrace
+gcc -o timedemo timedemo.c -ltrace
+gcc -o lengthdemo lengthdemo.c -ltrace
+gcc -o sourcedemo sourcedemo.c -ltrace
+gcc -o gettcpdemo gettcpdemo.c -ltrace
+gcc -o httpcount httpcount.c -ltrace
+gcc -o writedemo writedemo.c -ltrace
+gcc -o filterdemo filterdemo.c -ltrace
+gcc -o configdemo configdemo.c -ltrace
+gcc -o headerdemo headerdemo.c -ltrace
+gcc -o mplstag mplstag.c -ltrace
+gcc -o mplscount mplscount.c -ltrace
+gcc -o yk_sourcedemo yk_sourcedemo.c -ltrace
+[NOTICE-ACN_Code/hw4_libtrace_setup/setup.sh/cleanup] Setup complete
