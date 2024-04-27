@@ -12,6 +12,7 @@
 ## Tested Platforms
 
 1. WSL2 Ubuntu 22.04 LTS
+2. VM Ubuntu 23.10
 
 ## Reference
 
