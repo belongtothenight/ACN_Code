@@ -1,55 +1,78 @@
 #!/bin/bash
+#
+# Packages installed using dpkg/apt are not removed
 
-# var
-script_stat="dev" # dev, prod
-wget_flags="-nv --show-progress --output-document"
-tar_flags="-xzf"
-this_script="ACN_Code/hw4_libtrace_setup/setup.sh"
-program_install_dir="/opt"
-bash_function_url="https://raw.githubusercontent.com/belongtothenight/bash_scripts/main/src/functions.sh"
-bash_function_file="functions.sh"
-libwandder_release_url="https://github.com/LibtraceTeam/libwandder/archive/refs/tags/2.0.11-1.tar.gz"
-libwandder_name="libwandder"
-libwandder_file="${libwandder_name}-${libwandder_release_url##*/}"
-libwandder_ln="${libwandder_file//.tar.gz}"
-wandio_release_url="https://github.com/LibtraceTeam/wandio/archive/refs/tags/4.2.6-1.tar.gz"
-wandio_name="wandio"
-wandio_file="${wandio_name}-${wandio_release_url##*/}"
-wandio_ln="${wandio_file//.tar.gz}"
-libtrace_release_url="https://github.com/LibtraceTeam/libtrace/archive/refs/tags/4.0.24-1.tar.gz"
-libtrace_name="libtrace"
-libtrace_file="${libtrace_name}-${libtrace_release_url##*/}"
-libtrace_ln="${libtrace_file//.tar.gz}"
-libtrace_turorial_repo_url="https://github.com/ylai/libtrace_tutorial.git"
+# ====================================================================================
+# Init
+# ====================================================================================
+bash_function_file="./functions.sh"
 
-set -e
-source "${program_install_dir}/${bash_function_file}"
+echo "Sourcing bash functions"
+source "${bash_function_file}" || { echo 'source failed'; exit 1; } # Enter fail-exit mode
+source "./common_functions.sh"
+load_preset "./config.ini"
 
+# ====================================================================================
 # Remove functions file
+# ====================================================================================
 echo_notice "$this_script" "base" "Removing functions file"
-sudo rm -f "${program_install_dir}/${bash_function_file}"
+sudo rm -f "${bash_function_file}"
 
+# ====================================================================================
+# Remove uthash
+# ====================================================================================
+if [ $task_uthash == 1 ]; then
+    echo_notice "$this_script" "base" "Removing uthash"
+    sudo rm -rf "${program_install_dir}/${uthash_name}"
+    sudo rm -f ${system_include_dir}/ut*.h
+fi
+
+# ====================================================================================
 # Remove libwandder
-echo_notice "$this_script" "base" "Removing libwandder"
-sudo rm -f "${program_install_dir}/${libwandder_file}"
-sudo rm -rf "${program_install_dir}/${libwandder_ln}"
-sudo rm -f "${program_install_dir}/${libwandder_name}"
+# ====================================================================================
+if [ $task_libwandder == 1 ]; then
+    echo_notice "$this_script" "base" "Removing libwandder"
+    sudo rm -f ${system_include_dir}/libwandder*.h
+    sudo rm -f ${system_lib_dir}/libwandder*
+    sudo rm -f "${program_install_dir}/${libwandder_file}"
+    sudo rm -rf "${program_install_dir}/${libwandder_ln}"
+    sudo rm -f "${program_install_dir}/${libwandder_name}"
+fi
 
+# ====================================================================================
 # Remove wandio
-echo_notice "$this_script" "base" "Removing wandio"
-sudo rm -f "${program_install_dir}/${wandio_file}"
-sudo rm -rf "${program_install_dir}/${wandio_ln}"
-sudo rm -f "${program_install_dir}/${wandio_name}"
+# ====================================================================================
+if [ $task_wandio == 1 ]; then
+    echo_notice "$this_script" "base" "Removing wandio"
+    sudo rm -f ${system_include_dir}/wandio*.h
+    sudo rm -f ${system_lib_dir}/libwandio*
+    sudo rm -f "${program_install_dir}/${wandio_file}"
+    sudo rm -rf "${program_install_dir}/${wandio_ln}"
+    sudo rm -f "${program_install_dir}/${wandio_name}"
+fi
 
+# ====================================================================================
 # Remove libtrace
-echo_notice "$this_script" "base" "Removing libtrace"
-sudo rm -f "${program_install_dir}/${libtrace_file}"
-sudo rm -rf "${program_install_dir}/${libtrace_ln}"
-sudo rm -f "${program_install_dir}/${libtrace_name}"
+# ====================================================================================
+if [ $task_libtrace == 1 ]; then
+    echo_notice "$this_script" "base" "Removing libtrace"
+    sudo rm -f ${system_include_dir}/libtrace*.h
+    sudo rm -f ${system_include_dir}/libpacketdump*.h
+    sudo rm -rf "${system_include_dir}/${libtrace_name}"
+    sudo rm -f ${system_lib_dir}/libtrace*
+    sudo rm -rf ${system_lib_dir}/libpacketdump*
+    sudo rm -f "${program_install_dir}/${libtrace_file}"
+    sudo rm -rf "${program_install_dir}/${libtrace_ln}"
+    sudo rm -f "${program_install_dir}/${libtrace_name}"
+fi
 
+# ====================================================================================
 # Remove libtrace tutorial repo
-echo_notice "$this_script" "base" "Removing libtrace tutorial repo"
-sudo rm -rf "${program_install_dir}/libtrace_tutorial"
+# ====================================================================================
+if [ $task_libtrace_tutorial == 1 ]; then
+    echo_notice "$this_script" "base" "Removing libtrace tutorial repo"
+    sudo rm -rf "${program_install_dir}/libtrace_tutorial"
+fi
 
 # End of file
 echo_notice "$this_script" "base" "Cleanup complete"
