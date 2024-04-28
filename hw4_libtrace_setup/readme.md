@@ -19,7 +19,7 @@ To use this script, clone this repository, navigate to this directory, and follo
         
 ## Commands
 
-1. Changes monitoring: 
+1. Changes monitoring (see what is installed and where): 
     ```bash
     while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
     ```
