@@ -12,6 +12,33 @@ You will be able to select different parts of the options listed in [./config.in
 
 To use this script, clone this repository, navigate to this directory, and follow the instructions in the [Commands](#commands) section.
 
+## Tested Platforms
+
+1. WSL2 Ubuntu 22.04 LTS
+2. VM Ubuntu 23.10
+        
+## Commands
+
+1. Changes monitoring: 
+    ```bash
+    while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
+    ```
+2. Install or Re-install: (change `config.ini` before running)
+    ```bash
+    bash ./setup.sh
+    ```
+3. Remove: (change `config.ini` before running)
+    ```bash
+    bash ./remove.sh
+    ```
+
+## Demo
+
+| Description          | URL                                                          |
+| ---                  | ---                                                          |
+| Platform 1 full demo | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) |
+| Platform 2 full demo | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) |
+
 ## Structure
 
 1. [./.gitignore](./.gitignore): Git ignore file.
@@ -20,11 +47,6 @@ To use this script, clone this repository, navigate to this directory, and follo
 4. [./readme.md](./readme.md): This file.
 5. [./remove.sh](./remove.sh): Remove script. If error occurs, please find backup in `${program_install_dir}/backup*` and restore them.
 6. [./setup.sh](./setup.sh): Setup script, for installing, configurating and compiling.
-
-## Tested Platforms
-
-1. WSL2 Ubuntu 22.04 LTS
-2. VM Ubuntu 23.10
 
 ## Debug
 
@@ -41,28 +63,6 @@ To use this script, clone this repository, navigate to this directory, and follo
         [network]
         generateResolveConf = false
         ```
-        
-## Commands
-
-1. Changes monitoring: 
-    ```bash
-    while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
-    ```
-2. Install or Re-install: (change `config.ini` before running)
-    ```bash
-    bash ./setup.sh
-    ```
-3. Remove: (change `config.ini` before running)
-    ```bash
-    bash ./remove.sh
-    ```
-   
-## Demo
-
-| Description          | URL                                                          |
-| ---                  | ---                                                          |
-| Platform 1 full demo | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) |
-| Platform 2 full demo | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) |
 
 ## Reference
 
