@@ -47,10 +47,10 @@ This directory only responsible for setting up and removing libtrace development
    
 ## Demo
 
-| URL                                                          | Description          |
-| ---                                                          | ---                  |
-| [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) | Platform 1 full demo |
-| [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) | Platform 2 full demo |
+| Description          | URL                                                          |
+| ---                  | ---                                                          |
+| Platform 1 full demo | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) |
+| Platform 2 full demo | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) |
 
 ## Reference
 
