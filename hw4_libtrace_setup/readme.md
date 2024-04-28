@@ -6,11 +6,13 @@ This directory only responsible for setting up and removing libtrace development
 2. libwandder
 3. wandio
 4. libtrace
-5. libtrace tutorial (forked)
+5. libtrace tutorial (forked, original can't be compiled)
 
 You will be able to select different parts of the options listed in [./config.ini](./config.ini) file to install/re-install or remove after initial run is completed.
 
 To use this script, clone this repository, navigate to this directory, and follow the instructions in the [Commands](#commands) section.
+
+If you want to make sure things are running correctly, you can check the [Demo](#demo) section for the video links and log files.
 
 ## Tested Platforms
 
@@ -34,19 +36,20 @@ To use this script, clone this repository, navigate to this directory, and follo
 
 ## Demo
 
-| Description          | URL                                                          |
-| ---                  | ---                                                          |
-| Platform 1 full demo | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) |
-| Platform 2 full demo | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) |
+| Description          | URL                                                          | Install Log (slight changes)               |
+| ---                  | ---                                                          | ---                                        |
+| Platform 1 full demo | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) | [./log/platform1.log](./log/platform1.log) |
+| Platform 2 full demo | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) | [./log/platform2.log](./log/platform2.log) |
 
 ## Structure
 
-1. [./.gitignore](./.gitignore): Git ignore file.
-2. [./common_functions.sh](./common_functions.sh): Common bash functions used in setup and remove scripts.
-3. [./config.ini](./config.ini): Configuration file.
-4. [./readme.md](./readme.md): This file.
-5. [./remove.sh](./remove.sh): Remove script. If error occurs, please find backup in `${program_install_dir}/backup*` and restore them.
-6. [./setup.sh](./setup.sh): Setup script, for installing, configurating and compiling.
+1. [./log/](./log/): Log directory.
+2. [./.gitignore](./.gitignore): Git ignore file.
+3. [./common_functions.sh](./common_functions.sh): Common bash functions used in setup and remove scripts.
+4. [./config.ini](./config.ini): Configuration file.
+5. [./readme.md](./readme.md): This file.
+6. [./remove.sh](./remove.sh): Remove script. If error occurs, please find backup in `${program_install_dir}/backup*` and restore them.
+7. [./setup.sh](./setup.sh): Setup script, for installing, configurating and compiling.
 
 ## Debug
 
