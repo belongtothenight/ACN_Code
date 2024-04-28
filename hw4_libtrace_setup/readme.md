@@ -2,6 +2,12 @@
 
 This directory only responsible for setting up and removing libtrace development environment and related code.
 
+1. uthash
+2. libwandder
+3. wandio
+4. libtrace
+5. libtrace tutorial (forked)
+
 ## Structure
 
 1. [./.gitignore](./.gitignore): Git ignore file.
@@ -15,18 +21,6 @@ This directory only responsible for setting up and removing libtrace development
 
 1. WSL2 Ubuntu 22.04 LTS
 2. VM Ubuntu 23.10
-
-## Reference
-
-| Package           | Type    | Link                                                                                                                         |
-| -------           | :--:    | ----                                                                                                                         |
-| uthash            | REPO    | [https://github.com/troydhanson/uthash/tree/master](https://github.com/troydhanson/uthash/tree/master)                       |
-| libwandder        | REPO    | [https://github.com/LibtraceTeam/libwandder](https://github.com/LibtraceTeam/libwandder)                                     |
-| wandio            | REPO    | [https://github.com/LibtraceTeam/wandio](https://github.com/LibtraceTeam/wandio)                                             |
-| wandio            | INSTALL | [https://github.com/LibtraceTeam/wandio/blob/master/INSTALL](https://github.com/LibtraceTeam/wandio/blob/master/INSTALL)     |
-| libtrace          | REPO    | [https://github.com/LibtraceTeam/libtrace](https://github.com/LibtraceTeam/libtrace)                                         |
-| libtrace          | INSTALL | [https://github.com/LibtraceTeam/libtrace/blob/master/INSTALL](https://github.com/LibtraceTeam/libtrace/blob/master/INSTALL) |
-| libtrace_tutorial | REPO    | [https://github.com/ylai/libtrace_tutorial](https://github.com/ylai/libtrace_tutorial)                                       |
 
 ## Debug
 
@@ -57,3 +51,15 @@ This directory only responsible for setting up and removing libtrace development
 | ---                                                          | ---                  |
 | [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) | Platform 1 full demo |
 | [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) | Platform 2 full demo |
+
+## Reference
+
+| Package           | Type    | Link                                                                                                                         |
+| -------           | :--:    | ----                                                                                                                         |
+| uthash            | REPO    | [https://github.com/troydhanson/uthash/tree/master](https://github.com/troydhanson/uthash/tree/master)                       |
+| libwandder        | REPO    | [https://github.com/LibtraceTeam/libwandder](https://github.com/LibtraceTeam/libwandder)                                     |
+| wandio            | REPO    | [https://github.com/LibtraceTeam/wandio](https://github.com/LibtraceTeam/wandio)                                             |
+| wandio            | INSTALL | [https://github.com/LibtraceTeam/wandio/blob/master/INSTALL](https://github.com/LibtraceTeam/wandio/blob/master/INSTALL)     |
+| libtrace          | REPO    | [https://github.com/LibtraceTeam/libtrace](https://github.com/LibtraceTeam/libtrace)                                         |
+| libtrace          | INSTALL | [https://github.com/LibtraceTeam/libtrace/blob/master/INSTALL](https://github.com/LibtraceTeam/libtrace/blob/master/INSTALL) |
+| libtrace_tutorial | REPO    | [https://github.com/ylai/libtrace_tutorial](https://github.com/ylai/libtrace_tutorial)                                       |
