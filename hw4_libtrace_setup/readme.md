@@ -10,6 +10,8 @@ This directory only responsible for setting up and removing libtrace development
 
 You will be able to select different parts of the options listed in [./config.ini](./config.ini) file to install/re-install or remove after initial run is completed.
 
+To use this script, clone this repository, navigate to this directory, and follow the instructions in the [Commands](#commands) section.
+
 ## Structure
 
 1. [./.gitignore](./.gitignore): Git ignore file.
