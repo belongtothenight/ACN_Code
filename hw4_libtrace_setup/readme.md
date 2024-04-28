@@ -50,3 +50,10 @@ This directory only responsible for setting up and removing libtrace development
    ```bash
    while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
    ```
+   
+## Demo
+
+| URL                                                          | Description          |
+| ---                                                          | ---                  |
+| [https://youtu.be/eUz94aX3Fl8](https://youtu.be/eUz94aX3Fl8) | Platform 1 full demo |
+| [https://youtu.be/4m0WfPn3zGw](https://youtu.be/4m0WfPn3zGw) | Platform 2 full demo |
