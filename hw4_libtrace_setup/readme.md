@@ -1,5 +1,7 @@
 # Setup Libtrace Development Environment
 
+This directory only responsible for setting up and removing libtrace development environment and related code.
+
 ## Structure
 
 1. [./.gitignore](./.gitignore): Git ignore file.

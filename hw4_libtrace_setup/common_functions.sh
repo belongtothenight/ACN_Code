@@ -3,7 +3,7 @@
 
 # value: 1: verbose
 verbose=0
-message1="ACN_Code/hw4_libtrace_setup/setup.sh"
+message1="ACN_Code/hw4_libtrace_setup/common_functions.sh"
 message2="base"
 error_exit_code=1
 
@@ -30,21 +30,24 @@ load_preset () {
     #[ PARAM - PROGRAM FLAGS ] X 2
     check_var wget_flags                    $error_exit_code
     check_var tar_flags                     $error_exit_code
-    #[ PARAM - PATHS & URLS ] X 14
-    check_var this_script                   $error_exit_code
-    check_var program_install_dir           $error_exit_code
-    check_var system_include_dir            $error_exit_code
-    check_var system_lib_dir                $error_exit_code
-    check_var uthash_repo_url               $error_exit_code
-    check_var uthash_name                   $error_exit_code
-    check_var libwandder_release_url        $error_exit_code
-    check_var libwandder_name               $error_exit_code
-    check_var wandio_release_url            $error_exit_code
-    check_var wandio_name                   $error_exit_code
-    check_var libtrace_release_url          $error_exit_code
-    check_var libtrace_name                 $error_exit_code
-    check_var libtrace_turorial_repo_url    $error_exit_code
-    check_var libtrace_tutorial_name        $error_exit_code
+
+    if [ $verbose == 1 ]; then
+        echo_notice "$message1" "$message2" "Setting private variables"
+    fi
+    this_script="ACN_Code/hw4_libtrace_setup/setup.sh"
+    program_install_dir="/opt"
+    system_include_dir="/usr/local/include"
+    system_lib_dir="/usr/local/lib"
+    uthash_repo_url="https://github.com/troydhanson/uthash.git"
+    uthash_name="uthash"
+    libwandder_release_url="https://github.com/LibtraceTeam/libwandder/archive/refs/tags/2.0.11-1.tar.gz"
+    libwandder_name="libwandder"
+    wandio_release_url="https://github.com/LibtraceTeam/wandio/archive/refs/tags/4.2.6-1.tar.gz"
+    wandio_name="wandio"
+    libtrace_release_url="https://github.com/LibtraceTeam/libtrace/archive/refs/tags/4.0.24-1.tar.gz"
+    libtrace_name="libtrace"
+    libtrace_turorial_repo_url="https://github.com/belongtothenight/libtrace_tutorial.git"
+    libtrace_tutorial_name="libtrace_tutorial"
 
     if [ $verbose == 1 ]; then
         echo_notice "$message1" "$message2" "Performinng mutual actions"
