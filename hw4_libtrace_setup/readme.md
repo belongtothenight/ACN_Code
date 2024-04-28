@@ -68,7 +68,7 @@ To use this script, clone this repository, navigate to this directory, and follo
 
 | Package           | Type    | Link                                                                                                                         |
 | -------           | :--:    | ----                                                                                                                         |
-| uthash            | REPO    | [https://github.com/troydhanson/uthash/tree/master](https://github.com/troydhanson/uthash/tree/master)                       |
+| uthash            | REPO    | [https://github.com/troydhanson/uthash](https://github.com/troydhanson/uthash)                                               |
 | libwandder        | REPO    | [https://github.com/LibtraceTeam/libwandder](https://github.com/LibtraceTeam/libwandder)                                     |
 | wandio            | REPO    | [https://github.com/LibtraceTeam/wandio](https://github.com/LibtraceTeam/wandio)                                             |
 | wandio            | INSTALL | [https://github.com/LibtraceTeam/wandio/blob/master/INSTALL](https://github.com/LibtraceTeam/wandio/blob/master/INSTALL)     |
