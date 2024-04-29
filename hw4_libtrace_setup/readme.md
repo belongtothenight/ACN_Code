@@ -10,8 +10,6 @@ This directory only responsible for setting up and removing libtrace development
 
 You will be able to select different parts of the options listed in [./config.ini](./config.ini) file to install/re-install or remove after initial run is completed.
 
-If you want to make sure things are running correctly, you can check the [Demo](#demo) section for the video links and log files, and [Debug](#debug) section for common issues and solutions.
-
 ## Installation
 
 To use this script, clone this repository, navigate to this directory, and run the setup script:
@@ -21,6 +19,8 @@ git clon https://github.com/belongtothenight/ACN_Code.git
 cd ACN_Code/hw4_libtrace_setup
 bash ./setup.sh
 ```
+
+If you want to make sure things are running correctly, you can check the [Demo](#demo) section for the video links and log files, and [Debug](#debug) section for common issues and solutions.
 
 ## Tested Platforms
 
