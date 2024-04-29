@@ -71,6 +71,22 @@ If you want to make sure things are running correctly, you can check the [Demo](
     ```bash
     export LD_LIBRARY_PATH="/usr/local/lib"
     ```
+3. repo existed, symlink existed causing unable to create symlink error:
+    Try to remove installation and try again:
+    ```bash
+    bash ./remove.sh
+    bash ./setup.sh
+    ```
+4. C code related compiling warning/error:
+    First fix the error, adjust `config.ini` to only run the error section, then try to partially re-compile:
+    ```bash
+    bash ./setup.sh
+    ```
+    or partially remove and re-install/compile:
+    ```bash
+    bash ./remove.sh
+    bash ./setup.sh
+    ```
 
 ## Reference
 
