@@ -12,7 +12,7 @@ You will be able to select different parts of the options listed in [./config.in
 
 To use this script, clone this repository, navigate to this directory, and follow the instructions in the [Commands](#commands) section.
 
-If you want to make sure things are running correctly, you can check the [Demo](#demo) section for the video links and log files.
+If you want to make sure things are running correctly, you can check the [Demo](#demo) section for the video links and log files, and [Debug](#debug) section for common issues and solutions.
 
 ## Tested Platforms
 
