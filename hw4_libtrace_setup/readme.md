@@ -68,8 +68,8 @@ If you want to make sure things are running correctly, you can check the [Demo](
     bash ./remove.sh
     bash ./setup.sh
     ```
-4. C code related compiling warning/error:
-    First fix the error, adjust `config.ini` to only run the error section, then try to partially re-compile:<br>
+4. C code related compiling warning/error:<br>
+    First fix the error, adjust `config.ini` to only run the error section, then try to partially re-compile:
     ```bash
     bash ./setup.sh
     ```
