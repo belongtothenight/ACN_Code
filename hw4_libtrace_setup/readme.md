@@ -61,11 +61,16 @@ If you want to make sure things are running correctly, you can check the [Demo](
         # generateResolvConf = false
         nameserver 1.1.1.1
         ```
-    1. Optional, edit `/etc/wsl.conf` to contain following network section:
+    2. Optional, edit `/etc/wsl.conf` to contain following network section:
         ```bash
         [network]
         generateResolveConf = false
         ```
+2. message similar to `error while loading shared libraries: libtrace.so.7: cannot open shared object file: No such file or directory`:
+    Execute the command below and try again:
+    ```bash
+    export LD_LIBRARY_PATH="/usr/local/lib"
+    ```
 
 ## Reference
 
