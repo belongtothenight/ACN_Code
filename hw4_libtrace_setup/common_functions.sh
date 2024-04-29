@@ -27,13 +27,12 @@ load_preset () {
     check_var task_libtrace_tutorial        $error_exit_code
     #[ PARAM - EXECUTION MODE ] X 1
     check_var script_stat                   $error_exit_code
-    #[ PARAM - PROGRAM FLAGS ] X 2
-    check_var wget_flags                    $error_exit_code
-    check_var tar_flags                     $error_exit_code
 
     if [ $verbose == 1 ]; then
         echo_notice "$message1" "$message2" "Setting private variables"
     fi
+    wget_flags="-nv --show-progress"
+    tar_flags="-xzf"
     this_script="ACN_Code/hw4_libtrace_setup/setup.sh"
     program_install_dir="/opt"
     system_include_dir="/usr/local/include"
