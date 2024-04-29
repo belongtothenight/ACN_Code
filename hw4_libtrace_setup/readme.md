@@ -15,7 +15,7 @@ You will be able to select different parts of the options listed in [./config.in
 To use this script, clone this repository, navigate to this directory, and run the setup script:
 
 ```bash
-git clon https://github.com/belongtothenight/ACN_Code.git
+git clone https://github.com/belongtothenight/ACN_Code.git
 cd ACN_Code/hw4_libtrace_setup
 bash ./setup.sh
 ```
