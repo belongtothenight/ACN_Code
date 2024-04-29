@@ -26,11 +26,11 @@ If you want to make sure things are running correctly, you can check the [Demo](
     ```bash
     while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
     ```
-2. Install or Re-install: (change `config.ini` before running)
+2. Install or Re-install: (change [./config.ini](./config.ini) before running)
     ```bash
     bash ./setup.sh
     ```
-3. Remove: (change `config.ini` before running)
+3. Remove: (change [./config.ini](./config.ini) before running)
     ```bash
     bash ./remove.sh
     ```
@@ -69,7 +69,7 @@ If you want to make sure things are running correctly, you can check the [Demo](
     bash ./setup.sh
     ```
 4. C code related compiling warning/error:<br>
-    First fix the error, adjust `config.ini` to only run the error section, then try to partially re-compile:
+    First fix the error, adjust [./config.ini](./config.ini) to only run the error section, then try to partially re-compile:
     ```bash
     bash ./setup.sh
     ```
