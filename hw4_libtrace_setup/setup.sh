@@ -216,6 +216,7 @@ if [ $task_libtrace_tutorial == 1 ]; then
     cd $libtrace_tutorial_codedemo
     sudo make $make_flags
 fi
+export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 
 # End of file
 msg="cleanup"
