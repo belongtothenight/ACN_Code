@@ -204,8 +204,8 @@ if [ $task_libtrace_tutorial == 1 ]; then
     libtrace_tutorial_lib_massdal="${program_install_dir}/${libtrace_tutorial_name}/lib/massdal"
     libtrace_tutorial_hw0="${program_install_dir}/${libtrace_tutorial_name}/hw0"
     libtrace_tutorial_codedemo="${program_install_dir}/${libtrace_tutorial_name}/codedemo"
-    #LD_LIBRARY_PATH="${program_install_dir}/${libwandder_name}/src:${program_install_dir}/${wandio_name}/src"
-    LD_LIBRARY_PATH="${system_lib_dir}:${system_include_dir}:${libtrace_tutorial_lib_massdal}:$LD_LIBRARY_PATH"
+    #export LD_LIBRARY_PATH="${program_install_dir}/${libwandder_name}/src:${program_install_dir}/${wandio_name}/src"
+    export LD_LIBRARY_PATH="${system_lib_dir}:${system_include_dir}:${libtrace_tutorial_lib_massdal}"
     echo_notice "$this_script" "$msg" "Building libtrace tutorial -> lib/massdal"
     cd $libtrace_tutorial_lib_massdal
     sudo make $make_flags
@@ -216,7 +216,7 @@ if [ $task_libtrace_tutorial == 1 ]; then
     cd $libtrace_tutorial_codedemo
     sudo make $make_flags
 fi
-export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="/usr/local/lib"
 
 # End of file
 msg="cleanup"
