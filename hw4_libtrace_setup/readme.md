@@ -26,7 +26,7 @@ If you want to make sure things are running correctly, you can check the [Demo](
 
 1. WSL2 Ubuntu 22.04 LTS
 2. VM Ubuntu 23.10
-3. Raspberry Pi 4 Ubuntu 24.04 LTS (by @cnn1202)
+3. Raspberry Pi 4 Ubuntu 24.04 LTS (by [@cnn1202](https://github.com/cnn1202))
         
 ## Commands
 
