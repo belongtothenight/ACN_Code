@@ -45,7 +45,7 @@ load_preset () {
     wandio_name="wandio"
     libtrace_release_url="https://github.com/LibtraceTeam/libtrace/archive/refs/tags/4.0.24-1.tar.gz"
     libtrace_name="libtrace"
-    libtrace_turorial_repo_url="https://github.com/belongtothenight/libtrace_tutorial.git"
+    libtrace_turorial_repo_url="https://github.com/ylai/libtrace_tutorial.git"
     libtrace_tutorial_name="libtrace_tutorial"
 
     if [ $verbose == 1 ]; then
