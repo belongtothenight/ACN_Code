@@ -11,17 +11,17 @@
 bash_function_url="https://raw.githubusercontent.com/belongtothenight/bash_scripts/main/src/functions.sh"
 bash_function_file="./functions.sh"
 
-echo "Updating system package"
+echo ">> Updating system package"
 sudo apt update || { echo 'apt update failed' ; exit 1; }
 sudo apt upgrade -y || { echo 'apt upgrade failed' ; exit 1; }
 
-echo "Installing mutual dependencies"
+echo ">> Installing mutual dependencies"
 sudo apt install -y build-essential git wget || { echo 'apt failed' ; exit 1; }
 
-echo "Downloading bash functions"
+echo ">> Downloading bash functions"
 sudo wget -nv --show-progress ${bash_function_url} --output-document ${bash_function_file} || { echo 'wget failed'; exit 1; }
 
-echo "Sourcing bash functions"
+echo ">> Sourcing bash functions"
 source "${bash_function_file}" || { echo 'source failed'; exit 1; } # Enter fail-exit mode
 source "./common_functions.sh"
 load_preset "./config.ini"
@@ -110,9 +110,6 @@ if [ $task_libtrace == 1 ]; then
         err_retry_exec "aptins libssl-dev"              1 5 "${this_script}" "$msg" 1 # (optional) for libcrypto
         err_retry_exec "aptins libncurses5-dev"         1 5 "${this_script}" "$msg" 1 # (optional) for libncurses
         err_retry_exec "aptins libncursesw5-dev"        1 5 "${this_script}" "$msg" 1 # (optional) for libncurses
-    else
-        echo_error "$this_script" "$msg" "Unknown script_stat"
-        exit 1
     fi
 fi
 
@@ -137,9 +134,6 @@ if [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]
             err_conti_exec "sudo ln -s ${program_install_dir}/${libwandder_ln} ${program_install_dir}/${libwandder_name}" "${this_script}" "$msg"
         elif [ $script_stat == "prod" ]; then
             sudo ln -s "${program_install_dir}/${libwandder_ln}" "${program_install_dir}/${libwandder_name}"
-        else
-            echo_error "$this_script" "$msg" "Unknown script_stat"
-            exit 1
         fi
     fi
     if [ $task_wandio == 1 ]; then
@@ -147,9 +141,6 @@ if [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]
             err_conti_exec "sudo ln -s ${program_install_dir}/${wandio_ln} ${program_install_dir}/${wandio_name}" "${this_script}" "$msg"
         elif [ $script_stat == "prod" ]; then
             sudo ln -s "${program_install_dir}/${wandio_ln}" "${program_install_dir}/${wandio_name}"
-        else
-            echo_error "$this_script" "$msg" "Unknown script_stat"
-            exit 1
         fi
     fi
     if [ $task_libtrace == 1 ]; then
@@ -157,9 +148,6 @@ if [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]
             err_conti_exec "sudo ln -s ${program_install_dir}/${libtrace_ln} ${program_install_dir}/${libtrace_name}" "${this_script}" "$msg"
         elif [ $script_stat == "prod" ]; then
             sudo ln -s "${program_install_dir}/${libtrace_ln}" "${program_install_dir}/${libtrace_name}"
-        else
-            echo_error "$this_script" "$msg" "Unknown script_stat"
-            exit 1
         fi
     fi
 fi
