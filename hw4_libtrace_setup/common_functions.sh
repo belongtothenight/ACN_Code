@@ -46,6 +46,7 @@ load_preset () {
     program_install_dir="/opt"
     system_include_dir="/usr/local/include"
     system_lib_dir="/usr/local/lib"
+    system_share_dir="/usr/local/share"
     uthash_repo_url="https://github.com/troydhanson/uthash.git"
     uthash_name="uthash"
     libwandder_release_url="https://github.com/LibtraceTeam/libwandder/archive/refs/tags/2.0.11-1.tar.gz"

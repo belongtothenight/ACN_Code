@@ -42,8 +42,8 @@ fi
 msg="remove libwandder"
 if [ $task_libwandder == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing libwandder"
-    sudo rm -f ${system_include_dir}/libwandder*.h
-    sudo rm -f ${system_lib_dir}/libwandder*
+    cd "${program_install_dir}/${libwandder_name}"
+    sudo make uninstall
     sudo rm -f "${program_install_dir}/${libwandder_file}"
     sudo rm -rf "${program_install_dir}/${libwandder_ln}"
     sudo rm -f "${program_install_dir}/${libwandder_name}"
@@ -55,8 +55,8 @@ fi
 msg="remove wandio"
 if [ $task_wandio == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing wandio"
-    sudo rm -f ${system_include_dir}/wandio*.h
-    sudo rm -f ${system_lib_dir}/libwandio*
+    cd "${program_install_dir}/${wandio_name}"
+    sudo make uninstall
     sudo rm -f "${program_install_dir}/${wandio_file}"
     sudo rm -rf "${program_install_dir}/${wandio_ln}"
     sudo rm -f "${program_install_dir}/${wandio_name}"
@@ -68,11 +68,11 @@ fi
 msg="remove libtrace"
 if [ $task_libtrace == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing libtrace"
-    sudo rm -f ${system_include_dir}/libtrace*.h
-    sudo rm -f ${system_include_dir}/libpacketdump*.h
-    sudo rm -rf "${system_include_dir}/${libtrace_name}"
-    sudo rm -f ${system_lib_dir}/libtrace*
-    sudo rm -rf ${system_lib_dir}/libpacketdump*
+    cd "${program_install_dir}/${libtrace_name}"
+    sudo make uninstall
+    sudo rm -rf "${system_lib_dir}/libpacketdump"
+    sudo rmdir "${system_include_dir}/${libtrace_name}"
+    sudo rmdir "${system_share_dir}/${libtrace_name}"
     sudo rm -f "${program_install_dir}/${libtrace_file}"
     sudo rm -rf "${program_install_dir}/${libtrace_ln}"
     sudo rm -f "${program_install_dir}/${libtrace_name}"
