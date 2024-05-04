@@ -32,7 +32,7 @@ If you want to make sure things are running correctly, you can check the [Demo](
 
 - Changes monitoring (see what is installed and where): 
     ```bash
-    while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/opt"; ls /opt; done
+    while true; do sleep 1; clear; echo -e "/usr/local/include"; ls /usr/local/include; echo -e "\n/usr/local/lib"; ls /usr/local/lib; echo -e "\n/usr/local/bin"; ls /usr/local/bin; echo -e "\n/usr/local/share"; ls /usr/local/share; echo -e "\n/opt"; ls /opt; done
     ```
 - Install or Re-install: (change [./config.ini](./config.ini) before running)
     ```bash
