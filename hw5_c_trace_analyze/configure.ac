@@ -41,7 +41,7 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([setvbuf strcmp atoi printf exit strstr signal sizeof snprintf strdup access strtod perror strerror])
+AC_CHECK_FUNCS([setvbuf strcmp printf exit strstr signal sizeof snprintf strdup access strtod strtol perror strerror])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])

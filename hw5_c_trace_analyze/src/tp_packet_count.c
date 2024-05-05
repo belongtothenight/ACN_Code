@@ -74,8 +74,8 @@ int main (int argc, char *argv[]) {
                  * man 3 strtol
                  */
                 if (errno != EC_SUCCESS) {
-                    printf("errno = %d -> %s\n", errno, strerror(errno));
                     perror("strtod");
+                    printf("errno = %d -> %s\n", errno, strerror(errno));
                     ec = EC_CLI_INVALID_TIME_INTERVAL;
                 }
                 if (endptr == argv[i]) {
