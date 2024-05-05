@@ -16,16 +16,20 @@
 // Constants
 #define CLI_MAX_INPUTS 8
 
-void print_help_message (void) {
-    printf("Usage: tp_iat -i <input_file> -b <bin count> -o <output_file> -v\n");
-    printf("       tp_iat -h\n");
-    printf("  -h, --help    \tDisplay this help message\n");
-    printf("  -v, --verbose \tDisplay verbose output\n");
-    printf("  -i, --input   \tInput file\n");
-    printf("  -b, --bincnt  \tNumber of bins\n");
-    printf("  -o, --output  \tOutput csv file\n");
-}
+/**
+ * @brief Print help message
+ */
+void print_help_message (void);
 
+/**
+ * @brief Main function, parse trace file and extract IAT, then write to CSV file
+ * @param argc Argument count
+ * @param argv Argument vector
+ * @return Error code
+ * @details
+ * Normal usage: ./tp_iat -i <input_file> -b <bin_count> -o <output_file> [-v]
+ * Display help message: ./tp_iat -h
+ */
 int main (int argc, char *argv[]) {
     /* initialize */
     register_all_signal_handlers();
@@ -75,7 +79,7 @@ int main (int argc, char *argv[]) {
             } else {
                 ec = EC_CLI_NO_BIN_COUNT_VALUE;
             }
-        } else if (strcmp(argv[i], "--bincnt") == 0) {
+        } else if (strcmp(argv[i], "--bin-count") == 0) {
             i++;
             if (i < argc) {
                 bin_count = atoi(argv[i]);
@@ -99,6 +103,7 @@ int main (int argc, char *argv[]) {
             } else {
                 ec = EC_CLI_NO_OUTPUT_FILE_VALUE;
             }
+        /* Check for single arguments */
         } else if (strcmp(argv[i], "-h") == 0) {
             print_help_message();
             exit(EC_SUCCESS);
@@ -112,10 +117,9 @@ int main (int argc, char *argv[]) {
         } else {
             ec = EC_CLI_UNKNOWN_OPTION;
         }
-        /* Check for single arguments */
     }
     if (verbose) {
-        printf("Parsed arguments:\n");
+        printf("Arguments parsed:\n");
         printf("Input file: \t%s\n", input_file);
         printf("Bin count: \t%d\n", bin_count);
         printf("Output file: \t%s\n", output_file);
@@ -131,7 +135,7 @@ int main (int argc, char *argv[]) {
             ec = EC_CLI_NO_OUTPUT_OPTION;
         }
         if (verbose) {
-            printf("Checked required arguments\n");
+            printf("Required arguments check finished\n");
         }
     }
 
@@ -145,10 +149,11 @@ int main (int argc, char *argv[]) {
             ec = EC_CLI_INVALID_OUTPUT_FILE;
         }
         if (access(input_file, F_OK) != 0) {
+            printf("File inaccessable: %s\n", input_file);
             ec = EC_CLI_INPUT_FILE_NOT_FOUND;
         }
         if (verbose) {
-            printf("Checked valid arguments\n");
+            printf("Valid arguments check finished\n");
         }
     }
     if (ec != 0) {
@@ -157,9 +162,21 @@ int main (int argc, char *argv[]) {
         exit(ec);
     }
 
-    /* main loop */
+    /* main process */
     while (1) {
         printf("Hello, world!\n");
         sleep(1);
     }
+}
+
+void print_help_message (void) {
+    printf("Usage: tp_iat -i <input_file> -b <bin count> -o <output_file> -v\n");
+    printf("       tp_iat -h\n");
+    printf("Options:\n");
+    printf("  -i, --input       Input file\n");
+    printf("  -b, --bin-count   Number of bins\n");
+    printf("  -o, --output      Output csv file\n");
+    printf("  -v, --verbose     Display verbose output\n");
+    printf("  -h, --help        Display this help message\n");
+    return;
 }
