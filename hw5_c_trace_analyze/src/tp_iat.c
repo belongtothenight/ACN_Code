@@ -93,15 +93,10 @@ int main (int argc, char *argv[]) {
                 ec = EC_CLI_NO_OUTPUT_FILE_VALUE;
             }
         /* Check for single arguments */
-        } else if (strcmp(argv[i], "-h") == 0) {
+        } else if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0)) {
             print_help_message();
             exit(EXIT_SUCCESS);
-        } else if (strcmp(argv[i], "--help") == 0) {
-            print_help_message();
-            exit(EXIT_SUCCESS);
-        } else if (strcmp(argv[i], "-v") == 0) {
-            verbose = true;
-        } else if (strcmp(argv[i], "--verbose") == 0) {
+        } else if ((strcmp(argv[i], "-v") == 0) || (strcmp(argv[i], "--verbose") == 0)) {
             verbose = true;
         } else {
             ec = EC_CLI_UNKNOWN_OPTION;
