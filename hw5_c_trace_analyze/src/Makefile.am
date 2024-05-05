@@ -4,7 +4,7 @@ common_cxxflag = -Wextra -Wall -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -W
 
 # ====================================
 # install directory of public:
-# - plugins	        (.so, .a, .la)
+# - plugins         (.so, .a, .la)
 # - libtool library (.so, .a, .la)
 # - header          (.h)
 # - binary
