@@ -1,3 +1,9 @@
+/*
+ * @file lib_output_format.c
+ * @brief Output format library
+ * @author belongtothenight / Da-Chuan Chen / 2024
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

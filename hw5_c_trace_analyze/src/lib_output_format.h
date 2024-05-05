@@ -1,6 +1,7 @@
 /**
- * @file  output_format.h
+ * @file  lib_output_format.h
  * @brief Output format struct for color printing (charactors)
+ * @author belongtothenight / Da-Chuan Chen / 2024
  * Ref:
  * 1. https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
  * 2. https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character

@@ -1,3 +1,9 @@
+/*
+ * @file lib_signal_handler.c
+ * @brief Signal handler library source file
+ * @author belongtothenight / Da-Chuan Chen / 2024
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>

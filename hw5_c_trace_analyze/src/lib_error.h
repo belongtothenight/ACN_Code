@@ -1,3 +1,9 @@
+/*
+ * @file lib_error.h
+ * @brief Error handling library
+ * @author belongtothenight / Da-Chuan Chen / 2024
+ */
+
 #ifndef LIB_ERROR_H
 #define LIB_ERROR_H
 

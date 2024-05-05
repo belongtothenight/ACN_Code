@@ -1,3 +1,9 @@
+/*
+ * @file lib_error.c
+ * @brief Error handling library source file
+ * @author belongtothenight / Da-Chuan Chen / 2024
+ */
+
 #include <stdio.h>
 
 #include "lib_output_format.h"

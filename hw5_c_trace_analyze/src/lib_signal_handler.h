@@ -1,6 +1,7 @@
 /**
- * @file signal_handler.h
+ * @file lib_signal_handler.h
  * @brief Defines custom signal handler.
+ * @author belongtothenight / Da-Chuan Chen / 2024
  * Ref:
  * 1. https://stackoverflow.com/questions/554138/catching-segfaults-in-c
  * 2. https://linuxhint.com/signal_handlers_c_programming_language/
