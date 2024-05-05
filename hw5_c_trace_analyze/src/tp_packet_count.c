@@ -28,8 +28,8 @@ void print_help_message (void);
  * @param argv Argument vector
  * @return Error code
  * @details
- * Normal usage: ./tp_packet_count -i <input_file> -t <time_interval> [-v]
- * Display help message: ./tp_packet_count -h
+ * Normal usage:            ./tp_packet_count -i <input_file> -t <time_interval> [-v]
+ * Display help message:    ./tp_packet_count -h
  */
 int main (int argc, char *argv[]) {
     /* initialize */

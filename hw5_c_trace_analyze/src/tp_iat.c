@@ -28,8 +28,8 @@ void print_help_message (void);
  * @param argv Argument vector
  * @return Error code
  * @details
- * Normal usage: ./tp_iat -i <input_file> -b <bin_count> -o <output_file> [-v]
- * Display help message: ./tp_iat -h
+ * Normal usage:            ./tp_iat -i <input_file> -b <bin_count> -o <output_file> [-v]
+ * Display help message:    ./tp_iat -h
  */
 int main (int argc, char *argv[]) {
     /* initialize */
