@@ -83,10 +83,6 @@ int main (int argc, char *argv[]) {
             i++;
             if (i < argc) {
                 bin_count = (int) strtol(argv[i], &endptr, 10);
-                /* 
-                 * strtol error checking
-                 * man 3 strtol
-                 */
                 if (errno != EC_SUCCESS) {
                     perror("strtol");
                     printf("errno = %d -> %s\n", errno, strerror(errno));

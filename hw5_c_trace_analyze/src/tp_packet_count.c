@@ -82,11 +82,6 @@ int main (int argc, char *argv[]) {
             i++;
             if (i < argc) {
                 time_interval = strtod(argv[i], &endptr);
-                /* 
-                 * strtod error checking
-                 * man strtod
-                 * man 3 strtol
-                 */
                 if (errno != EC_SUCCESS) {
                     perror("strtod");
                     printf("errno = %d -> %s\n", errno, strerror(errno));
