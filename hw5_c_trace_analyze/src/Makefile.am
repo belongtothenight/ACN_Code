@@ -39,7 +39,7 @@ lib_common_la_LDFLAGS = -Wl, --no-as-needed
 # add executable to build
 # ====================================
 bin_PROGRAMS   = tp_packet_count \
-                tp_iat
+                 tp_iat
 
 # ====================================
 # add source to build executable
