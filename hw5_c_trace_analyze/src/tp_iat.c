@@ -1,3 +1,9 @@
+/*
+ * @file tp_iat.c
+ * @brief Main function, parse trace file and extract IAT, then write to CSV file
+ * @author belongtothenight / Da-Chuan Chen / 2024
+ */
+
 // System libraries
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,9 +38,6 @@ void print_help_message (void);
  * Display help message:    ./tp_iat -h
  */
 int main (int argc, char *argv[]) {
-    /* initialize */
-    register_all_signal_handlers();
-
     /* params */
                 errno = 0;          /* error number */
     ec_t        ec = 0;             /* error code */
@@ -45,8 +48,19 @@ int main (int argc, char *argv[]) {
     const char *output_file = NULL; /* output file */
     int         bin_count = 0;      /* number of bins */
 
-    /* output may be going through pipe to log file */
-    setvbuf(stdout, 0, _IONBF, 0);
+    /* initialize */
+    register_all_signal_handlers();
+    if (errno != EC_SUCCESS) {
+        perror("signal");
+        printf("errno = %d -> %s\n", errno, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    ec = setvbuf(stdout, 0, _IONBF, 0); /* output may be going through pipe to log file */
+    if ((ec != EC_SUCCESS) || (errno != EC_SUCCESS)) {
+        perror("setvbuf");
+        printf("errno = %d -> %s\n", errno, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
     /* check CLI argument count */
     if (argc < 2) {
