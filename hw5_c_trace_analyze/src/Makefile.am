@@ -4,19 +4,19 @@ common_cxxflag = -Wextra -Wall -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -W
 
 # ====================================
 # install directory of public:
-# - plugins 		(.so, .a, .la)
+# - plugins			(.so, .a, .la)
 # - libtool library (.so, .a, .la)
-# - header 			(.h)
+# - header			(.h)
 # - binary
 # NOTE: comment out if not needed of individual install
 # NOTE: created directory won't be removed by uninstall
 # NOTE: header ladir need to use the library name as prefix
 # ====================================
-libdir 						= $(prefix)/lib/${project}
-lib_common_ladir 			= $(prefix)/include/${project}
-bindir 						= $(prefix)/bin/${project}
-tp_packet_countdir 			= $(prefix)/bin/${project}
-tp_iatdir 					= $(prefix)/bin/${project}
+libdir						= $(prefix)/lib/${project}
+lib_common_ladir			= $(prefix)/include/${project}
+bindir						= $(prefix)/bin/${project}
+tp_packet_countdir			= $(prefix)/bin/${project}
+tp_iatdir					= $(prefix)/bin/${project}
 
 # ====================================
 # add library to install as plugin
