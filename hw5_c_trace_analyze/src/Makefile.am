@@ -29,9 +29,11 @@ lib_LTLIBRARIES = lib_common.la
 # NOTE: need to use the library name as prefix
 # ====================================
 lib_common_la_SOURCES = lib_output_format.c \
-                        lib_signal_handler.c
+                        lib_signal_handler.c \
+                        lib_error.c
 lib_common_la_HEADERS = lib_output_format.h \
-                        lib_signal_handler.h
+                        lib_signal_handler.h \
+                        lib_error.h
 lib_common_la_CFLAGS = $(common_cflag)
 lib_common_la_LDFLAGS = -Wl, --no-as-needed
 
@@ -45,13 +47,13 @@ bin_PROGRAMS   = tp_packet_count \
 # add source to build executable
 # NOTE: need to use the executable name as prefix
 # ====================================
-tp_packet_count_SOURCES = tp_packet_count.c \
-                          lib_error.c
-tp_packet_count_HEADERS = lib_error.h
+tp_packet_count_SOURCES = tp_packet_count.c
+                          #lib_error.c
+#tp_packet_count_HEADERS = lib_error.h
 tp_packet_count_CFLAGS = $(common_cflag)
 tp_packet_count_LDADD = lib_common.la
-tp_iat_SOURCES = tp_iat.c \
-                 lib_error.c
-tp_iat_HEADERS = lib_error.h
+tp_iat_SOURCES = tp_iat.c
+                 #lib_error.c
+#tp_iat_HEADERS = lib_error.h
 tp_iat_CFLAGS = $(common_cflag)
 tp_iat_LDADD = lib_common.la

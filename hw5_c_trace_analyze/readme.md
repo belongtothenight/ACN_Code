@@ -9,7 +9,7 @@ General user and standard deployment use [../hw4_libtrace_setup](../hw4_libtrace
 Developer can use following command to compile the code.
 
 ```bash
-autoreconf -iv && ./configure && make
+./bootstrap.sh && ./configure && make
 sudo make install
 ```
 
