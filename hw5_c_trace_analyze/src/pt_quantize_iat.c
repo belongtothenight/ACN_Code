@@ -310,7 +310,7 @@ int main (int argc, char *argv[]) {
             ec = EC_GEN_UNABLE_TO_OPEN_DATA_FILE;
         }
     }
-    if ((ec == EC_SUCCESS) && verbose) {
+    if (ec == EC_SUCCESS) {
         printf("Histogram data written to %s\n", filename_buf);
     }
     /* write histogram file 
@@ -352,7 +352,7 @@ int main (int argc, char *argv[]) {
             ec = EC_GEN_GNUPLOT_ERROR;
         }
     }
-    if ((ec == EC_SUCCESS) && verbose) {
+    if (ec == EC_SUCCESS) {
         printf("Histogram file written to %s.png\n", histogram_path);
     }
 
