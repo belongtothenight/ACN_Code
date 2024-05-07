@@ -31,6 +31,13 @@
 #define EC_CLI_INVALID_BIN_COUNT        0x1C02 /* Invalid bin count */
 #define EC_CLI_INVALID_OUTPUT_FILE      0x1C03 /* Invalid output file */
 #define EC_CLI_INVALID_TIME_INTERVAL    0x1C04 /* Invalid time interval */
+/* > 0x2000: general errors */
+#define EC_GEN_UNABLE_TO_CREATE_PACKET  0x2001 /* Unable to open trace file */
+#define EC_GEN_UNABLE_TO_CREATE_TRACE   0x2002 /* Unable to create trace */
+#define EC_GEN_UNABLE_TO_START_TRACE    0x2003 /* Unable to start trace */
+#define EC_GEN_TRACE_READ_PACKET_ERROR  0x2004 /* Error in reading packet from trace */
+#define EC_GEN_UNABLE_TO_GET_TIMESPEC   0x2005 /* Unable to get timespec */
+#define EC_GEN_CLOCK_GETTIME_ERROR      0x2006 /* Error in clock_gettime */
 
 /**
  * @brief Error code

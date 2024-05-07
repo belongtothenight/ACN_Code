@@ -11,7 +11,7 @@
 
 void print_ec_message (ec_t ec) {
     output_format format;
-    get_format(&format, 1);
+    get_format(&format);
     switch (ec) {
         case 0:
             printf("%sSuccess\n", format.status.success);
@@ -67,6 +67,25 @@ void print_ec_message (ec_t ec) {
             break;
         case EC_CLI_INVALID_TIME_INTERVAL:
             printf("%s0x%x: Invalid time interval, should provides valid floating point number\n\n", format.status.error, ec);
+            break;
+        /* > 0x2000: general errors */
+        case EC_GEN_UNABLE_TO_CREATE_PACKET:
+            printf("%s0x%x: Unable to create packet structure\n\n", format.status.error, ec);
+            break;
+        case EC_GEN_UNABLE_TO_CREATE_TRACE:
+            printf("%s0x%x: Unable to create trace file\n\n", format.status.error, ec);
+            break;
+        case EC_GEN_UNABLE_TO_START_TRACE:
+            printf("%s0x%x: Unable to start trace file\n\n", format.status.error, ec);
+            break;
+        case EC_GEN_TRACE_READ_PACKET_ERROR:
+            printf("%s0x%x: Error occurred while reading packet from trace file\n\n", format.status.error, ec);
+            break;
+        case EC_GEN_UNABLE_TO_GET_TIMESPEC:
+            printf("%s0x%x: Unable to get timespec\n\n", format.status.error, ec);
+            break;
+        case EC_GEN_CLOCK_GETTIME_ERROR:
+            printf("%s0x%x: Error occurred while getting clock_gettime\n\n", format.status.error, ec);
             break;
         /* > default: Unknown error code */
         default:

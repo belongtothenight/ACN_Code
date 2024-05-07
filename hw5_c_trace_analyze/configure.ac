@@ -23,9 +23,21 @@ AC_PROG_CC
 LT_INIT([disable-static])
 
 # Checks for libraries.
+AC_CHECK_LIB([pthread], [pthread_mutex_trylock], [have_pthread=1], [have_pthread=0])
+AC_CHECK_LIB([crypto], [OPENSSL_init_crypto], [have_crypto=1], [have_crypto=0])
+AC_CHECK_LIB([wandder], [wandder_etsili_get_cc_format], [have_wandder=1], [have_wandder=0])
+AC_CHECK_LIB([trace], [trace_create_packet], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_create], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_is_err], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_perror], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_start], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_read_packet], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_get_timespec], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_destroy], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_destroy_packet], [have_trace=1], [have_trace=0])
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdio.h stdlib.h stdbool.h string.h signal.h unistd.h errno.h])
+AC_CHECK_HEADERS([stdio.h stdlib.h stdbool.h string.h signal.h unistd.h errno.h time.h inttypes.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
@@ -41,8 +53,17 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([setvbuf strcmp printf exit strstr signal sizeof snprintf strdup access strtod strtol perror strerror])
+AC_CHECK_FUNCS([access
+                clock_gettime
+                exit
+                printf perror
+                setvbuf strcmp strstr signal sizeof snprintf strdup strtod strtol strerror])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
+AC_SUBST([ADD_LIBS])
+AC_SUBST([EXTRA_LIBS])
+AC_SUBST([ADD_LDFLAGS])
+AC_SUBST([ADD_INCLS])
+AC_SUBST([LTLIBOBJS])
 AC_OUTPUT

@@ -51,9 +51,11 @@ tp_packet_count_SOURCES = tp_packet_count.c
                           #lib_error.c
 #tp_packet_count_HEADERS = lib_error.h
 tp_packet_count_CFLAGS = $(common_cflag)
-tp_packet_count_LDADD = lib_common.la
+tp_packet_count_LDADD = lib_common.la -ltrace -lm -L/usr/local/lib
+tp_packet_count_LDFLAGS = -I/usr/local/include
 tp_iat_SOURCES = tp_iat.c
                  #lib_error.c
 #tp_iat_HEADERS = lib_error.h
 tp_iat_CFLAGS = $(common_cflag)
-tp_iat_LDADD = lib_common.la
+tp_iat_LDADD = lib_common.la -ltrace -lm -L/usr/local/lib
+tp_iat_LDFLAGS = -I/usr/local/include

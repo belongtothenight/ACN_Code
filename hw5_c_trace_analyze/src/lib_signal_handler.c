@@ -13,7 +13,7 @@
 
 void signal_handler (int signum) {
     output_format format;
-    get_format(&format, 1);
+    get_format(&format);
     char *signal_name = strsignal(signum);
     printf("\n%sSignal %2d -> %s received.\n", format.status.warning, signum, signal_name);
     exit(signum);
