@@ -226,6 +226,7 @@ fi
 if [ $task_acn_code == 1 ]; then
     echo_notice "$this_script" "$msg" "Building ACN code"
     cd "${program_install_dir}/${anc_code_name}"
+    sudo chmod +x ./bootstrap.sh
     sudo ./bootstrap.sh
     sudo ./configure
     sudo make $make_flags
