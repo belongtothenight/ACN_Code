@@ -20,7 +20,6 @@ AM_PROG_AR
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_GNU_PLOT
 LT_INIT([disable-static])
 
 # Checks for libraries.

@@ -1,5 +1,5 @@
 /*
- * @file tp_iat.c
+ * @file pt_quantize_iat.c
  * @brief Main function, parse trace file and extract IAT, 
  *        quantize them by time duration, then write count of each category into a PNG histogram
  * @author belongtothenight / Da-Chuan Chen / 2024
@@ -25,7 +25,7 @@
 #include "lib_error.h"
 
 /* Constants */
-#define CLI_MAX_INPUTS 10
+#define CLI_MAX_INPUTS 11
 
 /* Global variables */
 time_t      next_interval_time_sec = 0;
@@ -61,28 +61,31 @@ static void per_packet (libtrace_packet_t *packet, double time_interval, uint64_
  * @param argv Argument vector
  * @return Error code
  * @details
- * Normal usage:            ./tp_iat -i <input_file> -q <quantize_time_order_of_2> [-s <iat_count_size>] [-p <path_of_histogram>] [-v]
- * Display help message:    ./tp_iat -h
+ * Normal usage:            ./pt_quantize_iat -i <input_file> -q <quantize_time_order_of_2> [-s <iat_count_size>] [-p <path_of_histogram>] [-l] [-v]
+ * Display help message:    ./pt_quantize_iat -h
  */
 int main (int argc, char *argv[]) {
     /* params */
-                        errno = 0;                  /* error number */
-    ec_t                ec = 0;                     /* error code */
-    int                 i;                          /* iterator */
-    char               *endptr;                     /* string to int conversion pointer */
-    double              time_interval = 10;         /* progress display time interval (sec) */
-    libtrace_t         *trace = NULL;               /* trace file */
-    libtrace_packet_t  *packet = NULL;              /* packet */
-    struct timespec     start_time;                 /* start processing time */
-    struct timespec     end_time;                   /* end processing time */
-    time_t              elapsed_time_sec;           /* elapsed time (sec) */
-    long int            elapsed_time_nsec;          /* elapsed time (nsec) */
-    FILE               *gnuplot = NULL;              /* gnuplot pipe */
-    const char         *input_file = NULL;          /* input file */
-    uint64_t            quantize_time_order = 0;    /* quantize time order of 2 */
-    uint64_t            iat_count_size = 20;        /* size of quantized_iat_count */
-    const char         *histogram_path = NULL;      /* path of histogram */
-    bool                verbose = false;            /* verbose output */
+                        errno = 0;                      /* error number */
+    ec_t                ec = 0;                         /* error code */
+    int                 i;                              /* iterator */
+    char               *endptr;                         /* string to int conversion pointer */
+    double              time_interval = 10;             /* progress display time interval (sec) */
+    libtrace_t         *trace = NULL;                   /* trace file */
+    libtrace_packet_t  *packet = NULL;                  /* packet */
+    struct timespec     start_time;                     /* start processing time */
+    struct timespec     end_time;                       /* end processing time */
+    time_t              elapsed_time_sec;               /* elapsed time (sec) */
+    long int            elapsed_time_nsec;              /* elapsed time (nsec) */
+    FILE               *gnuplot = NULL;                 /* gnuplot pipe */
+    char                filename_buf[1024];             /* filename buffer */
+    FILE               *data_file = NULL;               /* data file */
+    const char         *input_file = NULL;              /* input file */
+    uint64_t            quantize_time_order = 0;        /* quantize time order of 2 */
+    uint64_t            iat_count_size = 20;            /* size of quantized_iat_count */
+    const char         *histogram_path = NULL;          /* path of histogram */
+    bool                histogram_log_scale = false;    /* histogram log scale */
+    bool                verbose = false;                /* verbose output */
 
     /* initialize */
     register_all_signal_handlers();
@@ -161,12 +164,14 @@ int main (int argc, char *argv[]) {
             } else {
                 ec = EC_CLI_NO_HISTOGRAM_PATH_VALUE;
             }
-        /* Check for single arguments */
+        /* Check for optional single arguments */
         } else if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0)) {
             print_help_message();
             exit(EXIT_SUCCESS);
         } else if ((strcmp(argv[i], "-v") == 0) || (strcmp(argv[i], "--verbose") == 0)) {
             verbose = true;
+        } else if ((strcmp(argv[i], "-l") == 0) || (strcmp(argv[i], "--log-scale") == 0)) {
+            histogram_log_scale = true;
         } else {
             ec = EC_CLI_UNKNOWN_OPTION;
             printf("Unknown option: %s\n", argv[i]);
@@ -294,8 +299,25 @@ int main (int argc, char *argv[]) {
 
     /* write count to dat file */
     if ((ec == EC_SUCCESS) && (histogram_path != NULL)) {
+        snprintf(filename_buf, sizeof(filename_buf), "%s.dat", histogram_path);
+        data_file = fopen(filename_buf, "w");
+        for (i=0; i<(int) iat_count_size; i++) {
+            fprintf(data_file, "%ld\n", quantized_iat_count[i]);
+        }
+        if ((data_file == NULL) || ferror(data_file)) {
+            perror("fopen");
+            printf("errno = %d -> %s\n", errno, strerror(errno));
+            ec = EC_GEN_UNABLE_TO_OPEN_DATA_FILE;
+        }
     }
-    /* write histogram file */
+    if ((ec == EC_SUCCESS) && verbose) {
+        printf("Histogram data written to %s\n", filename_buf);
+    }
+    /* write histogram file 
+     *
+     * https://gnuplot.sourceforge.net/demo/histograms.html
+     * http://www.gnuplot.info/docs/loc5395.html
+     */
     if ((ec == EC_SUCCESS) && (histogram_path != NULL)) {
         gnuplot = popen("gnuplot -persist", "w");
         if (gnuplot == NULL) {
@@ -303,15 +325,42 @@ int main (int argc, char *argv[]) {
             printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_UNABLE_TO_USE_GNUPLOT;
         }
-        //fprintf(gnuplot, "set terminal pngcairo persist font \"%s,%d\" size %d,%d\n", "Arial", "20", "1920", "1080");
-        //fprintf(gnuplot, "set title \"Histogram of Quantized IAT\"\n");
-        //fprintf(gnuplot, "set xlabel \"Quantized IAT\"\n");
-        //fprintf(gnuplot, "set ylabel \"Count\"\n");
-        //fprintf(gnuplot, "set style data histogram\n");
+        fprintf(gnuplot, "set terminal pngcairo font \"%s,%d\" size %d,%d\n", "Arial", 20, 1920, 1080);
+        fprintf(gnuplot, "set output \"%s.png\"\n", histogram_path);
+        fprintf(gnuplot, "set title \"Histogram of Quantized IAT\"\n");
+        fprintf(gnuplot, "set xlabel \"Quantized IAT\"\n");
+        if (histogram_log_scale) {
+            fprintf(gnuplot, "set ylabel \"Count (log-scaled)\"\n");
+        } else {
+            fprintf(gnuplot, "set ylabel \"Count\"\n");
+        }
+        fprintf(gnuplot, "set boxwidth 0.9 absolute\n");
+        fprintf(gnuplot, "set style fill solid 1.00 border lt -1\n");
+        fprintf(gnuplot, "set key fixed right top vertical Right noreverse noenhanced autotitle nobox\n");
+        fprintf(gnuplot, "set style histogram clustered gap 1 title textcolor lt -1\n");
+        fprintf(gnuplot, "set datafile missing '-'\n");
+        fprintf(gnuplot, "set style data histograms\n");
+        fprintf(gnuplot, "set xrange [-1:%d] noreverse writeback\n", (int) iat_count_size + 1);
+        if (histogram_log_scale) {
+            fprintf(gnuplot, "set logscale y\n");
+        }
+        fprintf(gnuplot, "plot newhistogram, '%s' using 1\n", filename_buf);
+        //if (ferror(gnuplot)) { // debug - gnuplot will definitely show error message in this case
+        if (ferror(gnuplot) || ((errno != 0) && (errno != 5))) { // often errno is 5
+            perror("fprintf");
+            printf("errno = %d -> %s\n", errno, strerror(errno));
+            ec = EC_GEN_GNUPLOT_ERROR;
+        }
+    }
+    if ((ec == EC_SUCCESS) && verbose) {
+        printf("Histogram file written to %s.png\n", histogram_path);
     }
 
     /* free memory */
-    if ((ec == EC_SUCCESS) && (histogram_path != NULL)) {
+    if (data_file != NULL) {
+        fclose(data_file);
+    }
+    if (histogram_path != NULL) {
         pclose(gnuplot);
     }
     free(quantized_iat_count);
@@ -326,13 +375,14 @@ int main (int argc, char *argv[]) {
 }
 
 void print_help_message (void) {
-    printf("Usage: tp_iat -i <input_file> -q <quantize_time> [-s <count_size>] [-p <path_of_histogram>] [-v]\n");
-    printf("       tp_iat -h\n");
+    printf("Usage: pt_quantize_iat -i <input_file> -q <quantize_time> [-s <count_size>] [-p <path_of_histogram>] [-l] [-v]\n");
+    printf("       pt_quantize_iat -h\n");
     printf("Options:\n");
     printf("  -i, --input           Input file\n");
     printf("  -q, --quantize-time   Time interval to quantize the packets, 2 to the power of t micro second\n");
     printf("  -s, --count-size      (optional) Number of quantized IAT to count, default=20, correspond to -q=4 or 5\n");
-    printf("  -p, --histogram-path  (optional) Path to save the histogram file, export if specified. Do not include file extension\n");
+    printf("  -p, --histogram-path  (optional) Path to save the histogram file, export if specified. Require gnuplot. Do not include file extension\n");
+    printf("  -l, --log-scale       (optional) Logarithmic scale for y-axis\n");
     printf("  -v, --verbose         (optional )Display verbose output\n");
     printf("  -h, --help            Display this help message\n");
     return;
@@ -404,7 +454,10 @@ static void per_packet (libtrace_packet_t *packet, double time_interval, uint64_
     current_time_sec = ts.tv_sec;
     current_time_usec = ts.tv_usec;
 
-    /* quantize the IAT */
+    /* quantize the IAT 
+     *
+     * also count the negative and max value exceed IAT
+     */
     if (iat_usec < 0) {
         negtive_iat_count++;
         return;

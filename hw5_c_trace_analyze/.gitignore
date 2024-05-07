@@ -1,3 +1,5 @@
 src/.deps/
 src/.libs/
 Session.vim
+*.dat
+*.png

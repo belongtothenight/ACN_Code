@@ -45,6 +45,8 @@
 #define EC_GEN_UNABLE_TO_GET_TIMESPEC   0x2005 /* Unable to get timespec */
 #define EC_GEN_CLOCK_GETTIME_ERROR      0x2006 /* Error in clock_gettime */
 #define EC_GEN_UNABLE_TO_USE_GNUPLOT    0x2007 /* Unable to use gnuplot */
+#define EC_GEN_GNUPLOT_ERROR            0x2008 /* Error in gnuplot drawing process */
+#define EC_GEN_UNABLE_TO_OPEN_DATA_FILE 0x2009 /* Unable to open data file */
 
 /**
  * @brief Error code
