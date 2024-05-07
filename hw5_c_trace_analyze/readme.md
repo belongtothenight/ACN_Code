@@ -22,7 +22,7 @@ make clean
 
 ## Parse Trace Executable
 
-Note: All executables can use '-h' or '--help' to show the help/usage message.
+Note: All executables can use `-h` or `--help` to show the help/usage message.
 
 1. pt_count_packet: Parse the trace file and count the number of packets in given time interval.
 2. pt_quantize_iat: Parse the trace file and calculate the Inter-Arrival Time (IAT) of packets.
