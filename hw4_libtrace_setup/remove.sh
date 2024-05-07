@@ -93,7 +93,7 @@ fi
 msg="remove ACN Code"
 if [ $task_acn_code == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing ACN Code repo"
-    cd "${program_install_dir}/${anc_code_name}"
+    cd "${program_install_dir}/${anc_code_name}/hw5_c_trace_analyze"
     sudo make uninstall
     sudo rm -rf "${program_install_dir}/${anc_code_name}"
     sudo rmdir "${system_include_dir}/${anc_code_name}"
