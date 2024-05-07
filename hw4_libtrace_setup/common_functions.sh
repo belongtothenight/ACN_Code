@@ -25,6 +25,7 @@ load_preset () {
     check_var task_wandio                   $error_exit_code
     check_var task_libtrace                 $error_exit_code
     check_var task_libtrace_tutorial        $error_exit_code
+    check_var task_acn_code                 $error_exit_code
     #[ PARAM - EXECUTION MODE ] X 1
     check_var script_stat                   $error_exit_code
 
@@ -46,6 +47,7 @@ load_preset () {
     program_install_dir="/opt"
     system_include_dir="/usr/local/include"
     system_lib_dir="/usr/local/lib"
+    system_bin_dir="/usr/local/bin"
     system_share_dir="/usr/local/share"
     uthash_repo_url="https://github.com/troydhanson/uthash.git"
     uthash_name="uthash"
@@ -57,6 +59,8 @@ load_preset () {
     libtrace_name="libtrace"
     libtrace_turorial_repo_url="https://github.com/ylai/libtrace_tutorial.git"
     libtrace_tutorial_name="libtrace_tutorial"
+    anc_code_repo_url="https://github.com/belongtothenight/ACN_Code.git"
+    anc_code_name="ACN_Code"
 
     if [ $verbose == 1 ]; then
         echo_notice "$message1" "$message2" "Performinng mutual actions"

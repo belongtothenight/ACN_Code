@@ -84,7 +84,21 @@ fi
 msg="remove libtrace tutorial"
 if [ $task_libtrace_tutorial == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing libtrace tutorial repo"
-    sudo rm -rf "${program_install_dir}/libtrace_tutorial"
+    sudo rm -rf "${program_install_dir}/${libtrace_tutorial_name}"
+fi
+
+# ====================================================================================
+# Remove ACN Code repo
+# ====================================================================================
+msg="remove ACN Code"
+if [ $task_acn_code == 1 ]; then
+    echo_notice "$this_script" "$msg" "Removing ACN Code repo"
+    cd "${program_install_dir}/${anc_code_name}"
+    sudo make uninstall
+    sudo rm -rf "${program_install_dir}/${anc_code_name}"
+    sudo rmdir "${system_include_dir}/${anc_code_name}"
+    sudo rmdir "${system_lib_dir}/${anc_code_name}"
+    sudo rmdir "${system_bin_dir}/${anc_code_name}"
 fi
 
 # End of file

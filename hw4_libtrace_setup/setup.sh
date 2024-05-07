@@ -69,9 +69,18 @@ fi
 if [ $task_libtrace_tutorial == 1 ]; then
     echo_notice "$this_script" "$msg" "Cloning libtrace tutorial repo"
     if [ $script_stat == "dev" ]; then
-        err_conti_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/libtrace_tutorial" "${this_script}" "$msg"
+        err_conti_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/${libtrace_tutorial_name}" "${this_script}" "$msg"
     elif [ $script_stat == "prod" ]; then
-        err_retry_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/libtrace_tutorial" 1 5 "${this_script}" "$msg" 1
+        err_retry_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/${libtrace_tutorial_name}" 1 5 "${this_script}" "$msg" 1
+    fi
+fi
+
+if [ $task_acn_code == 1 ]; then
+    echo_notice "$this_script" "$msg" "Cloning ACN code repo"
+    if [ $script_stat == "dev" ]; then
+        err_conti_exec "sudo git clone ${anc_code_repo_url} ${program_install_dir}/${anc_code_name}" "${this_script}" "$msg"
+    elif [ $script_stat == "prod" ]; then
+        err_retry_exec "sudo git clone ${anc_code_repo_url} ${program_install_dir}/${anc_code_name}" 1 5 "${this_script}" "$msg" 1
     fi
 fi
 
@@ -110,6 +119,15 @@ if [ $task_libtrace == 1 ]; then
         err_retry_exec "aptins libssl-dev"              1 5 "${this_script}" "$msg" 1 # (optional) for libcrypto
         err_retry_exec "aptins libncurses5-dev"         1 5 "${this_script}" "$msg" 1 # (optional) for libncurses
         err_retry_exec "aptins libncursesw5-dev"        1 5 "${this_script}" "$msg" 1 # (optional) for libncurses
+    fi
+fi
+
+if [ $task_acn_code == 1 ]; then
+    echo_notice "$this_script" "$msg" "Installing ACN code dependencies"
+    if [ $script_stat == "dev" ]; then
+        :
+    elif [ $script_stat == "prod" ]; then
+        err_retry_exec "aptins gnuplot-x11"             1 5 "${this_script}" "$msg" 1 # (optional) if you want to plot graphs
     fi
 fi
 
@@ -204,6 +222,16 @@ if [ $task_libtrace_tutorial == 1 ]; then
     cd $libtrace_tutorial_codedemo
     sudo make $make_flags
 fi
+
+if [ $task_acn_code == 1 ]; then
+    echo_notice "$this_script" "$msg" "Building ACN code"
+    cd "${program_install_dir}/${anc_code_name}"
+    sudo ./bootstrap.sh
+    sudo ./configure
+    sudo make $make_flags
+    sudo make install $make_flags
+fi
+
 export LD_LIBRARY_PATH="/usr/local/lib"
 
 # End of file
