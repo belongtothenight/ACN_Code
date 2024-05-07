@@ -20,6 +20,7 @@ AM_PROG_AR
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_GNU_PLOT
 LT_INIT([disable-static])
 
 # Checks for libraries.
@@ -33,6 +34,7 @@ AC_CHECK_LIB([trace], [trace_perror], [have_trace=1], [have_trace=0])
 AC_CHECK_LIB([trace], [trace_start], [have_trace=1], [have_trace=0])
 AC_CHECK_LIB([trace], [trace_read_packet], [have_trace=1], [have_trace=0])
 AC_CHECK_LIB([trace], [trace_get_timespec], [have_trace=1], [have_trace=0])
+AC_CHECK_LIB([trace], [trace_get_timeval], [have_trace=1], [have_trace=0])
 AC_CHECK_LIB([trace], [trace_destroy], [have_trace=1], [have_trace=0])
 AC_CHECK_LIB([trace], [trace_destroy_packet], [have_trace=1], [have_trace=0])
 

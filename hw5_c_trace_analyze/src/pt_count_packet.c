@@ -1,6 +1,6 @@
 /*
  * @file tp_packet_count.c
- * @brief Packet count from trace file
+ * @brief Count packet from trace file
  * @author belongtothenight / Da-Chuan Chen / 2024
  */
 
@@ -49,8 +49,8 @@ static void per_packet (libtrace_packet_t *packet, double time_interval);
  * @param argv Argument vector
  * @return Error code
  * @details
- * Normal usage:            ./tp_packet_count -i <input_file> -t <time_interval> [-v]
- * Display help message:    ./tp_packet_count -h
+ * Normal usage:            ./tp_count_packet -i <input_file> -t <time_interval> [-v]
+ * Display help message:    ./tp_count_packet -h
  */
 int main (int argc, char *argv[]) {
     /* params */
@@ -164,6 +164,10 @@ int main (int argc, char *argv[]) {
         printf("Valid arguments checked\n");
     }
 
+    /* end of CLI argument parsing
+     *
+     * exit if there are any errors
+     */
     if (ec != EC_SUCCESS) {
         print_ec_message(ec);
         print_help_message();
@@ -267,6 +271,9 @@ static void per_packet (libtrace_packet_t *packet, double time_interval) {
     /* retrieve data from packet 
      *
      * https://github.com/LibtraceTeam/libtrace/blob/cc98f68f72e24bf51e2dabc00af0dbc4ffe7bb3d/lib/trace.c#L1438
+     *
+     * following line will result in -Waggregate-return warning
+     * but it is safe to ignore as the struct is small and it is the intended practice
      */
     ts = trace_get_timespec(packet);
 

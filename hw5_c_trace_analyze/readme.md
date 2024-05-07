@@ -20,7 +20,7 @@ sudo make uninstall
 make clean
 ```
 
-## Executable
+## Parse Trace Executable
 
-1. tp_packet_count: Parse the trace file and count the number of packets in given time interval.
-2. tp_iat: Parse the trace file and calculate the inter-arrival time of packets.
+1. pt_count_packet: Parse the trace file and count the number of packets in given time interval.
+2. pt_quantize_iat: Parse the trace file and calculate the inter-arrival time of packets.
