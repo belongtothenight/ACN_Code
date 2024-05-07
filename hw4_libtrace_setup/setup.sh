@@ -225,7 +225,7 @@ fi
 
 if [ $task_acn_code == 1 ]; then
     echo_notice "$this_script" "$msg" "Building ACN code"
-    cd "${program_install_dir}/${anc_code_name}"
+    cd "${program_install_dir}/${anc_code_name}/hw5_c_trace_analyze"
     sudo chmod +x ./bootstrap.sh
     sudo ./bootstrap.sh
     sudo ./configure
