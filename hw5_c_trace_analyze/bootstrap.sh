@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Ref: https://github.com/LibtraceTeam/libtrace/blob/master/bootstrap.sh
 set -x
 
