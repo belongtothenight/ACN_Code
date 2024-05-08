@@ -127,7 +127,6 @@ int main (int argc, char *argv[]) {
                 quantize_time_order = (long int) strtol(argv[i], &endptr, 10);
                 if (errno != EC_SUCCESS) {
                     perror("strtol");
-                    printf("errno = %d -> %s\n", errno, strerror(errno));
                     ec = EC_CLI_INVALID_QUANTIZE_TIME;
                 }
                 if (endptr == argv[i]) {
@@ -147,7 +146,6 @@ int main (int argc, char *argv[]) {
                 iat_count_size = (long int) strtol(argv[i], &endptr, 10);
                 if (errno != EC_SUCCESS) {
                     perror("strtol");
-                    printf("errno = %d -> %s\n", errno, strerror(errno));
                     ec = EC_CLI_INVALID_COUNT_SIZE;
                 }
                 if (endptr == argv[i]) {
@@ -221,6 +219,7 @@ int main (int argc, char *argv[]) {
      * exit if there are any errors
      */
     if (ec != EC_SUCCESS) {
+        printf("errno = %d -> %s\n", errno, strerror(errno));
         print_ec_message(ec);
         print_help_message();
         exit(EXIT_FAILURE);
@@ -255,7 +254,6 @@ int main (int argc, char *argv[]) {
         printf("Processing trace file ...\n");
         if (clock_gettime(CLOCK_REALTIME, &start_time) == -1) {
             perror("clock_gettime");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_CLOCK_GETTIME_ERROR;
         }
     }
@@ -274,7 +272,6 @@ int main (int argc, char *argv[]) {
     if (ec == EC_SUCCESS) {
         if (clock_gettime(CLOCK_REALTIME, &end_time) == -1) {
             perror("clock_gettime");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_CLOCK_GETTIME_ERROR;
         }
     }
@@ -303,15 +300,15 @@ int main (int argc, char *argv[]) {
         data_file = fopen(filename_buf, "w");
         if ((data_file == NULL) || ferror(data_file)) {
             perror("fopen");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_UNABLE_TO_OPEN_DATA_FILE;
         }
+    }
+    if ((ec == EC_SUCCESS) && (histogram_path != NULL)) {
         for (i=0; i<(int) iat_count_size; i++) {
             fprintf(data_file, "%ld\n", quantized_iat_count[i]);
         }
         if (errno != EC_SUCCESS) {
             perror("fprintf");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_UNABLE_TO_WRITE_DATA_FILE;
         }
     }
@@ -327,7 +324,6 @@ int main (int argc, char *argv[]) {
         gnuplot = popen("gnuplot -persist", "w");
         if (gnuplot == NULL) {
             perror("popen");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_UNABLE_TO_USE_GNUPLOT;
         }
         fprintf(gnuplot, "set terminal pngcairo font \"%s,%d\" size %d,%d\n", "Arial", 20, 1920, 1080);
@@ -353,7 +349,6 @@ int main (int argc, char *argv[]) {
         //if (ferror(gnuplot)) { // debug - gnuplot will definitely show error message in this case
         if (ferror(gnuplot) || ((errno != 0) && (errno != 5))) { // often errno is 5
             perror("fprintf");
-            printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_GNUPLOT_ERROR;
         }
     }
@@ -365,13 +360,14 @@ int main (int argc, char *argv[]) {
     if (data_file != NULL) {
         fclose(data_file);
     }
-    if (histogram_path != NULL) {
+    if (gnuplot != NULL) {
         pclose(gnuplot);
     }
     free(quantized_iat_count);
 
     /* exit */
     if (ec != EC_SUCCESS) {
+        printf("errno = %d -> %s\n", errno, strerror(errno));
         print_ec_message(ec);
         exit(EXIT_FAILURE);
     }

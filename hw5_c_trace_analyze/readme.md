@@ -2,6 +2,8 @@
 
 Default structure is started from [https://github.com/belongtothenight/autotools_init_setup/tree/main/type2](https://github.com/belongtothenight/autotools_init_setup/tree/main/type2).
 
+These program is only developed on debian based Linux system.
+
 ## Usage
 
 General user and standard deployment use [../hw4_libtrace_setup](../hw4_libtrace_setup) to compile the code.
@@ -25,4 +27,4 @@ make clean
 Note: All executables can use `-h` or `--help` to show the help/usage message.
 
 1. pt_count_packet: Parse the trace file and count the number of packets in given time interval.
-2. pt_quantize_iat: Parse the trace file and calculate the Inter-Arrival Time (IAT) of packets.
+2. pt_quantize_iat: Parse the trace file and calculate the Inter-Arrival Time (IAT) of packets. Optionally, it can use GNUplot to plot histogram of IAT.

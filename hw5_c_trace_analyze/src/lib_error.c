@@ -112,7 +112,7 @@ void print_ec_message (ec_t ec) {
             printf("%s0x%x: Error occurred while using gnuplot\n\n", format.status.error, ec);
             break;
         case EC_GEN_UNABLE_TO_OPEN_DATA_FILE:
-            printf("%s0x%x: Unable to open data file\n\n", format.status.error, ec);
+            printf("%s0x%x: Unable to open data file at given path\n\n", format.status.error, ec);
             break;
         case EC_GEN_UNABLE_TO_WRITE_DATA_FILE:
             printf("%s0x%x: Unable to write data file\n\n", format.status.error, ec);
