@@ -307,9 +307,13 @@ int main (int argc, char *argv[]) {
         for (i=0; i<(int) iat_count_size; i++) {
             fprintf(data_file, "%ld\n", quantized_iat_count[i]);
         }
-        if (errno != EC_SUCCESS) {
+        if ((errno != EC_SUCCESS) && errno != EIO) {
             perror("fprintf");
             ec = EC_GEN_UNABLE_TO_WRITE_DATA_FILE;
+        }
+        if (errno == EIO) {
+            perror("fprintf");
+            printf("It is expected to have frequent EIO error in WSL2\n");
         }
     }
     if (ec == EC_SUCCESS) {
@@ -347,9 +351,13 @@ int main (int argc, char *argv[]) {
         }
         fprintf(gnuplot, "plot newhistogram, '%s' using 1\n", filename_buf);
         //if (ferror(gnuplot)) { // debug - gnuplot will definitely show error message in this case
-        if (ferror(gnuplot) || ((errno != 0) && (errno != 5))) { // often errno is 5
+        if (ferror(gnuplot) || ((errno != 0) && (errno != EIO))) { // often errno is 5
             perror("fprintf");
             ec = EC_GEN_GNUPLOT_ERROR;
+        }
+        if (errno == EIO) {
+            perror("fprintf");
+            printf("It is expected to have frequent EIO error in WSL2\n");
         }
     }
     if (ec == EC_SUCCESS) {
