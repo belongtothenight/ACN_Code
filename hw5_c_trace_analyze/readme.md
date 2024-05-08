@@ -28,3 +28,12 @@ Note: All executables can use `-h` or `--help` to show the help/usage message.
 
 1. pt_count_packet: Parse the trace file and count the number of packets in given time interval.
 2. pt_quantize_iat: Parse the trace file and calculate the Inter-Arrival Time (IAT) of packets. Optionally, it can use GNUplot to plot histogram of IAT.
+
+## Debug
+
+- compiling get following error message:
+    ```bash
+    ./configure.ac: line 10: syntax error near unexpected token \`[2.71]\'
+    ./configure.ac: line 10: \`AC_PREREQ([2.71])\'
+    ```
+    - Solution: Don't execute `./configure` as `./configure.ac`. Tab completion is causing this issue.
