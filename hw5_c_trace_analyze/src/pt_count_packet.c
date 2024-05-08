@@ -124,9 +124,6 @@ int main (int argc, char *argv[]) {
         } else {
             ec = EC_CLI_UNKNOWN_OPTION;
         }
-        if (ec != EC_SUCCESS) {
-            break;
-        }
     }
     if ((ec == EC_SUCCESS) && verbose) {
         printf("Arguments parsed:\n");
@@ -294,7 +291,7 @@ static void per_packet (libtrace_packet_t *packet, double time_interval) {
      *
      * Use while loop to ensure even if no packet is observed in the time interval
      */
-    while (((time_t) ts.tv_sec > next_interval_time_sec) && ((long int) ts.tv_nsec > next_interval_time_nsec)) {
+    while ((ts.tv_sec > next_interval_time_sec) && (ts.tv_nsec > next_interval_time_nsec)) {
         printf("%lu \t%ld \t%" PRIu64 "\n", next_interval_time_sec, next_interval_time_nsec, packet_count);
         packet_count = 0;
         next_interval_time_sec += (time_t) (time_interval);

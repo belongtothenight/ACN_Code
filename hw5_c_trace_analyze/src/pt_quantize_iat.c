@@ -109,7 +109,7 @@ int main (int argc, char *argv[]) {
     }
 
     /* parse CLI arguments */
-    for (i=1 ; (i<argc) && (ec==0) ; i++) {
+    for (i=1 ; (i<argc) && (ec==EC_SUCCESS) ; i++) {
         /* Check for argument pairs */
         if ((strcmp(argv[i], "-i") == 0) || (strcmp(argv[i], "--input") == 0)) {
             i++;
@@ -124,7 +124,7 @@ int main (int argc, char *argv[]) {
                 /* following line will result in a -Wsign-conversion warning, from signed to unsigned
                  * but it is safe to ignore since the value should always be positive
                  */
-                quantize_time_order = (long int) strtol(argv[i], &endptr, 10);
+                quantize_time_order = strtol(argv[i], &endptr, 10);
                 if (errno != EC_SUCCESS) {
                     perror("strtol");
                     ec = EC_CLI_INVALID_QUANTIZE_TIME;
@@ -143,7 +143,7 @@ int main (int argc, char *argv[]) {
                 /* following line will result in a -Wsign-conversion warning, from signed to unsigned
                  * but it is safe to ignore since the value should always be positive
                  */
-                iat_count_size = (long int) strtol(argv[i], &endptr, 10);
+                iat_count_size = strtol(argv[i], &endptr, 10);
                 if (errno != EC_SUCCESS) {
                     perror("strtol");
                     ec = EC_CLI_INVALID_COUNT_SIZE;
@@ -173,9 +173,6 @@ int main (int argc, char *argv[]) {
         } else {
             ec = EC_CLI_UNKNOWN_OPTION;
             printf("Unknown option: %s\n", argv[i]);
-        }
-        if (ec != EC_SUCCESS) {
-            break;
         }
     }
     if ((ec == EC_SUCCESS) && verbose) {
@@ -441,7 +438,7 @@ static void per_packet (libtrace_packet_t *packet, double time_interval, uint64_
      * unsigned variable is used to contain the most amount of packets, so initialize with -1 doesn't work
      * instead of adding logic to skip the first packet, which will be processed in every packet
      */
-    while ((time_t) ts.tv_sec > next_interval_time_sec) {
+    while (ts.tv_sec > next_interval_time_sec) {
         printf("\33[2K\rProcessed %lu seconds of packets", ts.tv_sec - initial_time_sec);
         next_interval_time_sec += (time_t) (time_interval);
         printf("\t| negative IAT: %lu\t| exceed max IAT: %lu", negtive_iat_count, exceed_max_iat_count-1);
