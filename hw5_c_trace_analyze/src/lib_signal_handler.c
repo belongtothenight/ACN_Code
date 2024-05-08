@@ -17,7 +17,6 @@ void signal_handler (int signum) {
     char *signal_name = strsignal(signum);
     printf("\n%sSignal %2d -> %s received.\n", format.status.warning, signum, signal_name);
     exit(signum);
-    return;
 }
 
 void register_all_signal_handlers (void) {
