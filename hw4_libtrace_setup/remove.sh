@@ -72,8 +72,8 @@ if [ $task_libtrace == 1 ]; then
     cd "${program_install_dir}/${libtrace_name}"
     sudo make uninstall
     sudo rm -rf "${system_lib_dir}/libpacketdump"
-    sudo rmdir "${system_include_dir}/${libtrace_name}"
-    sudo rmdir "${system_share_dir}/${libtrace_name}"
+    sudo rm -rf "${system_include_dir}/${libtrace_name}"
+    sudo rm -rf "${system_share_dir}/${libtrace_name}"
     sudo rm -f "${program_install_dir}/${libtrace_file}"
     sudo rm -rf "${program_install_dir}/${libtrace_ln}"
     sudo rm -f "${program_install_dir}/${libtrace_name}"
@@ -99,8 +99,8 @@ if [ $task_acn_code == 1 ]; then
     sudo make uninstall
     sudo rm -rf "${program_install_dir}/${acn_code_name}"
     sudo rm -f "${program_install_dir}/${acn_code_name}.zip"
-    sudo rmdir "${system_include_dir}/${acn_code_name}"
-    sudo rmdir "${system_lib_dir}/${acn_code_name}"
+    sudo rm -rf "${system_include_dir}/${acn_code_name}"
+    sudo rm -rf "${system_lib_dir}/${acn_code_name}"
     sudo rm -rf "${system_bin_dir}/${acn_code_name}"
 fi
 

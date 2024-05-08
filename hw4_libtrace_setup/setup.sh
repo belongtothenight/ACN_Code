@@ -241,7 +241,7 @@ if [ $task_libtrace_tutorial == 1 ]; then
 fi
 
 if [ $task_acn_code == 1 ]; then
-    echo_notice "$this_script" "$msg" "Building ACN code"
+    echo_notice "$this_script" "$msg" "Building ACN code -> hw5_c_trace_analyze"
     cd "${program_install_dir}/${acn_code_name}/hw5_c_trace_analyze"
     sudo chmod +x ./bootstrap.sh
     sudo ./bootstrap.sh
