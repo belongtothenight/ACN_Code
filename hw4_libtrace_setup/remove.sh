@@ -33,6 +33,7 @@ msg="remove uthash"
 if [ $task_uthash == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing uthash"
     sudo rm -rf "${program_install_dir}/${uthash_name}"
+    sudo rm -f "${program_install_dir}/${uthash_name}.zip"
     sudo rm -f ${system_include_dir}/ut*.h
 fi
 
@@ -85,6 +86,7 @@ msg="remove libtrace tutorial"
 if [ $task_libtrace_tutorial == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing libtrace tutorial repo"
     sudo rm -rf "${program_install_dir}/${libtrace_tutorial_name}"
+    sudo rm -f "${program_install_dir}/${libtrace_tutorial_name}.zip"
 fi
 
 # ====================================================================================
@@ -93,12 +95,13 @@ fi
 msg="remove ACN Code"
 if [ $task_acn_code == 1 ]; then
     echo_notice "$this_script" "$msg" "Removing ACN Code repo"
-    cd "${program_install_dir}/${anc_code_name}/hw5_c_trace_analyze"
+    cd "${program_install_dir}/${acn_code_name}/hw5_c_trace_analyze"
     sudo make uninstall
-    sudo rm -rf "${program_install_dir}/${anc_code_name}"
-    sudo rmdir "${system_include_dir}/${anc_code_name}"
-    sudo rmdir "${system_lib_dir}/${anc_code_name}"
-    sudo rmdir "${system_bin_dir}/${anc_code_name}"
+    sudo rm -rf "${program_install_dir}/${acn_code_name}"
+    sudo rm -f "${program_install_dir}/${acn_code_name}.zip"
+    sudo rmdir "${system_include_dir}/${acn_code_name}"
+    sudo rmdir "${system_lib_dir}/${acn_code_name}"
+    sudo rm -rf "${system_bin_dir}/${acn_code_name}"
 fi
 
 # End of file

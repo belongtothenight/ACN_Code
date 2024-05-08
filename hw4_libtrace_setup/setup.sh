@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Clone instead of repo but release if possible
+# Git clone instead of repo but release if possible
+# Use ZIP from github instead of git clone if possible
+# Git clone takes too long and is extremely not stable
 # Version check rely on automake
 # Network activities are put in the front section
 # Script will terminate once error occurs
@@ -16,7 +18,7 @@ sudo apt update || { echo 'apt update failed' ; exit 1; }
 sudo apt upgrade -y || { echo 'apt upgrade failed' ; exit 1; }
 
 echo ">> Installing mutual dependencies"
-sudo apt install -y build-essential git wget || { echo 'apt failed' ; exit 1; }
+sudo apt install -y build-essential git wget unzip || { echo 'apt failed' ; exit 1; }
 
 echo ">> Downloading bash functions"
 sudo wget -nv --show-progress ${bash_function_url} --output-document ${bash_function_file} || { echo 'wget failed'; exit 1; }
@@ -31,11 +33,11 @@ load_preset "./config.ini"
 # ====================================================================================
 msg="download"
 if [ $task_uthash == 1 ]; then
-    echo_notice "$this_script" "$msg" "Cloning uthash repo"
+    echo_notice "$this_script" "$msg" "Downloading uthash repo"
     if [ $script_stat == "dev" ]; then
-        err_conti_exec "sudo git clone ${uthash_repo_url} ${program_install_dir}/${uthash_name}" "${this_script}" "$msg"
+        err_conti_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${uthash_name}.zip ${uthash_zip_url}" "${this_script}" "$msg"
     elif [ $script_stat == "prod" ]; then
-        err_retry_exec "sudo git clone ${uthash_repo_url} ${program_install_dir}/${uthash_name}" 1 5 "${this_script}" "$msg" 1
+        err_retry_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${uthash_name}.zip ${uthash_zip_url}" 1 5 "${this_script}" "$msg" 1
     fi
 fi
 
@@ -58,7 +60,7 @@ if [ $task_wandio == 1 ]; then
 fi
 
 if [ $task_libtrace == 1 ]; then
-    echo_notice "$this_script" "$msg" "Cloning libtrace repo"
+    echo_notice "$this_script" "$msg" "Downloading libtrace repo"
     if [ $script_stat == "dev" ]; then
         err_conti_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${libtrace_file} ${libtrace_release_url}" "${this_script}" "$msg"
     elif [ $script_stat == "prod" ]; then
@@ -67,20 +69,20 @@ if [ $task_libtrace == 1 ]; then
 fi
 
 if [ $task_libtrace_tutorial == 1 ]; then
-    echo_notice "$this_script" "$msg" "Cloning libtrace tutorial repo"
+    echo_notice "$this_script" "$msg" "Downloading libtrace tutorial repo"
     if [ $script_stat == "dev" ]; then
-        err_conti_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/${libtrace_tutorial_name}" "${this_script}" "$msg"
+        err_conti_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${libtrace_tutorial_name}.zip ${libtrace_tutorial_zip_url}" "${this_script}" "$msg"
     elif [ $script_stat == "prod" ]; then
-        err_retry_exec "sudo git clone ${libtrace_turorial_repo_url} ${program_install_dir}/${libtrace_tutorial_name}" 1 5 "${this_script}" "$msg" 1
+        err_retry_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${libtrace_tutorial_name}.zip ${libtrace_tutorial_zip_url}" 1 5 "${this_script}" "$msg" 1
     fi
 fi
 
 if [ $task_acn_code == 1 ]; then
-    echo_notice "$this_script" "$msg" "Cloning ACN code repo"
+    echo_notice "$this_script" "$msg" "Downloading ACN code repo"
     if [ $script_stat == "dev" ]; then
-        err_conti_exec "sudo git clone ${anc_code_repo_url} ${program_install_dir}/${anc_code_name}" "${this_script}" "$msg"
+        err_conti_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${acn_code_name}.zip ${acn_code_zip_url}" "${this_script}" "$msg"
     elif [ $script_stat == "prod" ]; then
-        err_retry_exec "sudo git clone ${anc_code_repo_url} ${program_install_dir}/${anc_code_name}" 1 5 "${this_script}" "$msg" 1
+        err_retry_exec "sudo wget $wget_flags --output-document ${program_install_dir}/${acn_code_name}.zip ${acn_code_zip_url}" 1 5 "${this_script}" "$msg" 1
     fi
 fi
 
@@ -146,6 +148,21 @@ if [ $task_libwandder == 1 ] || [ $task_wandio == 1 ] || [ $task_libtrace == 1 ]
     if [ $task_libtrace == 1 ]; then
         sudo tar $tar_flags "${program_install_dir}/${libtrace_file}" -C "${program_install_dir}"
     fi
+    echo_notice "$this_script" "$msg" "Extracting .zip files"
+    cd $program_install_dir
+    if [ $task_uthash == 1 ]; then
+        sudo unzip $unzip_flags "${program_install_dir}/${uthash_name}.zip"
+        sudo mv "${program_install_dir}/${uthash_name}-master" "${program_install_dir}/${uthash_name}"
+    fi
+    if [ $task_libtrace_tutorial == 1 ]; then
+        sudo unzip $unzip_flags "${program_install_dir}/${libtrace_tutorial_name}.zip"
+        sudo mv "${program_install_dir}/${libtrace_tutorial_name}-master" "${program_install_dir}/${libtrace_tutorial_name}"
+    fi
+    if [ $task_acn_code == 1 ]; then
+        sudo unzip $unzip_flags "${program_install_dir}/${acn_code_name}.zip"
+        sudo mv "${program_install_dir}/${acn_code_name}-main" "${program_install_dir}/${acn_code_name}"
+    fi
+    cd $current_dir
     echo_notice "$this_script" "$msg" "Creating symbolic links"
     if [ $task_libwandder == 1 ]; then
         if [ $script_stat == "dev" ]; then
@@ -225,7 +242,7 @@ fi
 
 if [ $task_acn_code == 1 ]; then
     echo_notice "$this_script" "$msg" "Building ACN code"
-    cd "${program_install_dir}/${anc_code_name}/hw5_c_trace_analyze"
+    cd "${program_install_dir}/${acn_code_name}/hw5_c_trace_analyze"
     sudo chmod +x ./bootstrap.sh
     sudo ./bootstrap.sh
     sudo ./configure
