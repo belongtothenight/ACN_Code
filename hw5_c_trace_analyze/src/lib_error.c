@@ -114,6 +114,9 @@ void print_ec_message (ec_t ec) {
         case EC_GEN_UNABLE_TO_OPEN_DATA_FILE:
             printf("%s0x%x: Unable to open data file\n\n", format.status.error, ec);
             break;
+        case EC_GEN_UNABLE_TO_WRITE_DATA_FILE:
+            printf("%s0x%x: Unable to write data file\n\n", format.status.error, ec);
+            break;
         /* > default: Unknown error code */
         default:
             printf("%sUnknown error code: 0x%x\n", format.status.error, ec);

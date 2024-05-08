@@ -301,13 +301,18 @@ int main (int argc, char *argv[]) {
     if ((ec == EC_SUCCESS) && (histogram_path != NULL)) {
         snprintf(filename_buf, sizeof(filename_buf), "%s.dat", histogram_path);
         data_file = fopen(filename_buf, "w");
-        for (i=0; i<(int) iat_count_size; i++) {
-            fprintf(data_file, "%ld\n", quantized_iat_count[i]);
-        }
         if ((data_file == NULL) || ferror(data_file)) {
             perror("fopen");
             printf("errno = %d -> %s\n", errno, strerror(errno));
             ec = EC_GEN_UNABLE_TO_OPEN_DATA_FILE;
+        }
+        for (i=0; i<(int) iat_count_size; i++) {
+            fprintf(data_file, "%ld\n", quantized_iat_count[i]);
+        }
+        if (errno != EC_SUCCESS) {
+            perror("fprintf");
+            printf("errno = %d -> %s\n", errno, strerror(errno));
+            ec = EC_GEN_UNABLE_TO_WRITE_DATA_FILE;
         }
     }
     if (ec == EC_SUCCESS) {
