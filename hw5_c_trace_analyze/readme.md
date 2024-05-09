@@ -28,6 +28,9 @@ Note: All executables can use `-h` or `--help` to show the help/usage message.
 
 1. pt_count_packet: Parse the trace file and count the number of packets in given time interval.
 2. pt_quantize_iat: Parse the trace file and calculate the Inter-Arrival Time (IAT) of packets. Optionally, it can use GNUplot to plot histogram of IAT.
+    - -q 2 -s 80: [pt_quantize_iat_2_80.dat](meta/pt_quantize_iat_2_80.dat) / [pt_quantize_iat_2_80.png](meta/pt_quantize_iat_2_80.png)
+    - -q 2 -s 80 -l: [pt_quantize_iat_2_80_log.dat](meta/pt_quantize_iat_2_80_log.dat) / [pt_quantize_iat_2_80_log.png](meta/pt_quantize_iat_2_80_log.png)
+
 
 ## Debug
 
