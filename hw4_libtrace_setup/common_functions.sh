@@ -118,7 +118,7 @@ fi
 # $1: package name
 aptins () {
     echo_notice "common" "setup" "Installing ${BOLD}${GREEN}$1${END}..."
-    err_retry_exec "sudo apt $apt_gflag -o DPkg::Lock::Timeout=300 install $1 -y" 1 5 "common" "functions_aptins" 1
+    err_retry_exec "sudo apt -q -o DPkg::Lock::Timeout=300 install $1 -y" 1 5 "common" "functions_aptins" 1
 }
 if [ $verbose == 1 ]; then
     echo_notice "common" "function" "Loaded function: aptins"
