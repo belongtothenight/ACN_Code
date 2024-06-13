@@ -10,23 +10,22 @@
 # ====================================================================================
 # Init
 # ====================================================================================
-bash_function_url="https://raw.githubusercontent.com/belongtothenight/bash_scripts/main/src/functions.sh"
-bash_function_file="./functions.sh"
 
 echo ">> Updating system package"
 sudo apt update || { echo 'apt update failed' ; exit 1; }
 sudo apt upgrade -y || { echo 'apt upgrade failed' ; exit 1; }
 
-echo ">> Installing mutual dependencies"
-sudo apt install -y build-essential git wget unzip || { echo 'apt failed' ; exit 1; }
-
-echo ">> Downloading bash functions"
-sudo wget -nv --show-progress ${bash_function_url} --output-document ${bash_function_file} || { echo 'wget failed'; exit 1; }
-
 echo ">> Sourcing bash functions"
-source "${bash_function_file}" || { echo 'source failed'; exit 1; } # Enter fail-exit mode
 source "./common_functions.sh"
+
+echo ">> Loading configuration preset"
 load_preset "./config.ini"
+
+echo_notice "$this_script" "$msg" "Installing mutual dependencies"
+err_retry_exec "aptins build-essential" 1 5 "${this_script}" "$msg" 1
+err_retry_exec "aptins git" 1 5 "${this_script}" "$msg" 1
+err_retry_exec "aptins wget" 1 5 "${this_script}" "$msg" 1
+err_retry_exec "aptins unzip" 1 5 "${this_script}" "$msg" 1
 
 # ====================================================================================
 # Download source code
@@ -90,6 +89,7 @@ fi
 # Install dependencies with dpkg
 # ====================================================================================
 msg="install dependencies"
+
 if [ $task_wandio == 1 ]; then
     echo_notice "$this_script" "$msg" "Installing wandio dependencies"
     if [ $script_stat == "dev" ]; then

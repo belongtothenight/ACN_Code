@@ -5,11 +5,11 @@
 # ====================================================================================
 # Init
 # ====================================================================================
-bash_function_file="./functions.sh"
 
 echo "Sourcing bash functions"
-source "${bash_function_file}" || { echo 'source failed'; exit 1; } # Enter fail-exit mode
 source "./common_functions.sh"
+
+echo ">> Loading configuration preset"
 load_preset "./config.ini"
 
 # ====================================================================================
